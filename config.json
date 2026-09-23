@@ -1,11 +1,11 @@
 {
-  "version": 1,
+  "version": 1790175735605,
   "announcement": {
-    "id": 1,
+    "id": 1790175735,
     "active": false,
+    "type": "info",
     "title": "اطلاعیه Strong VPN",
     "message": "به Strong VPN خوش آمدید. وضعیت سرورها پایدار است.",
-    "type": "info",
     "action_text": "دانلود نسخه جدید",
     "action_url": "https://shop.strongdev.space/static/apk/StrongVPN-arm64.apk"
   },
