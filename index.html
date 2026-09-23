@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>پنل مدیریت و کنترل Strong VPN</title>
+  <title>کنترل پنل مدیریت Strong VPN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -32,13 +32,131 @@
         radial-gradient(circle at 85% 30%, rgba(0, 245, 255, 0.06) 0%, transparent 45%);
       color: var(--text);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------------- LOGIN SCREEN ---------------- */
+    #loginView {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(14, 22, 38, 0.85);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(168, 85, 247, 0.2);
+      border-radius: 28px;
+      padding: 36px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .login-card.shake {
+      animation: shakeAnim 0.4s ease-in-out;
+    }
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    .login-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #1C1236, #0A0E1A);
+      border: 1.5px solid var(--primary);
+      box-shadow: 0 0 25px var(--primary-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .login-card h2 {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #FFFFFF, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .login-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+    .login-field {
+      margin-bottom: 18px;
+      text-align: right;
+    }
+    .login-field label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .login-field input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 14px;
+      color: #FFF;
+      padding: 13px 16px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .login-field input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .login-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #F87171;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(90deg, #A855F7, #00D2FF);
+      color: #FFF;
+      border: none;
+      padding: 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+      transition: all 0.2s;
+      margin-top: 6px;
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 210, 255, 0.5);
+    }
+
+    /* ---------------- MAIN DASHBOARD ---------------- */
+    #mainView {
+      display: none;
       padding: 24px 16px 120px;
     }
     .container {
       max-width: 900px;
       margin: 0 auto;
     }
-    /* Header */
     .header {
       display: flex;
       align-items: center;
@@ -77,6 +195,11 @@
       font-size: 12px;
       color: var(--text-muted);
     }
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .status-badge {
       display: flex;
       align-items: center;
@@ -96,6 +219,21 @@
       background: var(--green);
       box-shadow: 0 0 8px var(--green);
     }
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #F87171;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
     /* Token Box */
     .token-box {
       background: var(--card-bg);
@@ -141,6 +279,7 @@
     .token-box button:hover {
       background: rgba(255, 255, 255, 0.15);
     }
+
     /* Cards */
     .card {
       background: var(--card-bg);
@@ -251,7 +390,7 @@
       color: #64748B;
       margin-top: 6px;
     }
-    /* Type chips */
+    /* Type selector */
     .type-selector {
       display: flex;
       gap: 8px;
@@ -379,9 +518,6 @@
       transform: translateY(-2px);
       box-shadow: 0 12px 30px rgba(0, 210, 255, 0.5);
     }
-    .save-btn:active {
-      transform: translateY(0);
-    }
     .last-updated {
       font-size: 12px;
       color: var(--text-muted);
@@ -412,214 +548,305 @@
 </head>
 <body>
 
-<div id="toast">تغییرات با موفقیت در گیت‌هاب ذخیره و منتشر شد!</div>
+<div id="toast">پیام سیستم</div>
 
-<div class="container">
-  <!-- Header -->
-  <div class="header">
-    <div class="logo-area">
-      <div class="logo-icon">
-        <svg width="28" height="28" viewBox="0 0 460 460" fill="none">
-          <polygon points="60,160 190,120 160,260 70,300" fill="#00F5FF" opacity="0.8" />
-          <polygon points="400,160 270,120 300,260 390,300" fill="#A855F7" opacity="0.8" />
-          <polygon points="265,60 170,225 240,225 195,400 310,210 235,210" fill="#FFFFFF" stroke="#C084FC" stroke-width="8" />
-        </svg>
-      </div>
-      <div class="logo-text">
-        <h1>STRONG VPN • کنترل پنل مرکزی</h1>
-        <p>مدیریت پیام‌های بازشو، کانفیگ‌ها و اطلاعات ارتباطی اپلیکیشن</p>
-      </div>
+<!-- 1. LOGIN SCREEN GATE -->
+<div id="loginView">
+  <div class="login-card" id="loginCard">
+    <div class="login-logo">
+      <svg width="36" height="36" viewBox="0 0 460 460" fill="none">
+        <polygon points="60,160 190,120 160,260 70,300" fill="#00F5FF" opacity="0.8" />
+        <polygon points="400,160 270,120 300,260 390,300" fill="#A855F7" opacity="0.8" />
+        <polygon points="265,60 170,225 240,225 195,400 310,210 235,210" fill="#FFFFFF" stroke="#C084FC" stroke-width="8" />
+      </svg>
     </div>
-    <div class="status-badge" id="connBadge">
-      <div class="status-dot"></div>
-      <span id="connStatus">اتصال به گیت‌هاب برقرار است</span>
-    </div>
-  </div>
+    <h2>کنترل پنل Strong VPN</h2>
+    <p>احراز هویت اختصاصی مدیریت</p>
 
-  <!-- Token Bar -->
-  <div class="token-box">
-    <label>توکن شخصی گیت‌هاب (PAT):</label>
-    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
-    <button onclick="saveToken()">ذخیره در مرورگر</button>
-    <button onclick="fetchCurrentConfig()">بروزرسانی داده‌ها</button>
-  </div>
+    <div class="login-error" id="loginError">نام کاربری یا رمز عبور اشتباه است!</div>
 
-  <!-- Card 1: Popup Announcement -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">
-        <span class="icon">📢</span>
-        <span>نوتیفیکیشن بازشو اپلیکیشن (Popup Announcement)</span>
+    <form onsubmit="handleLogin(event)">
+      <div class="login-field">
+        <label>نام کاربری:</label>
+        <input type="text" id="loginUser" placeholder="yousof" dir="ltr" required autocomplete="username">
       </div>
-      <label class="switch-container">
-        <span style="font-size: 13px; font-weight: 700;" id="switchLabel">فعال</span>
-        <div class="switch">
-          <input type="checkbox" id="annActive" onchange="updatePreview()">
-          <span class="slider"></span>
-        </div>
-      </label>
-    </div>
-
-    <div class="form-group">
-      <label>نوع اعلان (نوع استایل و آیکون):</label>
-      <div class="type-selector">
-        <div class="type-chip selected" data-type="update" onclick="setType('update')">🚀 به‌روزرسانی اپلیکیشن</div>
-        <div class="type-chip" data-type="info" onclick="setType('info')">ℹ️ اطلاعیه عمومی</div>
-        <div class="type-chip" data-type="warning" onclick="setType('warning')">⚠️ هشدار مهم</div>
+      <div class="login-field">
+        <label>رمز عبور مدیریت:</label>
+        <input type="password" id="loginPass" placeholder="••••••••••••" dir="ltr" required autocomplete="current-password">
       </div>
-    </div>
-
-    <div class="form-grid">
-      <div class="form-group full">
-        <label>عنوان اطلاعیه:</label>
-        <input type="text" id="annTitle" placeholder="مثال: سرورهای جدید ترکیه 🇹🇷 اضافه شدند" oninput="updatePreview()">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; font-size: 12.5px; color: var(--text-muted);">
+        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <input type="checkbox" id="rememberMe" checked>
+          <span>مرا در این دستگاه به یاد داشته باش</span>
+        </label>
       </div>
-
-      <div class="form-group full">
-        <label>متن کامل پیام برای کاربر:</label>
-        <textarea id="annMessage" placeholder="متن توضیحات پیام را اینجا بنویسید..." oninput="updatePreview()"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>متن دکمه اقدام (اختیاری):</label>
-        <input type="text" id="annActionText" placeholder="مثال: دانلود نسخه جدید یا مشاهده" oninput="updatePreview()">
-      </div>
-
-      <div class="form-group">
-        <label>لینک دکمه اقدام (URL):</label>
-        <input type="text" id="annActionUrl" placeholder="https://..." dir="ltr" oninput="updatePreview()">
-      </div>
-    </div>
-
-    <!-- Live Preview -->
-    <div style="margin-top: 20px;">
-      <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 10px;">
-        📱 پیش‌نمایش نحوه نمایش پاپ‌آپ در گوشی کاربر:
-      </label>
-      <div class="preview-modal" id="previewModal">
-        <div class="preview-icon" id="prevIcon">🚀</div>
-        <div class="preview-title" id="prevTitle">عنوان اطلاعیه</div>
-        <div class="preview-body" id="prevBody">متن پیام برای کاربران برنامه در اینجا نمایش داده می‌شود.</div>
-        <button class="preview-btn" id="prevBtn">دانلود نسخه جدید</button>
-        <button class="preview-close">بستن</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 2: Contact & Support Links -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">
-        <span class="icon">🔗</span>
-        <span>تنظیمات ارتباطی و پشتیبانی (پشتیبانی و آدرس سایت)</span>
-      </div>
-    </div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>آدرس سایت شاپ (Website URL):</label>
-        <input type="text" id="siteUrl" placeholder="https://shop.strongdev.space" dir="ltr">
-        <div class="hint">دکمه «خرید اشتراک / تمدید» کاربر را به این آدرس هدایت می‌کند.</div>
-      </div>
-      <div class="form-group">
-        <label>آدرس یا آیدی پشتیبانی تلگرام (Support URL):</label>
-        <input type="text" id="supportUrl" placeholder="https://t.me/daryafti_services یا @daryafti_services" dir="ltr">
-        <div class="hint">اگر خالی باشد، دکمه پشتیبانی در برنامه به‌صورت خودکار مخفی می‌شود.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 3: Server & Endpoints -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">
-        <span class="icon">⚙️</span>
-        <span>تنظیمات زیرساخت، سرور و اتصال</span>
-      </div>
-    </div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>آدرس پنل مدیریت مشتریان (Panel Base URL):</label>
-        <input type="text" id="panelUrl" placeholder="https://sel.dev-stong.ir:2083/..." dir="ltr">
-      </div>
-      <div class="form-group">
-        <label>ساب‌دامین دریافت اشتراک (Subscription Sub-domain):</label>
-        <input type="text" id="subDomain" placeholder="sb1.dev-stong.ir:2053" dir="ltr">
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 4: App Versions -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">
-        <span class="icon">📦</span>
-        <span>مدیریت نسخه‌ها و فایل نصب APK</span>
-      </div>
-    </div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>آخرین نسخه منتشرشده (Latest Version):</label>
-        <input type="text" id="latestVersion" placeholder="1.0.0" dir="ltr">
-      </div>
-      <div class="form-group">
-        <label>حداقل نسخه مجاز (Minimum Required Version):</label>
-        <input type="text" id="minVersion" placeholder="1.0.0" dir="ltr">
-      </div>
-      <div class="form-group full">
-        <label>لینک دانلود مستقیم فایل APK (arm64):</label>
-        <input type="text" id="apkUrl" placeholder="https://shop.strongdev.space/static/apk/StrongVPN-arm64.apk" dir="ltr">
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 5: Fallback Configs -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">
-        <span class="icon">🛡️</span>
-        <span>کانفیگ‌های رزرو و اضطراری (Fallback Configs)</span>
-      </div>
-    </div>
-    <div class="form-group full">
-      <label>کانفیگ‌های رزرو (هر خط یک لینک vless:// یا vmess:// یا trojan://):</label>
-      <textarea id="fallbackConfigs" placeholder="vless://...&#10;vmess://..." dir="ltr" style="font-family: monospace; min-height: 110px;"></textarea>
-      <div class="hint">در صورتی که ساب‌دامین کاربر فیلتر باشد، برنامه از این کانفیگ‌های رزرو برای اتصال استفاده خواهد کرد.</div>
-    </div>
+      <button type="submit" class="login-btn">ورود به پنل مدیریت</button>
+    </form>
   </div>
 </div>
 
-<!-- Floating Bottom Bar -->
-<div class="bottom-bar">
-  <div>
-    <div style="font-weight: 800; font-size: 15px;">ذخیره و انتشار تغییرات</div>
-    <div class="last-updated" id="lastUpdatedLabel">آخرین استعلام: لحظاتی پیش</div>
+<!-- 2. MAIN MANAGEMENT VIEW (HIDDEN UNTIL AUTHENTICATED) -->
+<div id="mainView">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 460 460" fill="none">
+            <polygon points="60,160 190,120 160,260 70,300" fill="#00F5FF" opacity="0.8" />
+            <polygon points="400,160 270,120 300,260 390,300" fill="#A855F7" opacity="0.8" />
+            <polygon points="265,60 170,225 240,225 195,400 310,210 235,210" fill="#FFFFFF" stroke="#C084FC" stroke-width="8" />
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>STRONG VPN • کنترل پنل مرکزی</h1>
+          <p>مدیریت پیام‌های بازشو، کانفیگ‌ها و اطلاعات ارتباطی اپلیکیشن</p>
+        </div>
+      </div>
+      <div class="user-pill">
+        <div class="status-badge" id="connBadge">
+          <div class="status-dot"></div>
+          <span id="connStatus">اتصال برقرار است</span>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">خروج</button>
+      </div>
+    </div>
+
+    <!-- Token Bar -->
+    <div class="token-box">
+      <label>توکن اتصال به گیت‌هاب (PAT):</label>
+      <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
+      <button onclick="saveToken()">ذخیره توکن</button>
+      <button onclick="fetchCurrentConfig()">بروزرسانی داده‌ها</button>
+    </div>
+
+    <!-- Card 1: Popup Announcement -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">📢</span>
+          <span>نوتیفیکیشن بازشو اپلیکیشن (Popup Announcement)</span>
+        </div>
+        <label class="switch-container">
+          <span style="font-size: 13px; font-weight: 700;" id="switchLabel">فعال</span>
+          <div class="switch">
+            <input type="checkbox" id="annActive" onchange="updatePreview()">
+            <span class="slider"></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>نوع اعلان (نوع استایل و آیکون):</label>
+        <div class="type-selector">
+          <div class="type-chip selected" data-type="update" onclick="setType('update')">🚀 به‌روزرسانی اپلیکیشن</div>
+          <div class="type-chip" data-type="info" onclick="setType('info')">ℹ️ اطلاعیه عمومی</div>
+          <div class="type-chip" data-type="warning" onclick="setType('warning')">⚠️ هشدار مهم</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>عنوان اطلاعیه:</label>
+          <input type="text" id="annTitle" placeholder="مثال: سرورهای جدید ترکیه 🇹🇷 اضافه شدند" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group full">
+          <label>متن کامل پیام برای کاربر:</label>
+          <textarea id="annMessage" placeholder="متن توضیحات پیام را اینجا بنویسید..." oninput="updatePreview()"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>متن دکمه اقدام (اختیاری):</label>
+          <input type="text" id="annActionText" placeholder="مثال: دانلود نسخه جدید یا مشاهده" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+          <label>لینک دکمه اقدام (URL):</label>
+          <input type="text" id="annActionUrl" placeholder="https://..." dir="ltr" oninput="updatePreview()">
+        </div>
+      </div>
+
+      <!-- Live Preview -->
+      <div style="margin-top: 20px;">
+        <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 10px;">
+          📱 پیش‌نمایش نحوه نمایش پاپ‌آپ در گوشی کاربر:
+        </label>
+        <div class="preview-modal" id="previewModal">
+          <div class="preview-icon" id="prevIcon">🚀</div>
+          <div class="preview-title" id="prevTitle">عنوان اطلاعیه</div>
+          <div class="preview-body" id="prevBody">متن پیام برای کاربران برنامه در اینجا نمایش داده می‌شود.</div>
+          <button class="preview-btn" id="prevBtn">دانلود نسخه جدید</button>
+          <button class="preview-close">بستن</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Contact & Support Links -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">🔗</span>
+          <span>تنظیمات ارتباطی و پشتیبانی (پشتیبانی و آدرس سایت)</span>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>آدرس سایت شاپ (Website URL):</label>
+          <input type="text" id="siteUrl" placeholder="https://shop.strongdev.space" dir="ltr">
+          <div class="hint">دکمه «خرید اشتراک / تمدید» کاربر را به این آدرس هدایت می‌کند.</div>
+        </div>
+        <div class="form-group">
+          <label>آدرس یا آیدی پشتیبانی تلگرام (Support URL):</label>
+          <input type="text" id="supportUrl" placeholder="https://t.me/daryafti_services یا @daryafti_services" dir="ltr">
+          <div class="hint">اگر خالی باشد، دکمه پشتیبانی در برنامه به‌صورت خودکار مخفی می‌شود.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Server & Endpoints -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">⚙️</span>
+          <span>تنظیمات زیرساخت، سرور و اتصال</span>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>آدرس پنل مدیریت مشتریان (Panel Base URL):</label>
+          <input type="text" id="panelUrl" placeholder="https://sel.dev-stong.ir:2083/..." dir="ltr">
+        </div>
+        <div class="form-group">
+          <label>ساب‌دامین دریافت اشتراک (Subscription Sub-domain):</label>
+          <input type="text" id="subDomain" placeholder="sb1.dev-stong.ir:2053" dir="ltr">
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: App Versions -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">📦</span>
+          <span>مدیریت نسخه‌ها و فایل نصب APK</span>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>آخرین نسخه منتشرشده (Latest Version):</label>
+          <input type="text" id="latestVersion" placeholder="1.0.0" dir="ltr">
+        </div>
+        <div class="form-group">
+          <label>حداقل نسخه مجاز (Minimum Required Version):</label>
+          <input type="text" id="minVersion" placeholder="1.0.0" dir="ltr">
+        </div>
+        <div class="form-group full">
+          <label>لینک دانلود مستقیم فایل APK (arm64):</label>
+          <input type="text" id="apkUrl" placeholder="https://shop.strongdev.space/static/apk/StrongVPN-arm64.apk" dir="ltr">
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Fallback Configs -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">🛡️</span>
+          <span>کانفیگ‌های رزرو و اضطراری (Fallback Configs)</span>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>کانفیگ‌های رزرو (هر خط یک لینک vless:// یا vmess:// یا trojan://):</label>
+        <textarea id="fallbackConfigs" placeholder="vless://...&#10;vmess://..." dir="ltr" style="font-family: monospace; min-height: 110px;"></textarea>
+        <div class="hint">در صورتی که ساب‌دامین کاربر فیلتر باشد، برنامه از این کانفیگ‌های رزرو برای اتصال استفاده خواهد کرد.</div>
+      </div>
+    </div>
   </div>
-  <button class="save-btn" onclick="saveAndCommitToGitHub()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-      <polyline points="17 21 17 13 7 13 7 21"></polyline>
-      <polyline points="7 3 7 8 15 8"></polyline>
-    </svg>
-    <span>ذخیره و انتشار در اپلیکیشن</span>
-  </button>
+
+  <!-- Floating Bottom Bar -->
+  <div class="bottom-bar">
+    <div>
+      <div style="font-weight: 800; font-size: 15px;">ذخیره و انتشار تغییرات</div>
+      <div class="last-updated" id="lastUpdatedLabel">آخرین استعلام: لحظاتی پیش</div>
+    </div>
+    <button class="save-btn" onclick="saveAndCommitToGitHub()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+        <polyline points="7 3 7 8 15 8"></polyline>
+      </svg>
+      <span>ذخیره و انتشار در اپلیکیشن</span>
+    </button>
+  </div>
 </div>
 
 <script>
   const GITHUB_OWNER = 'y3fd';
   const GITHUB_REPO = 'strongvpn-panel';
-  const GIST_ID = '79c29175ca9625963f7650f36b3c3f7d';
   const CONFIG_PATH = 'config.json';
-  const DEFAULT_TOKEN = '';
+  const AUTH_HASH = '4ba705e5b8ff7e4e1c4cc1a802a6bb9f9c560ce55d8f92322d8ea78955b21032';
+  const SALT = 'strongvpn_panel_salt_2026';
 
   let currentSha = null;
   let selectedType = 'update';
 
-  function init() {
-    let savedToken = localStorage.getItem('svpn_gh_token');
-    if (!savedToken) {
-      savedToken = DEFAULT_TOKEN;
-      localStorage.setItem('svpn_gh_token', savedToken);
+  async function sha256(str) {
+    const enc = new TextEncoder();
+    const data = enc.encode(str);
+    const hashBuf = await crypto.subtle.digest('SHA-256', data);
+    const hashArr = Array.from(new Uint8Array(hashBuf));
+    return hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function checkAuth() {
+    const authState = localStorage.getItem('svpn_auth') || sessionStorage.getItem('svpn_auth');
+    if (authState === 'authenticated') {
+      showDashboard();
+    } else {
+      document.getElementById('loginView').style.display = 'flex';
+      document.getElementById('mainView').style.display = 'none';
     }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value.trim();
+    const remember = document.getElementById('rememberMe').checked;
+
+    const calcHash = await sha256(`${SALT}:${u.toLowerCase()}:${p}`);
+    if (calcHash === AUTH_HASH) {
+      if (remember) {
+        localStorage.setItem('svpn_auth', 'authenticated');
+      } else {
+        sessionStorage.setItem('svpn_auth', 'authenticated');
+      }
+      showDashboard();
+    } else {
+      const err = document.getElementById('loginError');
+      err.style.display = 'block';
+      const card = document.getElementById('loginCard');
+      card.classList.add('shake');
+      setTimeout(() => card.classList.remove('shake'), 400);
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('svpn_auth');
+    sessionStorage.removeItem('svpn_auth');
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('mainView').style.display = 'none';
+    document.getElementById('loginView').style.display = 'flex';
+  }
+
+  function showDashboard() {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('mainView').style.display = 'block';
+
+    const savedToken = localStorage.getItem('svpn_gh_token') || '';
     document.getElementById('ghToken').value = savedToken;
     fetchCurrentConfig();
   }
@@ -628,7 +855,7 @@
     const t = document.getElementById('ghToken').value.trim();
     if (t) {
       localStorage.setItem('svpn_gh_token', t);
-      showToast('توکن با موفقیت در مرورگر شما ذخیره شد.');
+      showToast('توکن با موفقیت ذخیره شد.');
       fetchCurrentConfig();
     }
   }
@@ -670,6 +897,7 @@
       pIcon.style.color = '#F59E0B';
       pIcon.innerText = '⚠️';
       document.getElementById('prevBtn').style.background = '#F59E0B';
+      document.getElementById('prevBtn').style.color = '#000';
     } else if (selectedType === 'info') {
       pModal.style.borderColor = 'rgba(0, 245, 255, 0.7)';
       pModal.style.boxShadow = '0 0 35px rgba(0, 245, 255, 0.3)';
@@ -692,7 +920,6 @@
   async function fetchCurrentConfig() {
     const token = document.getElementById('ghToken').value.trim();
     try {
-      // 1. Try fetching from repo contents
       const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONFIG_PATH}`, {
         headers: token ? { 'Authorization': `token ${token}` } : {}
       });
@@ -705,14 +932,6 @@
         populateForm(cfg);
         document.getElementById('connStatus').innerText = 'متصل به مخزن strongvpn-panel';
         return;
-      }
-
-      // Fallback: Fetch directly from Gist
-      const gistRes = await fetch(`https://gist.githubusercontent.com/${GITHUB_OWNER}/${GIST_ID}/raw/config.json?t=${Date.now()}`);
-      if (gistRes.ok) {
-        const cfg = await gistRes.json();
-        populateForm(cfg);
-        document.getElementById('connStatus').innerText = 'متصل به گیست مرکزی';
       }
     } catch (e) {
       console.error(e);
@@ -793,7 +1012,6 @@
     const b64Content = btoa(unescape(encodeURIComponent(jsonStr)));
 
     try {
-      // 1. Commit to strongvpn-panel repository
       const payload = {
         message: `Update Strong VPN remote config [${new Date().toISOString()}]`,
         content: b64Content,
@@ -835,7 +1053,7 @@
     setTimeout(() => { t.className = ''; }, 3500);
   }
 
-  window.onload = init;
+  window.onload = checkAuth;
 </script>
 
 </body>
