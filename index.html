@@ -785,7 +785,10 @@
   const GITHUB_OWNER = 'y3fd';
   const GITHUB_REPO = 'strongvpn-panel';
   const CONFIG_PATH = 'config.json';
-  const AUTH_HASH = '4ba705e5b8ff7e4e1c4cc1a802a6bb9f9c560ce55d8f92322d8ea78955b21032';
+  const VALID_HASHES = [
+    '9c1dec19adad88091055daa2317ffa23e980f325a30cb2fa80d30d68690bb4ac', // @yousofdaryafti
+    '3076a1c261b034ffb5b128dfb8388274b0b7b90f348d5878a0f3d9ccc55fef9a'  // yousofdaryafti
+  ];
   const SALT = 'strongvpn_panel_salt_2026';
 
   let currentSha = null;
@@ -816,7 +819,7 @@
     const remember = document.getElementById('rememberMe').checked;
 
     const calcHash = await sha256(`${SALT}:${u.toLowerCase()}:${p}`);
-    if (calcHash === AUTH_HASH) {
+    if (VALID_HASHES.includes(calcHash)) {
       if (remember) {
         localStorage.setItem('svpn_auth', 'authenticated');
       } else {
