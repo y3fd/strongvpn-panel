@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پنل مدیریت و کنترل Strong VPN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070B14;
+      --card-bg: #0E1626;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #A855F7;
+      --primary-glow: rgba(168, 85, 247, 0.35);
+      --cyan: #00F5FF;
+      --cyan-glow: rgba(0, 245, 255, 0.35);
+      --green: #10B981;
+      --yellow: #F59E0B;
+      --red: #EF4444;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --input-bg: #141E33;
+      --input-border: rgba(255, 255, 255, 0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0, 245, 255, 0.06) 0%, transparent 45%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 120px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--card-border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1C1236, #0A0E1A);
+      border: 1px solid var(--primary);
+      box-shadow: 0 0 20px var(--primary-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-text h1 {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #FFFFFF, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo-text p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 600;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+    /* Token Box */
+    .token-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .token-box label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .token-box input {
+      flex: 1;
+      min-width: 220px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: #FFF;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: monospace;
+      outline: none;
+      direction: ltr;
+    }
+    .token-box button {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFF;
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .token-box button:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      position: relative;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-title .icon {
+      font-size: 20px;
+    }
+    /* Switch */
+    .switch-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155;
+      transition: .3s;
+      border-radius: 26px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background: linear-gradient(90deg, var(--primary), var(--cyan));
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    /* Form groups */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      color: #FFF;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan-glow);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+    .form-group .hint {
+      font-size: 11.5px;
+      color: #64748B;
+      margin-top: 6px;
+    }
+    /* Type chips */
+    .type-selector {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .type-chip {
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      color: var(--text-muted);
+    }
+    .type-chip.selected {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: var(--primary);
+      color: #FFF;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+    .type-chip[data-type="warning"].selected {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: var(--yellow);
+    }
+    .type-chip[data-type="info"].selected {
+      background: rgba(0, 245, 255, 0.2);
+      border-color: var(--cyan);
+    }
+    .type-chip[data-type="update"].selected {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: var(--primary);
+    }
+    /* Mobile Mockup Preview */
+    .preview-modal {
+      background: #0D1527;
+      border: 1.5px solid rgba(168, 85, 247, 0.6);
+      box-shadow: 0 0 35px var(--primary-glow);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      max-width: 380px;
+      margin: 15px auto;
+    }
+    .preview-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(168, 85, 247, 0.15);
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 26px;
+    }
+    .preview-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .preview-body {
+      font-size: 13.5px;
+      color: #CBD5E1;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .preview-btn {
+      width: 100%;
+      background: var(--primary);
+      color: #FFF;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      margin-bottom: 10px;
+    }
+    .preview-close {
+      width: 100%;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 14px;
+      font-size: 13px;
+    }
+    /* Bottom Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(14, 22, 38, 0.85);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1000;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 24px 24px 0 0;
+    }
+    .save-btn {
+      background: linear-gradient(90deg, #A855F7, #00D2FF);
+      color: #FFF;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+      transition: all 0.2s;
+    }
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 210, 255, 0.5);
+    }
+    .save-btn:active {
+      transform: translateY(0);
+    }
+    .last-updated {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    /* Toast */
+    #toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #10B981;
+      color: #FFF;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      z-index: 2000;
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    #toast.error {
+      background: var(--red);
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast">تغییرات با موفقیت در گیت‌هاب ذخیره و منتشر شد!</div>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 460 460" fill="none">
+          <polygon points="60,160 190,120 160,260 70,300" fill="#00F5FF" opacity="0.8" />
+          <polygon points="400,160 270,120 300,260 390,300" fill="#A855F7" opacity="0.8" />
+          <polygon points="265,60 170,225 240,225 195,400 310,210 235,210" fill="#FFFFFF" stroke="#C084FC" stroke-width="8" />
+        </svg>
+      </div>
+      <div class="logo-text">
+        <h1>STRONG VPN • کنترل پنل مرکزی</h1>
+        <p>مدیریت پیام‌های بازشو، کانفیگ‌ها و اطلاعات ارتباطی اپلیکیشن</p>
+      </div>
+    </div>
+    <div class="status-badge" id="connBadge">
+      <div class="status-dot"></div>
+      <span id="connStatus">اتصال به گیت‌هاب برقرار است</span>
+    </div>
+  </div>
+
+  <!-- Token Bar -->
+  <div class="token-box">
+    <label>توکن شخصی گیت‌هاب (PAT):</label>
+    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
+    <button onclick="saveToken()">ذخیره در مرورگر</button>
+    <button onclick="fetchCurrentConfig()">بروزرسانی داده‌ها</button>
+  </div>
+
+  <!-- Card 1: Popup Announcement -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="icon">📢</span>
+        <span>نوتیفیکیشن بازشو اپلیکیشن (Popup Announcement)</span>
+      </div>
+      <label class="switch-container">
+        <span style="font-size: 13px; font-weight: 700;" id="switchLabel">فعال</span>
+        <div class="switch">
+          <input type="checkbox" id="annActive" onchange="updatePreview()">
+          <span class="slider"></span>
+        </div>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>نوع اعلان (نوع استایل و آیکون):</label>
+      <div class="type-selector">
+        <div class="type-chip selected" data-type="update" onclick="setType('update')">🚀 به‌روزرسانی اپلیکیشن</div>
+        <div class="type-chip" data-type="info" onclick="setType('info')">ℹ️ اطلاعیه عمومی</div>
+        <div class="type-chip" data-type="warning" onclick="setType('warning')">⚠️ هشدار مهم</div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>عنوان اطلاعیه:</label>
+        <input type="text" id="annTitle" placeholder="مثال: سرورهای جدید ترکیه 🇹🇷 اضافه شدند" oninput="updatePreview()">
+      </div>
+
+      <div class="form-group full">
+        <label>متن کامل پیام برای کاربر:</label>
+        <textarea id="annMessage" placeholder="متن توضیحات پیام را اینجا بنویسید..." oninput="updatePreview()"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>متن دکمه اقدام (اختیاری):</label>
+        <input type="text" id="annActionText" placeholder="مثال: دانلود نسخه جدید یا مشاهده" oninput="updatePreview()">
+      </div>
+
+      <div class="form-group">
+        <label>لینک دکمه اقدام (URL):</label>
+        <input type="text" id="annActionUrl" placeholder="https://..." dir="ltr" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <!-- Live Preview -->
+    <div style="margin-top: 20px;">
+      <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 10px;">
+        📱 پیش‌نمایش نحوه نمایش پاپ‌آپ در گوشی کاربر:
+      </label>
+      <div class="preview-modal" id="previewModal">
+        <div class="preview-icon" id="prevIcon">🚀</div>
+        <div class="preview-title" id="prevTitle">عنوان اطلاعیه</div>
+        <div class="preview-body" id="prevBody">متن پیام برای کاربران برنامه در اینجا نمایش داده می‌شود.</div>
+        <button class="preview-btn" id="prevBtn">دانلود نسخه جدید</button>
+        <button class="preview-close">بستن</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Contact & Support Links -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="icon">🔗</span>
+        <span>تنظیمات ارتباطی و پشتیبانی (پشتیبانی و آدرس سایت)</span>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>آدرس سایت شاپ (Website URL):</label>
+        <input type="text" id="siteUrl" placeholder="https://shop.strongdev.space" dir="ltr">
+        <div class="hint">دکمه «خرید اشتراک / تمدید» کاربر را به این آدرس هدایت می‌کند.</div>
+      </div>
+      <div class="form-group">
+        <label>آدرس یا آیدی پشتیبانی تلگرام (Support URL):</label>
+        <input type="text" id="supportUrl" placeholder="https://t.me/daryafti_services یا @daryafti_services" dir="ltr">
+        <div class="hint">اگر خالی باشد، دکمه پشتیبانی در برنامه به‌صورت خودکار مخفی می‌شود.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Server & Endpoints -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="icon">⚙️</span>
+        <span>تنظیمات زیرساخت، سرور و اتصال</span>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>آدرس پنل مدیریت مشتریان (Panel Base URL):</label>
+        <input type="text" id="panelUrl" placeholder="https://sel.dev-stong.ir:2083/..." dir="ltr">
+      </div>
+      <div class="form-group">
+        <label>ساب‌دامین دریافت اشتراک (Subscription Sub-domain):</label>
+        <input type="text" id="subDomain" placeholder="sb1.dev-stong.ir:2053" dir="ltr">
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: App Versions -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="icon">📦</span>
+        <span>مدیریت نسخه‌ها و فایل نصب APK</span>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>آخرین نسخه منتشرشده (Latest Version):</label>
+        <input type="text" id="latestVersion" placeholder="1.0.0" dir="ltr">
+      </div>
+      <div class="form-group">
+        <label>حداقل نسخه مجاز (Minimum Required Version):</label>
+        <input type="text" id="minVersion" placeholder="1.0.0" dir="ltr">
+      </div>
+      <div class="form-group full">
+        <label>لینک دانلود مستقیم فایل APK (arm64):</label>
+        <input type="text" id="apkUrl" placeholder="https://shop.strongdev.space/static/apk/StrongVPN-arm64.apk" dir="ltr">
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 5: Fallback Configs -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="icon">🛡️</span>
+        <span>کانفیگ‌های رزرو و اضطراری (Fallback Configs)</span>
+      </div>
+    </div>
+    <div class="form-group full">
+      <label>کانفیگ‌های رزرو (هر خط یک لینک vless:// یا vmess:// یا trojan://):</label>
+      <textarea id="fallbackConfigs" placeholder="vless://...&#10;vmess://..." dir="ltr" style="font-family: monospace; min-height: 110px;"></textarea>
+      <div class="hint">در صورتی که ساب‌دامین کاربر فیلتر باشد، برنامه از این کانفیگ‌های رزرو برای اتصال استفاده خواهد کرد.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Bottom Bar -->
+<div class="bottom-bar">
+  <div>
+    <div style="font-weight: 800; font-size: 15px;">ذخیره و انتشار تغییرات</div>
+    <div class="last-updated" id="lastUpdatedLabel">آخرین استعلام: لحظاتی پیش</div>
+  </div>
+  <button class="save-btn" onclick="saveAndCommitToGitHub()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+      <polyline points="17 21 17 13 7 13 7 21"></polyline>
+      <polyline points="7 3 7 8 15 8"></polyline>
+    </svg>
+    <span>ذخیره و انتشار در اپلیکیشن</span>
+  </button>
+</div>
+
+<script>
+  const GITHUB_OWNER = 'y3fd';
+  const GITHUB_REPO = 'strongvpn-panel';
+  const GIST_ID = '79c29175ca9625963f7650f36b3c3f7d';
+  const CONFIG_PATH = 'config.json';
+  const DEFAULT_TOKEN = '';
+
+  let currentSha = null;
+  let selectedType = 'update';
+
+  function init() {
+    let savedToken = localStorage.getItem('svpn_gh_token');
+    if (!savedToken) {
+      savedToken = DEFAULT_TOKEN;
+      localStorage.setItem('svpn_gh_token', savedToken);
+    }
+    document.getElementById('ghToken').value = savedToken;
+    fetchCurrentConfig();
+  }
+
+  function saveToken() {
+    const t = document.getElementById('ghToken').value.trim();
+    if (t) {
+      localStorage.setItem('svpn_gh_token', t);
+      showToast('توکن با موفقیت در مرورگر شما ذخیره شد.');
+      fetchCurrentConfig();
+    }
+  }
+
+  function setType(type) {
+    selectedType = type;
+    document.querySelectorAll('.type-chip').forEach(c => {
+      c.classList.toggle('selected', c.getAttribute('data-type') === type);
+    });
+    updatePreview();
+  }
+
+  function updatePreview() {
+    const active = document.getElementById('annActive').checked;
+    const title = document.getElementById('annTitle').value || 'عنوان اطلاعیه';
+    const msg = document.getElementById('annMessage').value || 'متن پیام در اینجا نمایش داده می‌شود.';
+    const actionText = document.getElementById('annActionText').value || 'مشاهده';
+    const actionUrl = document.getElementById('annActionUrl').value;
+
+    document.getElementById('switchLabel').innerText = active ? 'فعال' : 'غیرفعال';
+    document.getElementById('prevTitle').innerText = title;
+    document.getElementById('prevBody').innerText = msg;
+    document.getElementById('prevBtn').innerText = actionText;
+    document.getElementById('prevBtn').style.display = actionUrl ? 'block' : 'none';
+
+    const pModal = document.getElementById('previewModal');
+    const pIcon = document.getElementById('prevIcon');
+
+    if (!active) {
+      pModal.style.opacity = '0.35';
+    } else {
+      pModal.style.opacity = '1';
+    }
+
+    if (selectedType === 'warning') {
+      pModal.style.borderColor = 'rgba(245, 158, 11, 0.7)';
+      pModal.style.boxShadow = '0 0 35px rgba(245, 158, 11, 0.3)';
+      pIcon.style.borderColor = '#F59E0B';
+      pIcon.style.color = '#F59E0B';
+      pIcon.innerText = '⚠️';
+      document.getElementById('prevBtn').style.background = '#F59E0B';
+    } else if (selectedType === 'info') {
+      pModal.style.borderColor = 'rgba(0, 245, 255, 0.7)';
+      pModal.style.boxShadow = '0 0 35px rgba(0, 245, 255, 0.3)';
+      pIcon.style.borderColor = '#00F5FF';
+      pIcon.style.color = '#00F5FF';
+      pIcon.innerText = 'ℹ️';
+      document.getElementById('prevBtn').style.background = '#00F5FF';
+      document.getElementById('prevBtn').style.color = '#000';
+    } else {
+      pModal.style.borderColor = 'rgba(168, 85, 247, 0.7)';
+      pModal.style.boxShadow = '0 0 35px rgba(168, 85, 247, 0.3)';
+      pIcon.style.borderColor = '#A855F7';
+      pIcon.style.color = '#A855F7';
+      pIcon.innerText = '🚀';
+      document.getElementById('prevBtn').style.background = '#A855F7';
+      document.getElementById('prevBtn').style.color = '#FFF';
+    }
+  }
+
+  async function fetchCurrentConfig() {
+    const token = document.getElementById('ghToken').value.trim();
+    try {
+      // 1. Try fetching from repo contents
+      const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONFIG_PATH}`, {
+        headers: token ? { 'Authorization': `token ${token}` } : {}
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        currentSha = data.sha;
+        const decoded = decodeURIComponent(escape(atob(data.content)));
+        const cfg = JSON.parse(decoded);
+        populateForm(cfg);
+        document.getElementById('connStatus').innerText = 'متصل به مخزن strongvpn-panel';
+        return;
+      }
+
+      // Fallback: Fetch directly from Gist
+      const gistRes = await fetch(`https://gist.githubusercontent.com/${GITHUB_OWNER}/${GIST_ID}/raw/config.json?t=${Date.now()}`);
+      if (gistRes.ok) {
+        const cfg = await gistRes.json();
+        populateForm(cfg);
+        document.getElementById('connStatus').innerText = 'متصل به گیست مرکزی';
+      }
+    } catch (e) {
+      console.error(e);
+      document.getElementById('connStatus').innerText = 'خطا در بارگذاری اولیه داده‌ها';
+    }
+  }
+
+  function populateForm(cfg) {
+    if (cfg.announcement) {
+      document.getElementById('annActive').checked = !!cfg.announcement.active;
+      document.getElementById('annTitle').value = cfg.announcement.title || '';
+      document.getElementById('annMessage').value = cfg.announcement.message || '';
+      document.getElementById('annActionText').value = cfg.announcement.action_text || '';
+      document.getElementById('annActionUrl').value = cfg.announcement.action_url || '';
+      setType(cfg.announcement.type || 'update');
+    }
+
+    if (cfg.endpoints) {
+      document.getElementById('siteUrl').value = cfg.endpoints.website_url || cfg.endpoints.shop_base_url || '';
+      document.getElementById('supportUrl').value = cfg.endpoints.support_url || '';
+      document.getElementById('panelUrl').value = cfg.endpoints.panel_base_url || '';
+      document.getElementById('subDomain').value = cfg.endpoints.sub_domain || '';
+    }
+
+    if (cfg.app) {
+      document.getElementById('latestVersion').value = cfg.app.latest_version || '1.0.0';
+      document.getElementById('minVersion').value = cfg.app.min_version || '1.0.0';
+      document.getElementById('apkUrl').value = cfg.app.apk_url || '';
+    }
+
+    if (cfg.fallback_configs && Array.isArray(cfg.fallback_configs)) {
+      document.getElementById('fallbackConfigs').value = cfg.fallback_configs.join('\n');
+    }
+
+    updatePreview();
+    document.getElementById('lastUpdatedLabel').innerText = 'بروزرسانی شد: ' + new Date().toLocaleTimeString('fa-IR');
+  }
+
+  async function saveAndCommitToGitHub() {
+    const token = document.getElementById('ghToken').value.trim();
+    if (!token) {
+      showToast('لطفاً ابتدا توکن شخصی گیت‌هاب را وارد کنید.', true);
+      return;
+    }
+
+    const fallbacks = document.getElementById('fallbackConfigs').value
+      .split('\n')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    const configObj = {
+      version: Date.now(),
+      announcement: {
+        id: Math.floor(Date.now() / 1000),
+        active: document.getElementById('annActive').checked,
+        type: selectedType,
+        title: document.getElementById('annTitle').value.trim(),
+        message: document.getElementById('annMessage').value.trim(),
+        action_text: document.getElementById('annActionText').value.trim(),
+        action_url: document.getElementById('annActionUrl').value.trim()
+      },
+      endpoints: {
+        website_url: document.getElementById('siteUrl').value.trim(),
+        support_url: document.getElementById('supportUrl').value.trim(),
+        panel_base_url: document.getElementById('panelUrl').value.trim(),
+        sub_domain: document.getElementById('subDomain').value.trim(),
+        shop_base_url: document.getElementById('siteUrl').value.trim()
+      },
+      app: {
+        latest_version: document.getElementById('latestVersion').value.trim(),
+        min_version: document.getElementById('minVersion').value.trim(),
+        apk_url: document.getElementById('apkUrl').value.trim()
+      },
+      fallback_configs: fallbacks
+    };
+
+    const jsonStr = JSON.stringify(configObj, null, 2);
+    const b64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    try {
+      // 1. Commit to strongvpn-panel repository
+      const payload = {
+        message: `Update Strong VPN remote config [${new Date().toISOString()}]`,
+        content: b64Content,
+        branch: 'main'
+      };
+      if (currentSha) {
+        payload.sha = currentSha;
+      }
+
+      const putRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONFIG_PATH}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (putRes.ok) {
+        const resData = await putRes.json();
+        currentSha = resData.content.sha;
+        showToast('تغییرات با موفقیت در گیت‌هاب ذخیره و منتشر شد!');
+        document.getElementById('lastUpdatedLabel').innerText = 'ذخیره شد: ' + new Date().toLocaleTimeString('fa-IR');
+      } else {
+        const err = await putRes.json();
+        showToast('خطا در ذخیره مخزن: ' + (err.message || 'نامشخص'), true);
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('خطا در ارتباط با سرور گیت‌هاب', true);
+    }
+  }
+
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.className = isError ? 'error show' : 'show';
+    setTimeout(() => { t.className = ''; }, 3500);
+  }
+
+  window.onload = init;
+</script>
+
+</body>
+</html>
