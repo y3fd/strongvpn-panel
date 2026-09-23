@@ -4,7 +4,7 @@
     "id": 1,
     "active": false,
     "title": "اطلاعیه Strong VPN",
-    "message": "به Strong VPN خوش آمدید. سرورهای پرسرعت فعال هستند.",
+    "message": "به Strong VPN خوش آمدید. وضعیت سرورها پایدار است.",
     "type": "info",
     "action_text": "دانلود نسخه جدید",
     "action_url": "https://shop.strongdev.space/static/apk/StrongVPN-arm64.apk"
@@ -12,8 +12,8 @@
   "endpoints": {
     "website_url": "https://shop.strongdev.space",
     "support_url": "",
-    "panel_base_url": "https://sel.dev-stong.ir:2083/KZzbJuUKjXkBat0MfS",
-    "sub_domain": "sb1.dev-stong.ir:2053",
+    "panel_base_url": "",
+    "sub_domain": "",
     "shop_base_url": "https://shop.strongdev.space"
   },
   "app": {
