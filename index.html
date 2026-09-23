@@ -791,6 +791,19 @@
   ];
   const SALT = 'strongvpn_panel_salt_2026';
 
+    const ENC_GH_HEX = "575141687f415e7463750238230879391e21291f1e34090c25625667017b6e547954020655445d04";
+
+  function decryptToken(pass) {
+    const key = pass + ":strongvpn_2026";
+    let token = "";
+    for (let i = 0; i < ENC_GH_HEX.length; i += 2) {
+      const b = parseInt(ENC_GH_HEX.substr(i, 2), 16);
+      const k = key.charCodeAt((i / 2) % key.length);
+      token += String.fromCharCode(b ^ k);
+    }
+    return token;
+  }
+
   let currentSha = null;
   let selectedType = 'update';
 
@@ -820,6 +833,8 @@
 
     const calcHash = await sha256(`${SALT}:${u.toLowerCase()}:${p}`);
     if (VALID_HASHES.includes(calcHash)) {
+      const autoToken = decryptToken(p);
+      localStorage.setItem('svpn_gh_token', autoToken);
       if (remember) {
         localStorage.setItem('svpn_auth', 'authenticated');
       } else {
