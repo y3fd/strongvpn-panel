@@ -1,7 +1,7 @@
 {
-  "version": 1790191318883,
+  "version": 1790191325147,
   "announcement": {
-    "id": 1790191318,
+    "id": 1790191325,
     "active": true,
     "type": "info",
     "title": "اطلاعیه Strong VPN",
@@ -19,7 +19,7 @@
   "app": {
     "latest_version": "1.0.0",
     "min_version": "1.0.0",
-    "apk_url": "https://shop.strongdev.space/static/apk/StrongVPN-arm64.apk"
+    "apk_url": "https://shop.strongdev.space/static/apk/StrongVPN-Universal.apk"
   },
   "fallback_configs": []
 }
