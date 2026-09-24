@@ -1,12 +1,12 @@
 {
-  "version": 1790240090942,
+  "version": 1790240202085,
   "announcement": {
-    "id": 1790240090,
+    "id": 1790240202,
     "active": true,
     "type": "update",
-    "title": "اطلاعیه Strong VPN",
-    "message": "به Strong VPN خوش آمدید. وضعیت سرورها پایدار است.",
-    "action_text": "دانلود نسخه جدید 2",
+    "title": "اطلاعیه",
+    "message": "نسخه جدید اپلیکیشن",
+    "action_text": "دانلود نسخه جدید",
     "action_url": "https://shop.strongdev.space/static/apk/StrongVPN-Universal.apk"
   },
   "endpoints": {
@@ -21,5 +21,7 @@
     "min_version": "1.0.0",
     "apk_url": "https://shop.strongdev.space/static/apk/StrongVPN-Universal.apk"
   },
-  "fallback_configs": []
+  "fallback_configs": [
+    "ss://YWVzLTEyOC1nY206SjFQd2VwcnBqT2s2MVBuaUVrVUJ4dw==@185.235.198.128:2002?type=tcp#%F0%9F%87%A9%F0%9F%87%AA%20%F0%9D%90%83%F0%9D%90%84%20%E2%97%8F%20%F0%9D%90%93%20%E2%97%8F%20PNet-79744%20%F0%9F%AB%86"
+  ]
 }
