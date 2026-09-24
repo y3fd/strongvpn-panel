@@ -756,11 +756,27 @@
           <span class="icon">🛡️</span>
           <span>کانفیگ‌های رزرو و اضطراری (Fallback Configs)</span>
         </div>
+        <div style="font-size: 12px; color: #00E676; font-weight: bold; background: rgba(0,230,118,0.12); padding: 3px 10px; border-radius: 8px;" id="fallbackCountBadge">۰ سرور</div>
       </div>
       <div class="form-group full">
-        <label>کانفیگ‌های رزرو (هر خط یک لینک vless:// یا vmess:// یا trojan://):</label>
-        <textarea id="fallbackConfigs" placeholder="vless://...&#10;vmess://..." dir="ltr" style="font-family: monospace; min-height: 110px;"></textarea>
-        <div class="hint">در صورتی که ساب‌دامین کاربر فیلتر باشد، برنامه از این کانفیگ‌های رزرو برای اتصال استفاده خواهد کرد.</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+          <label style="margin-bottom: 0;">کانفیگ‌های رزرو (خط‌به‌خط یا کد آرایه JSON):</label>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" onclick="formatFallbackAsJson()" style="background: rgba(26,109,255,0.15); color: #1a6dff; border: 1px solid rgba(26,109,255,0.3); border-radius: 8px; padding: 4px 10px; font-size: 11.5px; cursor: pointer; font-family: inherit;">تبدیل به JSON</button>
+            <button type="button" onclick="formatFallbackAsLines()" style="background: rgba(16,216,118,0.15); color: #10d876; border: 1px solid rgba(16,216,118,0.3); border-radius: 8px; padding: 4px 10px; font-size: 11.5px; cursor: pointer; font-family: inherit;">تبدیل به خطی</button>
+          </div>
+        </div>
+        <textarea id="fallbackConfigs" placeholder="vless://...&#10;vmess://...&#10;یا کد JSON: [&quot;vless://...&quot;, &quot;ss://...&quot;]" dir="ltr" style="font-family: monospace; min-height: 115px;" oninput="onFallbackConfigsChanged()"></textarea>
+        <div class="hint">پشتیبانی همزمان از لینک‌های vless, vmess, trojan, ss و ساختار JSON. نام سرورها به صورت هوشمند شناسایی شده و در زیر قابل ویرایش است.</div>
+
+        <!-- Dynamic Server Name Editor Container -->
+        <div id="fallbackEditorContainer" style="margin-top: 14px; display: none;">
+          <div style="font-size: 12.5px; font-weight: bold; margin-bottom: 8px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+            <span>✏️ ویرایش نام سرورها:</span>
+            <span style="font-size: 11px; color: var(--text-secondary); font-weight: normal;">(تغییر نام در این کادرها، نام سرور را در کانفیگ اصلاح می‌کند)</span>
+          </div>
+          <div id="fallbackServerList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -983,10 +999,164 @@
 
     if (cfg.fallback_configs && Array.isArray(cfg.fallback_configs)) {
       document.getElementById('fallbackConfigs').value = cfg.fallback_configs.join('\n');
+      onFallbackConfigsChanged();
     }
 
     updatePreview();
     document.getElementById('lastUpdatedLabel').innerText = 'بروزرسانی شد: ' + new Date().toLocaleTimeString('fa-IR');
+  }
+
+  function extractServerInfo(uri) {
+    uri = (uri || '').trim();
+    if (!uri) return null;
+    let proto = (uri.split('://')[0] || 'proxy').toLowerCase();
+    let name = '';
+    let host = '';
+    let port = '';
+
+    if (uri.includes('#')) {
+      const parts = uri.split('#');
+      try {
+        name = decodeURIComponent(parts[1]);
+      } catch (_) {
+        name = parts[1];
+      }
+    }
+
+    try {
+      if (proto === 'vmess') {
+        const b64 = uri.replace('vmess://', '');
+        const jsonStr = decodeURIComponent(escape(atob(b64)));
+        const obj = JSON.parse(jsonStr);
+        name = obj.ps || name;
+        host = obj.add || '';
+        port = obj.port || '';
+      } else {
+        const cleanUri = uri.split('#')[0];
+        const u = new URL(cleanUri);
+        host = u.hostname;
+        port = u.port;
+      }
+    } catch (_) {}
+
+    return { uri, proto, name: name || 'بدون نام', host, port };
+  }
+
+  function getFallbackUris() {
+    const raw = (document.getElementById('fallbackConfigs')?.value || '').trim();
+    if (!raw) return [];
+    if (raw.startsWith('[') || raw.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          return parsed.map(s => typeof s === 'string' ? s.trim() : (s.uri || s.url || '')).filter(Boolean);
+        } else if (parsed.fallback_configs && Array.isArray(parsed.fallback_configs)) {
+          return parsed.fallback_configs.filter(Boolean);
+        }
+      } catch (_) {}
+    }
+    return raw.split('\n').map(s => s.trim()).filter(s => s.length > 0 && !s.startsWith('//') && !s.startsWith('#'));
+  }
+
+  function onFallbackConfigsChanged() {
+    const uris = getFallbackUris();
+    const countBadge = document.getElementById('fallbackCountBadge');
+    if (countBadge) countBadge.innerText = uris.length + ' سرور';
+
+    const container = document.getElementById('fallbackEditorContainer');
+    const listEl = document.getElementById('fallbackServerList');
+    if (!container || !listEl) return;
+
+    if (uris.length === 0) {
+      container.style.display = 'none';
+      listEl.innerHTML = '';
+      return;
+    }
+
+    container.style.display = 'block';
+    listEl.innerHTML = '';
+
+    uris.forEach((uri, idx) => {
+      const info = extractServerInfo(uri) || { uri, proto: 'proxy', name: 'سرور ' + (idx + 1), host: '', port: '' };
+      const row = document.createElement('div');
+      row.style = 'display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 12px;';
+
+      const protoColors = {
+        vless: '#00e676',
+        vmess: '#1a6dff',
+        trojan: '#9c27b0',
+        ss: '#ff9100'
+      };
+      const protoColor = protoColors[info.proto] || '#00e676';
+      row.innerHTML = `
+        <div style="display: flex; flex-direction: column; min-width: 90px;">
+          <span style="font-size: 11px; font-weight: bold; color: ${protoColor}; text-transform: uppercase;">${info.proto}</span>
+          <span style="font-size: 10.5px; color: var(--text-secondary); direction: ltr; font-family: monospace;">${info.host ? info.host + (info.port ? ':' + info.port : '') : ''}</span>
+        </div>
+        <input type="text" class="server-name-edit" data-index="${idx}" value="${info.name.replace(/"/g, '&quot;')}" placeholder="نام نمایشی سرور" style="flex: 1; padding: 7px 10px; font-size: 12.5px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.25); color: var(--text-primary); font-family: inherit;" oninput="updateServerName(${idx}, this.value)">
+        <button type="button" onclick="removeServer(${idx})" style="background: transparent; border: none; color: #ff5252; cursor: pointer; padding: 4px; font-size: 14px;" title="حذف">✕</button>
+      `;
+      listEl.appendChild(row);
+    });
+  }
+
+  function updateServerName(index, newName) {
+    const uris = getFallbackUris();
+    if (index >= uris.length) return;
+    let uri = uris[index];
+    const proto = uri.split('://')[0].toLowerCase();
+
+    if (proto === 'vmess') {
+      try {
+        const b64 = uri.replace('vmess://', '');
+        const jsonStr = decodeURIComponent(escape(atob(b64)));
+        const obj = JSON.parse(jsonStr);
+        obj.ps = newName;
+        uri = 'vmess://' + btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+      } catch (_) {
+        if (uri.includes('#')) uri = uri.split('#')[0] + '#' + encodeURIComponent(newName);
+        else uri = uri + '#' + encodeURIComponent(newName);
+      }
+    } else {
+      if (uri.includes('#')) {
+        uri = uri.split('#')[0] + '#' + encodeURIComponent(newName);
+      } else {
+        uri = uri + '#' + encodeURIComponent(newName);
+      }
+    }
+    uris[index] = uri;
+    const isJson = (document.getElementById('fallbackConfigs').value.trim()).startsWith('[');
+    if (isJson) {
+      document.getElementById('fallbackConfigs').value = JSON.stringify(uris, null, 2);
+    } else {
+      document.getElementById('fallbackConfigs').value = uris.join('\n');
+    }
+  }
+
+  function removeServer(index) {
+    const uris = getFallbackUris();
+    if (index < uris.length) {
+      uris.splice(index, 1);
+      const isJson = (document.getElementById('fallbackConfigs').value.trim()).startsWith('[');
+      if (isJson) {
+        document.getElementById('fallbackConfigs').value = uris.length ? JSON.stringify(uris, null, 2) : '';
+      } else {
+        document.getElementById('fallbackConfigs').value = uris.join('\n');
+      }
+      onFallbackConfigsChanged();
+    }
+  }
+
+  function formatFallbackAsJson() {
+    const uris = getFallbackUris();
+    document.getElementById('fallbackConfigs').value = JSON.stringify(uris, null, 2);
+    onFallbackConfigsChanged();
+  }
+
+  function formatFallbackAsLines() {
+    const uris = getFallbackUris();
+    document.getElementById('fallbackConfigs').value = uris.join('\n');
+    onFallbackConfigsChanged();
   }
 
   async function saveAndCommitToGitHub() {
@@ -996,10 +1166,7 @@
       return;
     }
 
-    const fallbacks = document.getElementById('fallbackConfigs').value
-      .split('\n')
-      .map(s => s.trim())
-      .filter(s => s.length > 0);
+    const fallbacks = getFallbackUris();
 
     const configObj = {
       version: Date.now(),
