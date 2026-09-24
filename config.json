@@ -1,9 +1,9 @@
 {
-  "version": 1790233400618,
+  "version": 1790240090942,
   "announcement": {
-    "id": 1790233400,
+    "id": 1790240090,
     "active": true,
-    "type": "info",
+    "type": "update",
     "title": "اطلاعیه Strong VPN",
     "message": "به Strong VPN خوش آمدید. وضعیت سرورها پایدار است.",
     "action_text": "دانلود نسخه جدید 2",
