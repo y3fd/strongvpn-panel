@@ -1,13 +1,13 @@
 {
-  "version": 1790270406386,
+  "version": 1790270801902,
   "announcement": {
-    "id": 1790270406,
+    "id": 1790267432,
     "active": true,
     "type": "update",
     "title": "اطلاعیه",
     "message": "نسخه جدید اپلیکیشن",
     "action_text": "دانلود نسخه جدید",
-    "action_url": "https://auth.djanah99.ir/download/universal"
+    "action_url": "https://shop.strongdev.space/static/apk/StrongVPN-Universal.apk"
   },
   "endpoints": {
     "website_url": "https://shop.strongdev.space",
@@ -19,7 +19,11 @@
   "app": {
     "latest_version": "1.0.0",
     "min_version": "1.0.0",
-    "apk_url": "https://auth.djanah99.ir/download/universal"
+    "apk_url": "https://auth.djanah99.ir/download/universal",
+    "apk_arm64_url": "https://auth.djanah99.ir/download/arm64",
+    "windows_url": "https://auth.djanah99.ir/download/windows",
+    "windows_portable_url": "https://auth.djanah99.ir/download/windows-portable"
   },
-  "fallback_configs": []
+  "fallback_configs": [],
+  "clear_cache_revision": 3
 }
