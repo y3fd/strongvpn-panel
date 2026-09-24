@@ -1,7 +1,7 @@
 {
-  "version": 1790240269148,
+  "version": 1790242101318,
   "announcement": {
-    "id": 1790240269,
+    "id": 1790242101,
     "active": true,
     "type": "update",
     "title": "اطلاعیه",
@@ -22,6 +22,6 @@
     "apk_url": "https://shop.strongdev.space/static/apk/StrongVPN-Universal.apk"
   },
   "fallback_configs": [
-    "ss://YWVzLTEyOC1nY206SjFQd2VwcnBqT2s2MVBuaUVrVUJ4dw==@185.235.198.128:2002?type=tcp#%F0%9F%87%A9%F0%9F%87%AA%20%F0%9D%90%83%F0%9D%90%84%20%E2%97%8F%20%F0%9D%90%93%20%E2%97%8F%20PNet-79744%20%F0%9F%AB%86"
+    "ss://YWVzLTEyOC1nY206SjFQd2VwcnBqT2s2MVBuaUVrVUJ4dw==@185.235.198.128:2002?type=tcp#%F0%9F%87%A9%F0%9F%87%AA%20%D8%A2%D9%84%D9%85%D8%A7%D9%86"
   ]
 }
