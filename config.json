@@ -1,5 +1,5 @@
 {
-  "version": 1790269652088,
+  "version": 1790269685372,
   "announcement": {
     "id": 1790267432,
     "active": true,
@@ -21,6 +21,8 @@
     "min_version": "1.0.0",
     "apk_url": "https://shop.strongdev.space/static/apk/StrongVPN-Universal.apk"
   },
-  "fallback_configs": [],
+  "fallback_configs": [
+    "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTp0ZXN0@1.1.1.1:443#TestEmergency"
+  ],
   "clear_cache_revision": 3
 }
