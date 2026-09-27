@@ -780,6 +780,80 @@
       </div>
     </div>
 
+    <!-- Card 7: Free Tier Server Management -->
+    <div class="card" id="freeConfigsCard">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">⚡</span>
+          <span>مدیریت سرورهای رایگان (Free Tier Servers)</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" onclick="testFreeServersHealth()" style="background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+            ⚡ تست سلامت و اتصال سرورها
+          </button>
+          <button type="button" onclick="fetchFreeConfigsFromWorker()" style="background: rgba(0,245,255,0.15); color: #00F5FF; border: 1px solid rgba(0,245,255,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+            🔄 بارگذاری مجدد
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>افزودن سرور رایگان جدید:</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <input type="text" id="newFreeConfigName" placeholder="نام نمایشی (مثال: 🇩🇪 آلمان رایگان)" style="flex: 1; min-width: 170px;">
+          <input type="text" id="newFreeConfigUri" placeholder="لینک کانفیگ (vless://, vmess://, ss://, trojan://)" dir="ltr" style="flex: 2; min-width: 240px;">
+          <button type="button" onclick="addNewFreeConfig()" style="background: linear-gradient(90deg, #10B981, #059669); color: #FFF; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; font-family: inherit;">
+            ➕ ثبت سرور
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top: 14px;">
+        <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 8px;">
+          لیست سرورهای رایگان فعال (اهدایی در تماشای تبلیغ):
+        </label>
+        <div id="freeConfigsList" style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 15px;">در حال دریافت سرورها...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8: Client Error Telemetry Viewer -->
+    <div class="card" id="clientErrorsCard">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">📊</span>
+          <span>لاگ و گزارش خطاهای کاربران (Client Error Telemetry)</span>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <button type="button" onclick="fetchClientErrorsFromWorker()" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+            🔄 تازه‌سازی
+          </button>
+          <button type="button" onclick="clearClientErrorsFromWorker()" style="background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+            🗑️ پاکسازی لاگ
+          </button>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto; max-height: 280px; overflow-y: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--input-border); color: var(--text-muted); background: rgba(0,0,0,0.2);">
+              <th style="padding: 8px 10px;">زمان</th>
+              <th style="padding: 8px 10px;">مرحله</th>
+              <th style="padding: 8px 10px;">شماره / شناسه</th>
+              <th style="padding: 8px 10px;">شرح خطا</th>
+            </tr>
+          </thead>
+          <tbody id="clientErrorsTableBody">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: 16px; color: var(--text-muted);">در حال دریافت لاگ‌ها...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Card 6: In-App Ads & Free Access -->
     <div class="card" id="adSettingsCard">
       <div class="card-header">
@@ -1002,6 +1076,8 @@
     const savedToken = localStorage.getItem('svpn_gh_token') || '';
     document.getElementById('ghToken').value = savedToken;
     fetchCurrentConfig();
+    fetchFreeConfigsFromWorker();
+    fetchClientErrorsFromWorker();
   }
 
   function saveToken() {
@@ -1132,6 +1208,204 @@
 
   const CF_WORKER_API = 'https://auth.djanah99.ir';
   const CF_ADMIN_SECRET = '80136a8179fa1e1f81749a3ac3cce568';
+
+  // ---------------- Free Configs Management ----------------
+  async function testFreeServersHealth() {
+  const secret = (document.getElementById('cfSecretInput')?.value || '').trim() || CF_ADMIN_SECRET;
+  showToast('در حال بررسی پورت و سلامت سرورها...');
+  try {
+    const res = await fetch(`${CF_WORKER_API}/api/admin/free-configs/health`, {
+      headers: { 'X-Admin-Secret': secret }
+    });
+    const d = await res.json();
+    if (d.success && Array.isArray(d.servers)) {
+      for (const s of d.servers) {
+        const badge = document.getElementById(`server-badge-${s.id}`);
+        if (badge) {
+          if (s.host && s.port) {
+            badge.innerHTML = `<span style="color: #10B981; font-weight: 700;">🟢 آنلاین (${s.host}:${s.port})</span>`;
+          } else {
+            badge.innerHTML = `<span style="color: #F87171; font-weight: 700;">🔴 فرمت نامعتبر</span>`;
+          }
+        }
+      }
+      showToast('بررسی سلامت سرورها با موفقیت انجام شد');
+    }
+  } catch (err) {
+    showToast('خطا در بررسی سلامت سرورها: ' + err.message, true);
+  }
+}
+
+async function fetchFreeConfigsFromWorker() {
+    const listEl = document.getElementById('freeConfigsList');
+    if (!listEl) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/free-configs`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (!data.success || !Array.isArray(data.configs)) {
+        listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در دریافت سرورهای رایگان</div>';
+        return;
+      }
+      if (data.configs.length === 0) {
+        listEl.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 10px;">هیچ سرور رایگانی ثبت نشده است.</div>';
+        return;
+      }
+      listEl.innerHTML = '';
+      data.configs.forEach(cfg => {
+        const item = document.createElement('div');
+        item.style = 'display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 14px;';
+        
+        const isAct = cfg.active === 1;
+        const shortUri = cfg.uri.length > 50 ? cfg.uri.slice(0, 48) + '...' : cfg.uri;
+        item.innerHTML = `
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-weight: 700; font-size: 13.5px; color: #FFF;">${cfg.name || 'بدون نام'}</span>
+              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; ${isAct ? 'background: rgba(16,185,129,0.15); color: #10B981;' : 'background: rgba(239,68,68,0.15); color: #F87171;'}">
+                ${isAct ? 'فعال' : 'غیرفعال'}
+              </span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); font-family: monospace; direction: ltr; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${shortUri}
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" onclick="toggleFreeConfig(${cfg.id})" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">
+              ${isAct ? 'غیرفعال کردن' : 'فعال‌سازی'}
+            </button>
+            <button type="button" onclick="deleteFreeConfig(${cfg.id})" style="background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">
+              حذف
+            </button>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+    } catch (e) {
+      console.error(e);
+      listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در ارتباط با ورکر کلودفلر</div>';
+    }
+  }
+
+  async function addNewFreeConfig() {
+    const name = document.getElementById('newFreeConfigName').value.trim();
+    const uri = document.getElementById('newFreeConfigUri').value.trim();
+    if (!name || !uri) {
+      showToast('لطفاً هم نام و هم لینک کانفیگ را وارد کنید.', true);
+      return;
+    }
+    showToast('در حال ثبت سرور رایگان...');
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/free-configs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ name, uri })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('سرور رایگان با موفقیت اضافه شد!');
+        document.getElementById('newFreeConfigName').value = '';
+        document.getElementById('newFreeConfigUri').value = '';
+        fetchFreeConfigsFromWorker();
+      } else {
+        showToast('خطا: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (e) {
+      showToast('خطا در ارتباط با سرور', true);
+    }
+  }
+
+  async function toggleFreeConfig(id) {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/free-configs/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ action: 'toggle' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'وضعیت تغییر یافت');
+        fetchFreeConfigsFromWorker();
+      }
+    } catch (_) {}
+  }
+
+  async function deleteFreeConfig(id) {
+    if (!confirm('آیا از حذف این سرور رایگان اطمینان دارید؟')) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/free-configs/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ action: 'delete' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'سرور حذف شد');
+        fetchFreeConfigsFromWorker();
+      }
+    } catch (_) {}
+  }
+
+  // ---------------- Client Errors Telemetry ----------------
+  async function fetchClientErrorsFromWorker() {
+    const tbody = document.getElementById('clientErrorsTableBody');
+    if (!tbody) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/client-errors`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (!data.success || !Array.isArray(data.errors)) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #F87171; padding: 12px;">خطا در دریافت لاگ خطاها</td></tr>';
+        return;
+      }
+      if (data.errors.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #10B981; padding: 14px;">✅ هیچ خطایی از سمت کاربران گزارش نشده است.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = '';
+      data.errors.forEach(err => {
+        const tr = document.createElement('tr');
+        tr.style = 'border-bottom: 1px solid rgba(255,255,255,0.05);';
+        const d = new Date(err.created_at * 1000);
+        const timeStr = d.toLocaleDateString('fa-IR') + ' ' + d.toLocaleTimeString('fa-IR');
+        tr.innerHTML = `
+          <td style="padding: 8px 10px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">${timeStr}</td>
+          <td style="padding: 8px 10px; font-weight: 700; color: #38bdf8;">${err.stage}</td>
+          <td style="padding: 8px 10px; font-family: monospace; direction: ltr; color: #CBD5E1;">${err.phone || '-'}</td>
+          <td style="padding: 8px 10px; color: #FCA5A5; line-height: 1.4;">${err.message}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (_) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #F87171; padding: 12px;">خطا در ارتباط با سرور</td></tr>';
+    }
+  }
+
+  async function clearClientErrorsFromWorker() {
+    if (!confirm('آیا از پاکسازی تمام لاگ‌های خطای کاربران اطمینان دارید؟')) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/client-errors`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('لاگ‌ها با موفقیت پاک شدند');
+        fetchClientErrorsFromWorker();
+      }
+    } catch (_) {}
+  }
 
   function selectAdPreset(preset) {
     if (preset === 'plan100') {
