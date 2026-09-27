@@ -779,6 +779,124 @@
         </div>
       </div>
     </div>
+
+    <!-- Card 6: In-App Ads & Free Access -->
+    <div class="card" id="adSettingsCard">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">🎁</span>
+          <span>تبلیغات درون‌برنامه‌ای و اتصال رایگان (In-App Ads)</span>
+        </div>
+        <label class="switch-container">
+          <span style="font-size: 13px; font-weight: 700;" id="adSwitchLabel">فعال</span>
+          <div class="switch">
+            <input type="checkbox" id="adActive" onchange="updateAdPreview()" checked>
+            <span class="slider"></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="form-group full">
+        <label>انتخاب سریع بنر تبلیغ (یا آپلود تصویر سفارشی):</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+          <button type="button" onclick="selectAdPreset('plan100')" style="background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 700; font-family: inherit;">
+            🔥 بنر پلن ویژه ۱۰۰ گیگ (جدید)
+          </button>
+          <button type="button" onclick="selectAdPreset('default')" style="background: rgba(14,165,233,0.15); color: #38bdf8; border: 1px solid rgba(14,165,233,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 700; font-family: inherit;">
+            ⭐ بنر ۵ ساعت دسترسی (پیش‌فرض)
+          </button>
+          <label style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 700; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; margin: 0;">
+            <span>📤 آپلود تصویر بنر از گوشی</span>
+            <input type="file" id="adImageUpload" accept="image/*" style="display: none;" onchange="handleAdImageUpload(event)">
+          </label>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>آدرس تصویر بنر تبلیغ (Banner Image URL):</label>
+          <input type="text" id="adImageUrl" placeholder="https://auth.djanah99.ir/ad/plan100.jpg" dir="ltr" oninput="updateAdPreview()">
+          <div class="hint">تصویر بنر در کادر تبلیغ اپلیکیشن نمایش داده می‌شود (نسبت مناسب: 4:5 یا 9:16).</div>
+        </div>
+
+        <div class="form-group">
+          <label>عنوان تبلیغ (اختیاری در حالت بنر تصویری):</label>
+          <input type="text" id="adTitle" placeholder="پلن ویژه جدید اضافه شد!" oninput="updateAdPreview()">
+        </div>
+
+        <div class="form-group">
+          <label>لینک مقصد کلیک دکمه خرید/ربات (اختیاری):</label>
+          <input type="text" id="adLink" placeholder="https://t.me/strong1vpn_bot" dir="ltr">
+        </div>
+
+        <div class="form-group full">
+          <label>متن توضیحات تبلیغ (در صورت عدم نمایش تصویر):</label>
+          <textarea id="adBody" placeholder="با دیدن این تبلیغ ۵ ساعت اتصال رایگان بگیرید..." oninput="updateAdPreview()" style="min-height: 70px;"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>حداقل زمان تماشای تبلیغ (ثانیه):</label>
+          <input type="number" id="adWatchSec" value="15" min="5" max="120" oninput="updateAdPreview()">
+          <div class="hint">کاربر باید این مقدار ثانیه را تماشا کند تا پاداش فعال شود.</div>
+        </div>
+
+        <div class="form-group">
+          <label>مدت زمان هدیه اتصال (ساعت):</label>
+          <input type="number" id="adRewardHours" value="5" min="1" max="72" oninput="updateAdPreview()">
+          <div class="hint">هر بار دیدن تبلیغ چند ساعت اتصال رایگان اضافه می‌کند (پیش‌فرض: ۵ ساعت).</div>
+        </div>
+
+        <div class="form-group">
+          <label>سقف مجاز تماشای تبلیغ در هر روز:</label>
+          <input type="number" id="adMaxDaily" value="3" min="1" max="20">
+          <div class="hint">حداکثر دفعاتی که هر کاربر در طول یک روز می‌تواند تبلیغ ببیند.</div>
+        </div>
+
+        <div class="form-group">
+          <label>فاصله زمانی بین دو تبلیغ پیاپی (ثانیه):</label>
+          <input type="number" id="adCooldown" value="30" min="5" max="600">
+          <div class="hint">کاربر بعد از هر تبلیغ باید این مدت صبر کند تا تبلیغ بعدی باز شود.</div>
+        </div>
+      </div>
+
+      <!-- Live Mobile Ad Preview -->
+      <div style="margin-top: 24px;">
+        <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 12px;">
+          📱 پیش‌نمایش نحوه نمایش تبلیغ در گوشی کاربر (سایز و فریم اپلیکیشن):
+        </label>
+        <div style="display: flex; justify-content: center;">
+          <div style="width: 100%; max-width: 320px; background: #0A1120; border: 1.5px solid rgba(255,255,255,0.15); border-radius: 26px; padding: 16px 14px; box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 25px rgba(26,109,255,0.25); display: flex; flex-direction: column; gap: 12px; position: relative;">
+            
+            <!-- Top bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #38bdf8; font-weight: 700;">
+                <span>⏳</span>
+                <span>دیدن تبلیغ تا پاداش: <b id="adPrevTimer" style="color: #fbbf24;">15s</b></span>
+              </div>
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #64748b;">✕</div>
+            </div>
+
+            <!-- Ad Creative Viewport -->
+            <div style="border-radius: 16px; overflow: hidden; background: #111B2E; border: 1px solid rgba(255,255,255,0.08); min-height: 220px; display: flex; align-items: center; justify-content: center; position: relative;">
+              <img id="adPrevImage" src="https://auth.djanah99.ir/ad/plan100.jpg" alt="بنر تبلیغ" style="width: 100%; height: auto; display: block; object-fit: contain;">
+              <div id="adPrevTextCard" style="display: none; padding: 20px; text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 8px;">🎁</div>
+                <div id="adPrevTextTitle" style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px;">عنوان تبلیغ</div>
+                <div id="adPrevTextBody" style="font-size: 12px; color: #94a3b8; line-height: 1.5;">متن توضیحات تبلیغ</div>
+              </div>
+            </div>
+
+            <!-- Reward Button -->
+            <div style="margin-top: 4px;">
+              <button type="button" style="width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; padding: 11px; border-radius: 12px; font-size: 13px; font-weight: 800; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(16,185,129,0.35);">
+                <span>🎁</span>
+                <span id="adPrevBtnText">دریافت ۵ ساعت دسترسی رایگان</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Floating Bottom Bar -->
@@ -1002,8 +1120,130 @@
       onFallbackConfigsChanged();
     }
 
+    if (cfg.ad_settings) {
+      populateAdSettings(cfg.ad_settings);
+    } else {
+      fetchAdSettingsFromWorker();
+    }
+
     updatePreview();
     document.getElementById('lastUpdatedLabel').innerText = 'بروزرسانی شد: ' + new Date().toLocaleTimeString('fa-IR');
+  }
+
+  const CF_WORKER_API = 'https://auth.djanah99.ir';
+  const CF_ADMIN_SECRET = '80136a8179fa1e1f81749a3ac3cce568';
+
+  function selectAdPreset(preset) {
+    if (preset === 'plan100') {
+      document.getElementById('adImageUrl').value = 'https://auth.djanah99.ir/ad/plan100.jpg';
+      document.getElementById('adTitle').value = '🎉 پلن ویژه جدید اضافه شد! 🌟';
+      document.getElementById('adBody').value = '📦 100 گیگابایت (30 روز) فقط 600,000 تومان - مخصوص کاربران پرمصرف! خرید از ربات @strong1vpn_bot';
+      document.getElementById('adLink').value = 'https://t.me/strong1vpn_bot';
+    } else if (preset === 'default') {
+      document.getElementById('adImageUrl').value = 'https://auth.djanah99.ir/ad/creative.jpg';
+      document.getElementById('adTitle').value = 'تبلیغ حمایتی';
+      document.getElementById('adBody').value = 'با دیدن این تبلیغ ۵ ساعت اتصال رایگان بگیرید';
+      document.getElementById('adLink').value = '';
+    }
+    updateAdPreview();
+  }
+
+  function updateAdPreview() {
+    const active = document.getElementById('adActive')?.checked ?? true;
+    const switchLabel = document.getElementById('adSwitchLabel');
+    if (switchLabel) switchLabel.innerText = active ? 'فعال' : 'غیرفعال';
+
+    const imgUrl = (document.getElementById('adImageUrl')?.value || '').trim();
+    const title = (document.getElementById('adTitle')?.value || 'عنوان تبلیغ').trim();
+    const body = (document.getElementById('adBody')?.value || 'متن توضیحات تبلیغ').trim();
+    const watchSec = document.getElementById('adWatchSec')?.value || '15';
+    const rewardH = document.getElementById('adRewardHours')?.value || '5';
+
+    const prevTimer = document.getElementById('adPrevTimer');
+    if (prevTimer) prevTimer.innerText = watchSec + 's';
+
+    const prevBtn = document.getElementById('adPrevBtnText');
+    if (prevBtn) prevBtn.innerText = `دریافت ${rewardH} ساعت دسترسی رایگان`;
+
+    const imgEl = document.getElementById('adPrevImage');
+    const textCardEl = document.getElementById('adPrevTextCard');
+    const textTitle = document.getElementById('adPrevTextTitle');
+    const textBody = document.getElementById('adPrevTextBody');
+
+    if (imgUrl) {
+      if (imgEl) {
+        imgEl.style.display = 'block';
+        if (imgEl.src !== imgUrl) imgEl.src = imgUrl;
+      }
+      if (textCardEl) textCardEl.style.display = 'none';
+    } else {
+      if (imgEl) imgEl.style.display = 'none';
+      if (textCardEl) textCardEl.style.display = 'block';
+      if (textTitle) textTitle.innerText = title;
+      if (textBody) textBody.innerText = body;
+    }
+  }
+
+  async function handleAdImageUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    showToast('در حال بارگذاری و بهینه‌سازی تصویر بنر...');
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      try {
+        const rawBase64 = e.target.result;
+        const res = await fetch(`${CF_WORKER_API}/api/admin/ad-creative`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Secret': CF_ADMIN_SECRET
+          },
+          body: JSON.stringify({
+            name: 'custom_' + Date.now().toString().slice(-6),
+            image_base64: rawBase64
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.image_url) {
+          document.getElementById('adImageUrl').value = data.image_url;
+          updateAdPreview();
+          showToast('تصویر با موفقیت در کلودفلر آپلود شد!');
+        } else {
+          showToast('خطا در آپلود تصویر: ' + (data.message || 'نامشخص'), true);
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('خطا در ارسال تصویر به سرور', true);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function populateAdSettings(ad) {
+    if (!ad) return;
+    if (document.getElementById('adActive')) document.getElementById('adActive').checked = (ad.ad_active !== false);
+    if (document.getElementById('adImageUrl')) document.getElementById('adImageUrl').value = ad.ad_image_url || '';
+    if (document.getElementById('adTitle')) document.getElementById('adTitle').value = ad.ad_title || '';
+    if (document.getElementById('adBody')) document.getElementById('adBody').value = ad.ad_body || '';
+    if (document.getElementById('adLink')) document.getElementById('adLink').value = ad.ad_link || '';
+    if (document.getElementById('adWatchSec')) document.getElementById('adWatchSec').value = ad.free_ad_watch_sec !== undefined ? ad.free_ad_watch_sec : 15;
+    if (document.getElementById('adRewardHours')) document.getElementById('adRewardHours').value = ad.free_ad_sec ? Math.round(ad.free_ad_sec / 3600) : 5;
+    if (document.getElementById('adMaxDaily')) document.getElementById('adMaxDaily').value = ad.free_ad_max_per_day !== undefined ? ad.free_ad_max_per_day : 3;
+    if (document.getElementById('adCooldown')) document.getElementById('adCooldown').value = ad.free_ad_min_gap !== undefined ? ad.free_ad_min_gap : 30;
+    updateAdPreview();
+  }
+
+  async function fetchAdSettingsFromWorker() {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/ad-settings`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.settings) populateAdSettings(data.settings);
+      }
+    } catch (_) {}
   }
 
   function extractServerInfo(uri) {
@@ -1191,8 +1431,32 @@
         min_version: document.getElementById('minVersion').value.trim(),
         apk_url: document.getElementById('apkUrl').value.trim()
       },
-      fallback_configs: fallbacks
+      fallback_configs: fallbacks,
+      ad_settings: {
+        ad_active: document.getElementById('adActive')?.checked ?? true,
+        ad_type: 'image',
+        ad_title: document.getElementById('adTitle')?.value.trim() || 'تبلیغ ویژه',
+        ad_body: document.getElementById('adBody')?.value.trim() || 'با دیدن این تبلیغ ۵ ساعت اتصال رایگان بگیرید',
+        ad_image_url: document.getElementById('adImageUrl')?.value.trim() || 'https://auth.djanah99.ir/ad/plan100.jpg',
+        ad_link: document.getElementById('adLink')?.value.trim() || '',
+        free_ad_sec: (parseInt(document.getElementById('adRewardHours')?.value, 10) || 5) * 3600,
+        free_ad_watch_sec: parseInt(document.getElementById('adWatchSec')?.value, 10) || 15,
+        free_ad_max_per_day: parseInt(document.getElementById('adMaxDaily')?.value, 10) || 3,
+        free_ad_min_gap: parseInt(document.getElementById('adCooldown')?.value, 10) || 30
+      }
     };
+
+    // Immediate sync to Cloudflare D1
+    try {
+      fetch(`${CF_WORKER_API}/api/admin/ad-settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify(configObj.ad_settings)
+      }).catch(e => console.warn('CF ad sync:', e));
+    } catch (_) {}
 
     const jsonStr = JSON.stringify(configObj, null, 2);
     const b64Content = btoa(unescape(encodeURIComponent(jsonStr)));
