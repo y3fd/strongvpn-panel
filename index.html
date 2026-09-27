@@ -24,7 +24,7 @@
       --input-bg: #141E33;
       --input-border: rgba(255, 255, 255, 0.12);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; }
     body {
       background-color: var(--bg);
       background-image: 
@@ -522,6 +522,67 @@
       font-size: 12px;
       color: var(--text-muted);
     }
+
+    /* ---------------- Tab Navigation ---------------- */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { font-family: 'Vazirmatn', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #FFF;
+      border-color: rgba(168,85,247,0.3);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #A855F7, #6366F1);
+      color: #FFF;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(168,85,247,0.4);
+    }
+    .tab-btn .tab-badge {
+      background: rgba(255,255,255,0.2);
+      color: #FFF;
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 20px;
+      font-weight: 800;
+    }
+    .tab-btn.active .tab-badge {
+      background: rgba(255,255,255,0.3);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    /* Compact card tweak for tabbed layout */
+    .tab-panel .card { margin-bottom: 16px; padding: 20px; }
+    .tab-panel .card:last-child { margin-bottom: 6px; }
+    /* Collapsible token box */
+    .token-box.collapsed { padding: 10px 16px; }
+    .token-box.collapsed .token-extra { display: none; }
+
     /* Toast */
     #toast {
       position: fixed;
@@ -613,19 +674,36 @@
       </div>
     </div>
 
-    <!-- Token Bar -->
-    <div class="token-box">
+    <!-- Token Bar (collapsible) -->
+    <div class="token-box collapsed" id="tokenBox">
+      <label style="cursor:pointer; display:flex; align-items:center; gap:6px;" onclick="document.getElementById('tokenBox').classList.toggle('collapsed')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="m21 2-9.6 9.6"></path><path d="m15.5 7.5 3 3L22 7l-3-3"></path></svg> توکن گیت‌هاب
+        <span style="font-size:11px; color:var(--text-muted);">(کلیک برای نمایش)</span>
+      </label>
+      <div class="token-extra" style="display:flex; align-items:center; gap:10px; flex:1; flex-wrap:wrap;">
+
       <label>توکن اتصال به گیت‌هاب (PAT):</label>
       <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
       <button onclick="saveToken()">ذخیره توکن</button>
       <button onclick="fetchCurrentConfig()">بروزرسانی داده‌ها</button>
+      </div>
     </div>
 
-    <!-- Card 1: Popup Announcement -->
+    <!-- Tab Navigation -->
+    <div class="tabs" id="mainTabs">
+      <button class="tab-btn active" data-tab="announcement" onclick="switchTab('announcement')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg> <span>اعلان بازشو</span> <span class="tab-badge" id="badge-announcement" style="display:none;"></span></button>
+      <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> <span>تنظیمات</span></button>
+      <button class="tab-btn" data-tab="servers" onclick="switchTab('servers')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg> <span>سرورها</span> <span class="tab-badge" id="badge-servers">0</span></button>
+      <button class="tab-btn" data-tab="ads" onclick="switchTab('ads')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg> <span>تبلیغات</span></button>
+      <button class="tab-btn" data-tab="logs" onclick="switchTab('logs')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg> <span>مانیتورینگ</span> <span class="tab-badge" id="badge-logs" style="display:none;"></span></button>
+    </div>
+
+    <!-- Tab: Announcement -->
+    <div class="tab-panel active" id="tab-announcement">
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">📢</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg></span>
           <span>نوتیفیکیشن بازشو اپلیکیشن (Popup Announcement)</span>
         </div>
         <label class="switch-container">
@@ -640,7 +718,7 @@
       <div class="form-group">
         <label>نوع اعلان (نوع استایل و آیکون):</label>
         <div class="type-selector">
-          <div class="type-chip selected" data-type="update" onclick="setType('update')">🚀 به‌روزرسانی اپلیکیشن</div>
+          <div class="type-chip selected" data-type="update" onclick="setType('update')">⚡ به‌روزرسانی اپلیکیشن</div>
           <div class="type-chip" data-type="info" onclick="setType('info')">ℹ️ اطلاعیه عمومی</div>
           <div class="type-chip" data-type="warning" onclick="setType('warning')">⚠️ هشدار مهم</div>
         </div>
@@ -683,11 +761,14 @@
       </div>
     </div>
 
-    <!-- Card 2: Contact & Support Links -->
+    </div><!-- /tab-announcement -->
+
+    <!-- Tab: Settings (Contact + Endpoints + Versions) -->
+    <div class="tab-panel" id="tab-settings">
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">🔗</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>
           <span>تنظیمات ارتباطی و پشتیبانی (پشتیبانی و آدرس سایت)</span>
         </div>
       </div>
@@ -709,7 +790,7 @@
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">⚙️</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>
           <span>تنظیمات زیرساخت، سرور و اتصال</span>
         </div>
       </div>
@@ -729,7 +810,7 @@
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">📦</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg></span>
           <span>مدیریت نسخه‌ها و فایل نصب APK</span>
         </div>
       </div>
@@ -749,11 +830,14 @@
       </div>
     </div>
 
-    <!-- Card 5: Fallback Configs -->
+    </div><!-- /tab-settings -->
+
+    <!-- Tab: Servers (Fallback + Free Tier) -->
+    <div class="tab-panel" id="tab-servers">
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">🛡️</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg></span>
           <span>کانفیگ‌های رزرو و اضطراری (Fallback Configs)</span>
         </div>
         <div style="font-size: 12px; color: #00E676; font-weight: bold; background: rgba(0,230,118,0.12); padding: 3px 10px; border-radius: 8px;" id="fallbackCountBadge">۰ سرور</div>
@@ -784,15 +868,15 @@
     <div class="card" id="freeConfigsCard">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">⚡</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>
           <span>مدیریت سرورهای رایگان (Free Tier Servers)</span>
         </div>
         <div style="display: flex; gap: 8px;">
           <button type="button" onclick="testFreeServersHealth()" style="background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
-            ⚡ تست سلامت و اتصال سرورها
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> تست سلامت سرورها
           </button>
           <button type="button" onclick="fetchFreeConfigsFromWorker()" style="background: rgba(0,245,255,0.15); color: #00F5FF; border: 1px solid rgba(0,245,255,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
-            🔄 بارگذاری مجدد
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg> بارگذاری مجدد
           </button>
         </div>
       </div>
@@ -818,19 +902,22 @@
       </div>
     </div>
 
-    <!-- Card 8: Client Error Telemetry Viewer -->
+    </div><!-- /tab-servers -->
+
+    <!-- Tab: Monitoring / Logs -->
+    <div class="tab-panel" id="tab-logs">
     <div class="card" id="clientErrorsCard">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">📊</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg></span>
           <span>لاگ و گزارش خطاهای کاربران (Client Error Telemetry)</span>
         </div>
         <div style="display: flex; gap: 6px;">
           <button type="button" onclick="fetchClientErrorsFromWorker()" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
-            🔄 تازه‌سازی
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg> تازه‌سازی
           </button>
           <button type="button" onclick="clearClientErrorsFromWorker()" style="background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
-            🗑️ پاکسازی لاگ
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg> پاکسازی لاگ
           </button>
         </div>
       </div>
@@ -854,11 +941,14 @@
       </div>
     </div>
 
-    <!-- Card 6: In-App Ads & Free Access -->
+    </div><!-- /tab-logs -->
+
+    <!-- Tab: In-App Ads -->
+    <div class="tab-panel" id="tab-ads">
     <div class="card" id="adSettingsCard">
       <div class="card-header">
         <div class="card-title">
-          <span class="icon">🎁</span>
+          <span class="icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg></span>
           <span>تبلیغات درون‌برنامه‌ای و اتصال رایگان (In-App Ads)</span>
         </div>
         <label class="switch-container">
@@ -971,6 +1061,7 @@
         </div>
       </div>
     </div>
+    </div><!-- /tab-ads -->
   </div>
 
   <!-- Floating Bottom Bar -->
@@ -1169,6 +1260,8 @@
   }
 
   function populateForm(cfg) {
+    const annBadge = document.getElementById('badge-announcement');
+    if (annBadge) { if (cfg.announcement && cfg.announcement.active) { annBadge.style.display = ''; annBadge.innerText = 'فعال'; annBadge.style.background = '#10B981'; } else { annBadge.style.display = 'none'; } }
     if (cfg.announcement) {
       document.getElementById('annActive').checked = !!cfg.announcement.active;
       document.getElementById('annTitle').value = cfg.announcement.title || '';
@@ -1248,6 +1341,8 @@ async function fetchFreeConfigsFromWorker() {
         listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در دریافت سرورهای رایگان</div>';
         return;
       }
+      const badge = document.getElementById('badge-servers');
+      if (badge) badge.innerText = data.configs.length;
       if (data.configs.length === 0) {
         listEl.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 10px;">هیچ سرور رایگانی ثبت نشده است.</div>';
         return;
@@ -1369,6 +1464,8 @@ async function fetchFreeConfigsFromWorker() {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #F87171; padding: 12px;">خطا در دریافت لاگ خطاها</td></tr>';
         return;
       }
+      const logBadge = document.getElementById('badge-logs');
+      if (logBadge) { if (data.errors.length > 0) { logBadge.style.display = ''; logBadge.innerText = data.errors.length; } else { logBadge.style.display = 'none'; } }
       if (data.errors.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #10B981; padding: 14px;">✅ هیچ خطایی از سمت کاربران گزارش نشده است.</td></tr>';
         return;
@@ -1776,6 +1873,25 @@ async function fetchFreeConfigsFromWorker() {
     t.className = isError ? 'error show' : 'show';
     setTimeout(() => { t.className = ''; }, 3500);
   }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+    localStorage.setItem('svpn_active_tab', name);
+    // Lazy load when switching
+    if (name === 'servers') fetchFreeConfigsFromWorker();
+    if (name === 'logs') fetchClientErrorsFromWorker();
+    if (name === 'ads') updateAdPreview();
+  }
+
+  // Restore last active tab on load
+  (function() {
+    const saved = localStorage.getItem('svpn_active_tab');
+    if (saved && document.getElementById('tab-' + saved)) {
+      // defer until DOM ready
+      setTimeout(() => switchTab(saved), 300);
+    }
+  })();
 
   window.onload = checkAuth;
 </script>
