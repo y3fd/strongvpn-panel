@@ -692,6 +692,7 @@
     <!-- Tab Navigation -->
     <div class="tabs" id="mainTabs">
       <button class="tab-btn active" data-tab="announcement" onclick="switchTab('announcement')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg> <span>اعلان بازشو</span> <span class="tab-badge" id="badge-announcement" style="display:none;"></span></button>
+      <button class="tab-btn" data-tab="users" onclick="switchTab('users')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> <span>کاربران</span> <span class="tab-badge" id="badge-users">0</span></button>
       <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> <span>تنظیمات</span></button>
       <button class="tab-btn" data-tab="servers" onclick="switchTab('servers')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg> <span>سرورها</span> <span class="tab-badge" id="badge-servers">0</span></button>
       <button class="tab-btn" data-tab="ads" onclick="switchTab('ads')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg> <span>تبلیغات</span></button>
@@ -762,6 +763,125 @@
     </div>
 
     </div><!-- /tab-announcement -->
+
+    <!-- Tab: Users Management (3x-ui Sync + App-only Device Limit) -->
+    <div class="tab-panel" id="tab-users">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg></span>
+            <span>ساخت کاربر جدید در پنل 3x-ui</span>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>شماره موبایل یا شناسه کاربر:</label>
+            <input type="text" id="newXuiEmail" placeholder="09170008899" dir="ltr">
+            <div class="hint">این شناسه به عنوان نام کاربر (Remark) در 3x-ui ثبت می‌شود.</div>
+          </div>
+
+          <div class="form-group">
+            <label>انتخاب حجم و مدت زمان اشتراک:</label>
+            <select id="newXuiPlan" onchange="onPlanSelectChange(this)">
+              <option value="10:30">۱۰ گیگابایت - ۳۰ روزه</option>
+              <option value="20:30">۲۰ گیگابایت - ۳۰ روزه</option>
+              <option value="30:30" selected>۳۰ گیگابایت - ۳۰ روزه</option>
+              <option value="40:30">۴۰ گیگابایت - ۳۰ روزه</option>
+              <option value="100:30">۱۰۰ گیگابایت - ۳۰ روزه (ویژه)</option>
+              <option value="custom">حجم و روز دلخواه...</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="customPlanInputs" style="display: none;">
+            <label>حجم دلخواه (گیگ) و مدت (روز):</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="number" id="customVolGB" value="50" min="1" max="500" placeholder="حجم GB" style="flex:1;">
+              <input type="number" id="customDays" value="30" min="1" max="365" placeholder="روز" style="flex:1;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>🔒 محدودیت اتصال همزمان (فقط در اپلیکیشن):</label>
+            <select id="newXuiAppLimit">
+              <option value="1" selected>۱ دستگاه (تک کاربره)</option>
+              <option value="2">۲ دستگاه (دو کاربره)</option>
+              <option value="3">۳ دستگاه</option>
+              <option value="5">۵ دستگاه</option>
+              <option value="10">نامحدود (بدون محدودیت اپ)</option>
+            </select>
+            <div class="hint" style="color: #38bdf8;">⚡ این محدودیت مستقلاً در سرور اپلیکیشن اعمال می‌شود و به 3x-ui کاری ندارد.</div>
+          </div>
+
+          <div class="form-group full" style="margin-top: 6px;">
+            <button type="button" onclick="createXuiUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 13px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+              <span>➕ ساخت اشتراک در 3x-ui و تنظیم محدودیت اپ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Generated Result Modal / Box -->
+        <div id="newCreatedUserBox" style="display: none; margin-top: 18px; background: rgba(16,185,129,0.08); border: 1.5px solid rgba(16,185,129,0.3); border-radius: 16px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <strong style="color: #10B981; font-size: 14px;">✅ کاربر با موفقیت در 3x-ui ساخته شد!</strong>
+            <button type="button" onclick="document.getElementById('newCreatedUserBox').style.display='none'" style="background: transparent; border: none; color: #94a3b8; font-size: 16px; cursor: pointer;">✕</button>
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
+            لینک سابسکریپشن اختصاصی:
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="createdSubUrl" readonly dir="ltr" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #38bdf8; padding: 8px 12px; font-family: monospace; font-size: 12.5px; flex: 1;">
+            <button type="button" onclick="copyCreatedSubUrl()" style="background: #10B981; color: #FFF; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 12.5px; white-space: nowrap;">
+              📋 کپی لینک
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users List Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></span>
+            <span>لیست زنده کاربران 3x-ui و سقف دستگاه در اپ</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" onclick="fetchXuiUsers()" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+              🔄 بارگذاری مجدد
+            </button>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+          <input type="text" id="xuiSearchInput" placeholder="جستجوی شماره یا ایمیل کاربر..." dir="ltr" style="flex: 1;" onkeyup="if(event.key==='Enter') fetchXuiUsers()">
+          <button type="button" onclick="fetchXuiUsers()" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 12px; font-weight: 700; cursor: pointer;">
+            🔍 جستجو
+          </button>
+        </div>
+
+        <div style="overflow-x: auto; max-height: 480px; overflow-y: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--input-border); color: var(--text-muted); background: rgba(0,0,0,0.2);">
+                <th style="padding: 10px;">شناسه / شماره</th>
+                <th style="padding: 10px;">حجم مصرفی / کل</th>
+                <th style="padding: 10px;">انقضا</th>
+                <th style="padding: 10px;">سقف دستگاه در اپ</th>
+                <th style="padding: 10px; text-align: center;">عملیات</th>
+              </tr>
+            </thead>
+            <tbody id="xuiUsersTableBody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران از 3x-ui...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-users -->
+
+
 
     <!-- Tab: Settings (Contact + Endpoints + Versions) -->
     <div class="tab-panel" id="tab-settings">
@@ -1874,11 +1994,233 @@ async function fetchFreeConfigsFromWorker() {
     setTimeout(() => { t.className = ''; }, 3500);
   }
 
+
+  // ---------------- 3x-ui Users & App-Only Device Limits ----------------
+  let cachedAppLimits = {};
+
+  function onPlanSelectChange(sel) {
+    const customBox = document.getElementById('customPlanInputs');
+    if (customBox) customBox.style.display = sel.value === 'custom' ? 'block' : 'none';
+  }
+
+  async function fetchAppLimits() {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/app-limits`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.limits)) {
+        cachedAppLimits = {};
+        data.limits.forEach(r => {
+          if (r.phone) cachedAppLimits[r.phone.toLowerCase().trim()] = r.max_devices;
+        });
+      }
+    } catch (_) {}
+  }
+
+  async function fetchXuiUsers() {
+    const tbody = document.getElementById('xuiUsersTableBody');
+    const badge = document.getElementById('badge-users');
+    if (!tbody) return;
+    const q = (document.getElementById('xuiSearchInput')?.value || '').trim();
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 16px; color: var(--text-muted);">در حال بارگذاری کاربران از سرور...</td></tr>';
+    
+    await fetchAppLimits();
+
+    try {
+      const url = `${CF_WORKER_API}/api/admin/xui-users` + (q ? `?q=${encodeURIComponent(q)}` : '');
+      const res = await fetch(url, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (!data.success || !Array.isArray(data.users)) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 14px;">خطا در دریافت کاربران از پنل 3x-ui</td></tr>';
+        return;
+      }
+      if (badge && data.total !== undefined) badge.innerText = data.total;
+
+      if (data.users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 16px;">هیچ کاربری با این مشخصات یافت نشد.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      data.users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.style = 'border-bottom: 1px solid rgba(255,255,255,0.05);';
+        
+        const emailClean = (u.email || '').toLowerCase().trim();
+        const appLimit = cachedAppLimits[emailClean] || 1; // Default 1 device in app
+
+        // Traffic format
+        const totalGBNum = (u.totalGB / (1024 ** 3)).toFixed(1);
+        const up = u.traffic?.up || 0;
+        const down = u.traffic?.down || 0;
+        const usedGBNum = ((up + down) / (1024 ** 3)).toFixed(1);
+
+        // Expiry format
+        let expStr = 'نامحدود';
+        if (u.expiryTime > 0) {
+          const d = new Date(u.expiryTime);
+          expStr = d.toLocaleDateString('fa-IR');
+        }
+
+        const subUrl = `https://sb1.dev-stong.ir:2053/sub/${u.subId}`;
+
+        tr.innerHTML = `
+          <td style="padding: 10px; font-weight: 700; color: #FFF; font-family: monospace; direction: ltr;">
+            ${u.email}
+          </td>
+          <td style="padding: 10px; color: #CBD5E1;">
+            ${usedGBNum} / ${totalGBNum} GB
+          </td>
+          <td style="padding: 10px; color: var(--text-muted); font-size: 11.5px;">
+            ${expStr}
+          </td>
+          <td style="padding: 10px;">
+            <select onchange="updateUserAppLimit('${u.email}', this.value)" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #38bdf8; font-size: 11.5px; padding: 4px 6px;">
+              <option value="1" ${appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
+              <option value="2" ${appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
+              <option value="3" ${appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
+              <option value="5" ${appLimit == 5 ? 'selected' : ''}>۵ دستگاه</option>
+              <option value="10" ${appLimit == 10 ? 'selected' : ''}>نامحدود</option>
+            </select>
+          </td>
+          <td style="padding: 10px; text-align: center;">
+            <div style="display: flex; gap: 6px; justify-content: center;">
+              <button type="button" onclick="navigator.clipboard.writeText('${subUrl}'); showToast('لینک کپی شد');" style="background: rgba(0,245,255,0.12); color: #00F5FF; border: 1px solid rgba(0,245,255,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
+                📋 کپی لینک
+              </button>
+              <button type="button" onclick="promptRenewUser('${u.email}')" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
+                🔄 تمدید
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 14px;">خطا در واکشی کاربران</td></tr>';
+    }
+  }
+
+  async function updateUserAppLimit(phone, maxDevices) {
+    try {
+      showToast('در حال ثبت سقف دستگاه در اپ...');
+      const res = await fetch(`${CF_WORKER_API}/api/admin/app-limits`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ phone: phone, max_devices: parseInt(maxDevices, 10) })
+      });
+      const data = await res.json();
+      if (data.success) {
+        cachedAppLimits[phone.toLowerCase().trim()] = parseInt(maxDevices, 10);
+        showToast(`سقف اتصال اپلیکیشن برای ${phone} روی ${maxDevices} دستگاه تنظیم شد`);
+      } else {
+        showToast('خطا در تنظیم محدودیت: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (_) {
+      showToast('خطا در ارتباط با سرور', true);
+    }
+  }
+
+  async function createXuiUser() {
+    const email = (document.getElementById('newXuiEmail')?.value || '').trim();
+    if (!email) {
+      showToast('لطفاً شماره یا ایمیل کاربر را وارد کنید', true);
+      return;
+    }
+    const planVal = document.getElementById('newXuiPlan')?.value || '30:30';
+    let volGB = 30;
+    let days = 30;
+    if (planVal === 'custom') {
+      volGB = parseInt(document.getElementById('customVolGB')?.value || 50, 10) || 50;
+      days = parseInt(document.getElementById('customDays')?.value || 30, 10) || 30;
+    } else {
+      const parts = planVal.split(':');
+      volGB = parseInt(parts[0], 10) || 30;
+      days = parseInt(parts[1], 10) || 30;
+    }
+
+    const appLimit = parseInt(document.getElementById('newXuiAppLimit')?.value || 1, 10) || 1;
+
+    showToast('در حال ساخت کاربر در 3x-ui...');
+    try {
+      // 1. Create client in 3x-ui
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ email: email, volume_gb: volGB, days: days })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        showToast('خطا در 3x-ui: ' + (data.message || 'نامشخص'), true);
+        return;
+      }
+
+      // 2. Set App-only Device Limit in Cloudflare
+      await fetch(`${CF_WORKER_API}/api/admin/app-limits`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ phone: email, max_devices: appLimit })
+      });
+
+      // 3. Show created link
+      const subUrl = `https://sb1.dev-stong.ir:2053/sub/${data.subId}`;
+      const box = document.getElementById('newCreatedUserBox');
+      const inp = document.getElementById('createdSubUrl');
+      if (box && inp) {
+        inp.value = subUrl;
+        box.style.display = 'block';
+      }
+
+      showToast(`کاربر با سقف ${appLimit} دستگاه در اپ با موفقیت ساخته شد!`);
+      document.getElementById('newXuiEmail').value = '';
+      fetchXuiUsers();
+    } catch (e) {
+      showToast('خطا در ارتباط با سرور: ' + e.message, true);
+    }
+  }
+
+  function copyCreatedSubUrl() {
+    const inp = document.getElementById('createdSubUrl');
+    if (inp && inp.value) {
+      navigator.clipboard.writeText(inp.value);
+      showToast('لینک اشتراک کپی شد!');
+    }
+  }
+
+  async function promptRenewUser(email) {
+    const gbStr = prompt(`حجم تمدید برای ${email} (گیگابایت):`, '30');
+    if (!gbStr) return;
+    const daysStr = prompt(`مدت زمان تمدید (روز):`, '30');
+    if (!daysStr) return;
+
+    showToast(`در حال تمدید اشتراک ${email}...`);
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users/renew`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ email: email, volume_gb: parseInt(gbStr, 10) || 30, days: parseInt(daysStr, 10) || 30 })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`اشتراک ${email} با موفقیت تمدید شد!`);
+        fetchXuiUsers();
+      } else {
+        showToast('خطا در تمدید: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (_) {
+      showToast('خطا در ارتباط با سرور', true);
+    }
+  }
+
   function switchTab(name) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
     localStorage.setItem('svpn_active_tab', name);
     // Lazy load when switching
+    if (name === 'users') fetchXuiUsers();
     if (name === 'servers') fetchFreeConfigsFromWorker();
     if (name === 'logs') fetchClientErrorsFromWorker();
     if (name === 'ads') updateAdPreview();
