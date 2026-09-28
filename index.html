@@ -2180,12 +2180,7 @@ async function fetchFreeConfigsFromWorker() {
     });
   }
 
-  function openDirectHapp() {
-    if (!currentModalSubUrl) return;
-    const url = `happ://add/${currentModalSubUrl.trim()}`;
-    window.open(url, '_blank');
-    showToast('در حال اتصال مستقیم در HAPP...');
-  }
+
 
   async function openDevicesModal(phone) {
     currentModalEmail = phone;
@@ -2564,9 +2559,7 @@ async function fetchFreeConfigsFromWorker() {
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 8px;">
-      <button type="button" id="qrDirectHappBtn" onclick="openDirectHapp()" style="background: linear-gradient(90deg, #10B981, #059669); color: #FFF; border: none; padding: 11px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px; font-family: inherit;">
-        ⚡ اتصال مستقیم با HAPP (happ://add)
-      </button>
+
       <button type="button" id="qrCopyUrlBtn" onclick="copyModalSubUrl()" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); padding: 10px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; font-family: inherit;">
         📋 کپی آدرس سابسکریپشن
       </button>
