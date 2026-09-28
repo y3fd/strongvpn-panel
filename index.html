@@ -583,6 +583,78 @@
     .token-box.collapsed { padding: 10px 16px; }
     .token-box.collapsed .token-extra { display: none; }
 
+
+    /* ---------------- Option A: Stats Cards Grid ---------------- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: rgba(14, 22, 38, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .stat-card:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-2px);
+    }
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 900;
+      color: #FFF;
+      line-height: 1.1;
+      font-family: monospace, inherit;
+    }
+    .stat-label {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+    /* Modal styles for Option C (QR & Devices) */
+    .app-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .app-modal {
+      background: #0E1626;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(168,85,247,0.25);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 460px;
+      padding: 24px;
+      position: relative;
+      animation: modalZoom 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+    @keyframes modalZoom { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
     /* Toast */
     #toast {
       position: fixed;
@@ -688,6 +760,60 @@
       <button onclick="fetchCurrentConfig()">بروزرسانی داده‌ها</button>
       </div>
     </div>
+
+    <!-- Option A: Top Summary Analytics Grid -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(168,85,247,0.15); color: #c084fc;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="statUsers">--</div>
+          <div class="stat-label">کل کاربران 3x-ui</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(0,245,255,0.15); color: #00F5FF;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="statInbounds">--</div>
+          <div class="stat-label">این‌باندهای فعال</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(16,185,129,0.15); color: #10B981;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="statFree">--</div>
+          <div class="stat-label">سرورهای رایگان</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(56,189,248,0.15); color: #38bdf8;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="statSessions">--</div>
+          <div class="stat-label">دستگاه‌های آنلاین اپ</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(239,68,68,0.15); color: #F87171;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="statErrors">0</div>
+          <div class="stat-label">خطاهای ۲۴ ساعت اخیر</div>
+        </div>
+      </div>
+    </div>
+
 
     <!-- Tab Navigation -->
     <div class="tabs" id="mainTabs">
@@ -1289,6 +1415,7 @@
     fetchCurrentConfig();
     fetchFreeConfigsFromWorker();
     fetchClientErrorsFromWorker();
+    fetchDashboardStats();
   }
 
   function saveToken() {
@@ -1995,6 +2122,178 @@ async function fetchFreeConfigsFromWorker() {
   }
 
 
+
+  // ---------------- Option A: Stats Dashboard ----------------
+  async function fetchDashboardStats() {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/dashboard-stats`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (data.success && data.stats) {
+        const s = data.stats;
+        const setVal = (id, val, suffix = '') => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = (val !== undefined ? val : '--') + suffix;
+        };
+        setVal('statUsers', s.total_users || 0);
+        setVal('statInbounds', s.active_inbounds || 0);
+        setVal('statFree', s.free_servers || 0);
+        setVal('statSessions', s.active_app_devices || 0);
+        setVal('statErrors', s.today_errors !== undefined ? s.today_errors : 0);
+      }
+    } catch (_) {}
+  }
+
+  // ---------------- Option C: Subscription Actions helpers ----------------
+  let currentModalSubUrl = '';
+  let currentModalEmail = '';
+
+  function openQrModal(email, subId) {
+    currentModalEmail = email;
+    currentModalSubUrl = `https://sb1.dev-stong.ir:2053/sub/${subId}`;
+    const title = document.getElementById('qrModalTitle');
+    const info = document.getElementById('qrModalSubInfo');
+    const img = document.getElementById('qrModalImage');
+    if (title) title.innerText = `کیوآرکد اشتراک: ${email}`;
+    if (info) info.innerText = currentModalSubUrl;
+    if (img) {
+      const enc = encodeURIComponent(currentModalSubUrl);
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${enc}&margin=4`;
+    }
+    const overlay = document.getElementById('qrModalOverlay');
+    if (overlay) overlay.style.display = 'flex';
+  }
+
+  function closeQrModal() {
+    const o = document.getElementById('qrModalOverlay');
+    if (o) o.style.display = 'none';
+  }
+
+  function copyModalSubUrl() {
+    if (!currentModalSubUrl) return;
+    navigator.clipboard.writeText(currentModalSubUrl).then(() => showToast('آدرس سابسکریپشن کپی شد!')).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = currentModalSubUrl; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); ta.remove();
+      showToast('آدرس کپی شد!');
+    });
+  }
+
+  function openDirectHapp() {
+    if (!currentModalSubUrl) return;
+    const url = `happ://add/${currentModalSubUrl.trim()}`;
+    window.open(url, '_blank');
+    showToast('در حال اتصال مستقیم در HAPP...');
+  }
+
+  async function openDevicesModal(phone) {
+    currentModalEmail = phone;
+    const overlay = document.getElementById('devicesModalOverlay');
+    const list = document.getElementById('devicesModalList');
+    const userSpan = document.getElementById('devModalUser');
+    if (userSpan) userSpan.innerText = phone;
+    if (overlay) overlay.style.display = 'flex';
+    if (list) list.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 16px;">در حال دریافت نشست‌های فعال...</div>';
+
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/user-devices?phone=${encodeURIComponent(phone)}`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (!data.success || !Array.isArray(data.devices)) {
+        if (list) list.innerHTML = '<div style="color: #F87171; text-align: center; padding: 16px;">خطا در دریافت دستگاه‌ها</div>';
+        return;
+      }
+      if (data.devices.length === 0) {
+        if (list) list.innerHTML = '<div style="color: #10B981; text-align: center; padding: 16px;">📭 هیچ دستگاه فعالی برای این کاربر متصل به اپ نیست.</div>';
+        return;
+      }
+      if (list) {
+        list.innerHTML = '';
+        data.devices.forEach(d => {
+          const row = document.createElement('div');
+          row.style = 'display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 14px;';
+          const when = new Date((d.updated_at || d.created_at || 0) * 1000);
+          const whenStr = isNaN(when.getTime()) ? '-' : when.toLocaleString('fa-IR');
+          row.innerHTML = `
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: 700; font-size: 13px; color: #FFF;">${d.device_name || d.platform || 'دستگاه ناشناس'}</div>
+              <div style="font-size: 11.5px; color: var(--text-muted); font-family: monospace; direction: ltr;">${d.device_id || '-'}</div>
+              <div style="font-size: 11px; color: #64748B; margin-top: 2px;">آخرین فعالیت: ${whenStr}</div>
+            </div>
+            <button type="button" onclick="kickDevice('${phone}', '${d.device_id}')" style="background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); padding: 6px 12px; border-radius: 10px; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit;">
+              🚪 خارج کردن
+            </button>
+          `;
+          list.appendChild(row);
+        });
+      }
+    } catch (_) {
+      if (list) list.innerHTML = '<div style="color: #F87171; text-align: center; padding: 14px;">خطا در ارتباط با سرور</div>';
+    }
+  }
+
+  function closeDevicesModal() {
+    const o = document.getElementById('devicesModalOverlay');
+    if (o) o.style.display = 'none';
+  }
+
+  async function kickDevice(phone, deviceId) {
+    if (!confirm(`آیا دستگاه ${deviceId} را از برنامه ${phone} خارج کنید؟`)) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/user-devices/kick`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ phone: phone, device_id: deviceId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('دستگاه با موفقیت خارج شد!');
+        openDevicesModal(phone);
+        fetchDashboardStats();
+      } else {
+        showToast('خطا: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (_) { showToast('خطا در ارتباط با سرور', true); }
+  }
+
+  async function resetUserTraffic(email) {
+    if (!confirm(`آیا مطمئنی می‌خواهی حجم مصرفی ${email} در پنل 3x-ui صفر شود؟`)) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users/reset-traffic`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ email: email })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('ترافیک مصرفی با موفقیت صفر شد!');
+        fetchXuiUsers();
+      } else {
+        showToast('خطا در ریست ترافیک: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (_) { showToast('خطا در ارتباط با سرور', true); }
+  }
+
+  async function toggleUserEnable(email) {
+    if (!confirm(`تغییر وضعیت فعال/غیرفعال برای ${email} ؟`)) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users/toggle`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ email: email })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'وضعیت تغییر یافت');
+        fetchXuiUsers();
+      } else {
+        showToast('خطا: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (_) { showToast('خطا در ارتباط با سرور', true); }
+  }
+
   // ---------------- 3x-ui Users & App-Only Device Limits ----------------
   let cachedAppLimits = {};
 
@@ -2087,12 +2386,21 @@ async function fetchFreeConfigsFromWorker() {
             </select>
           </td>
           <td style="padding: 10px; text-align: center;">
-            <div style="display: flex; gap: 6px; justify-content: center;">
-              <button type="button" onclick="navigator.clipboard.writeText('${subUrl}'); showToast('لینک کپی شد');" style="background: rgba(0,245,255,0.12); color: #00F5FF; border: 1px solid rgba(0,245,255,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
-                📋 کپی لینک
+            <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+              <button type="button" onclick="openQrModal('${u.email}', '${u.subId}')" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
+                🎯 کیوآر
+              </button>
+              <button type="button" onclick="openDevicesModal('${u.email}')" style="background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
+                📱 دستگاه‌ها
               </button>
               <button type="button" onclick="promptRenewUser('${u.email}')" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
                 🔄 تمدید
+              </button>
+              <button type="button" onclick="resetUserTraffic('${u.email}')" style="background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
+                🧹 ریست حجم
+              </button>
+              <button type="button" onclick="toggleUserEnable('${u.email}')" style="background: rgba(239,68,68,0.12); color: ${u.enable ? '#F87171' : '#10B981'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
+                ${u.enable ? '⏸️ غیرفعال' : '▶️ فعال‌سازی'}
               </button>
             </div>
           </td>
@@ -2237,6 +2545,50 @@ async function fetchFreeConfigsFromWorker() {
 
   window.onload = checkAuth;
 </script>
+
+
+<!-- Modal: QR Code & Direct Deep Link (Option C) -->
+<div class="app-modal-overlay" id="qrModalOverlay" onclick="if(event.target===this) closeQrModal()">
+  <div class="app-modal" style="text-align: center;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;" id="qrModalTitle">کیوآرکد اشتراک</h3>
+      <button type="button" onclick="closeQrModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+    </div>
+    
+    <div style="background: #FFF; padding: 14px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+      <img id="qrModalImage" src="" alt="QR" style="width: 200px; height: 200px; display: block;">
+    </div>
+
+    <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;" id="qrModalSubInfo">
+      جهت اسکن مستقیم با دوربین اپلیکیشن
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button type="button" id="qrDirectHappBtn" onclick="openDirectHapp()" style="background: linear-gradient(90deg, #10B981, #059669); color: #FFF; border: none; padding: 11px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px; font-family: inherit;">
+        ⚡ اتصال مستقیم با HAPP (happ://add)
+      </button>
+      <button type="button" id="qrCopyUrlBtn" onclick="copyModalSubUrl()" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); padding: 10px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; font-family: inherit;">
+        📋 کپی آدرس سابسکریپشن
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Connected App Devices & Remote Kick (Option C) -->
+<div class="app-modal-overlay" id="devicesModalOverlay" onclick="if(event.target===this) closeDevicesModal()">
+  <div class="app-modal" style="max-width: 520px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;">
+        📱 دستگاه‌های متصل به اپ: <span id="devModalUser" style="color: #38bdf8;"></span>
+      </h3>
+      <button type="button" onclick="closeDevicesModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+    </div>
+
+    <div id="devicesModalList" style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto;">
+      <div style="color: var(--text-muted); text-align: center; padding: 20px;">در حال دریافت نشست‌های فعال...</div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
