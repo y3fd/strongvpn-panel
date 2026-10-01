@@ -677,7 +677,230 @@
     #toast.error {
       background: var(--red);
     }
-  </style>
+  
+    /* Modern Dashboard Table Styling for Internal Users */
+    .int-users-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 6px;
+      font-size: 13px;
+      text-align: right;
+    }
+    .int-users-table thead th {
+      padding: 12px 14px;
+      color: #94A3B8;
+      font-weight: 700;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: transparent;
+      white-space: nowrap;
+    }
+    .int-user-row {
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.2s ease;
+      border-radius: 14px;
+    }
+    .int-user-row:hover {
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    .int-user-row td {
+      padding: 12px 14px;
+      vertical-align: middle;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .int-user-row td:first-child {
+      border-right: 1px solid rgba(255, 255, 255, 0.04);
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
+    }
+    .int-user-row td:last-child {
+      border-left: 1px solid rgba(255, 255, 255, 0.04);
+      border-top-left-radius: 14px;
+      border-bottom-left-radius: 14px;
+    }
+
+    /* User Profile Chip */
+    .user-profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-avatar-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(0, 245, 255, 0.2));
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #FFF;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+    }
+    .user-meta-name {
+      font-weight: 800;
+      color: #F8FAFC;
+      font-size: 13.5px;
+      letter-spacing: 0.3px;
+      font-family: 'Vazirmatn', monospace, sans-serif;
+    }
+    .user-meta-note {
+      font-size: 11px;
+      color: #94A3B8;
+      margin-top: 2px;
+    }
+
+    /* Password Interactive Chip */
+    .pass-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 5px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: monospace;
+      font-size: 12.5px;
+      color: #38BDF8;
+    }
+    .pass-chip:hover {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #FFF;
+    }
+
+    /* Volume Usage Bar */
+    .usage-container {
+      min-width: 175px;
+    }
+    .usage-metrics {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 11.5px;
+      margin-bottom: 6px;
+      direction: ltr;
+    }
+    .usage-track {
+      width: 100%;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      padding: 1px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+    }
+    .usage-bar {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Status Pill */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      position: relative;
+    }
+    .status-dot.active {
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+    }
+    .status-dot.expired {
+      background: #EF4444;
+      box-shadow: 0 0 10px #EF4444;
+    }
+    .status-dot.warning {
+      background: #F59E0B;
+      box-shadow: 0 0 10px #F59E0B;
+    }
+
+    /* Timer Pill */
+    .timer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Action Toolbar */
+    .action-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-action-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #CBD5E1;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .btn-action-icon:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #FFF;
+      transform: translateY(-1px);
+    }
+    .btn-action-icon.danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #EF4444;
+    }
+    .btn-action-renew {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(0, 210, 255, 0.2));
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34D399;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-action-renew:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(0, 210, 255, 0.35));
+      color: #FFF;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+      transform: translateY(-1px);
+    }
+
+</style>
 </head>
 <body>
 
@@ -1063,22 +1286,22 @@
           </div>
 
           <!-- Table Container -->
-          <div style="overflow-x: auto; max-height: 520px; overflow-y: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
+          <div style="overflow-x: auto; max-height: 560px; overflow-y: auto;">
+            <table class="int-users-table">
               <thead>
-                <tr style="border-bottom: 1px solid var(--input-border); color: var(--text-muted); background: rgba(0,0,0,0.2);">
-                  <th style="padding: 10px;">کاربر / شناسه</th>
-                  <th style="padding: 10px;">رمز ورود</th>
-                  <th style="padding: 10px; min-width: 170px;">حجم مصرفی / سقف مجاز</th>
-                  <th style="padding: 10px;">تایمر اعتبار</th>
-                  <th style="padding: 10px;">سرورها و دستگاه</th>
-                  <th style="padding: 10px;">وضعیت</th>
-                  <th style="padding: 10px; text-align: center;">عملیات</th>
+                <tr>
+                  <th>کاربر / شناسه</th>
+                  <th>رمز عبور</th>
+                  <th style="min-width: 190px;">حجم مصرفی / سقف مجاز</th>
+                  <th>اعتبار / تایمر</th>
+                  <th>دسترسی و سرورها</th>
+                  <th>وضعیت حساب</th>
+                  <th style="text-align: center;">عملیات و مدیریت</th>
                 </tr>
               </thead>
               <tbody id="internalUsersTableBody">
                 <tr>
-                  <td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران از دیتابیس پنل...</td>
+                  <td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران از دیتابیس پنل...</td>
                 </tr>
               </tbody>
             </table>
@@ -2829,7 +3052,7 @@ async function fetchFreeConfigsFromWorker() {
     if (!tbody) return;
 
     if (users.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">هیچ کاربر اختصاصی یافت نشد. می‌توانید با فرم بالا کاربر بسازید.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">هیچ کاربر اختصاصی یافت نشد. می‌توانید با فرم بالا کاربر جدید ایجاد کنید.</td></tr>';
       return;
     }
 
@@ -2839,91 +3062,159 @@ async function fetchFreeConfigsFromWorker() {
       const totalGb = u.total_bytes > 0 ? ((u.total_bytes) / (1024 ** 3)).toFixed(1) : 'نامحدود';
       const pct = u.total_bytes > 0 ? Math.min(100, Math.round(((u.used_bytes || 0) / u.total_bytes) * 100)) : 0;
 
-      // Color based on pct
-      let barColor = '#10B981';
-      if (pct >= 85) barColor = '#EF4444';
-      else if (pct >= 60) barColor = '#F59E0B';
+      // Color and gradient for usage bar
+      let barGrad = 'linear-gradient(90deg, #10B981, #00D2FF)';
+      let pctColor = '#34D399';
+      if (pct >= 85) {
+        barGrad = 'linear-gradient(90deg, #F59E0B, #EF4444)';
+        pctColor = '#F87171';
+      } else if (pct >= 60) {
+        barGrad = 'linear-gradient(90deg, #10B981, #F59E0B)';
+        pctColor = '#FBBF24';
+      }
 
-      // Expiry Timer String
-      let expiryStr = 'نامحدود';
-      let expiryColor = '#10B981';
+      // Expiry Timer Badge
+      let timerPill = '';
       if (u.expiry_time > 0) {
         const diffMs = u.expiry_time - nowMs;
         if (diffMs <= 0) {
-          expiryStr = '<span style="color: #EF4444; font-weight: 700;">منقضی شده</span>';
-          expiryColor = '#EF4444';
+          timerPill = `
+            <div class="timer-pill" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.3); color: #F87171;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>منقضی شده</span>
+            </div>`;
         } else {
           const totalHours = Math.ceil(diffMs / (1000 * 3600));
           if (totalHours < 24) {
-            expiryStr = `<span style="color: #F59E0B; font-weight: 700;">⏳ ${totalHours} ساعت مانده</span>`;
+            timerPill = `
+              <div class="timer-pill" style="background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.3); color: #FBBF24;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>${totalHours} ساعت مانده</span>
+              </div>`;
           } else {
             const days = Math.ceil(diffMs / (1000 * 86400));
-            expiryStr = `<span style="color: #38bdf8;">📅 ${days} روز مانده</span>`;
+            timerPill = `
+              <div class="timer-pill" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.25); color: #38BDF8;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>${days} روز مانده</span>
+              </div>`;
           }
         }
+      } else {
+        timerPill = `
+          <div class="timer-pill" style="color: #94A3B8;">
+            <span>نامحدود</span>
+          </div>`;
       }
 
       // Status Badge
-      let statusBadge = '';
+      let statusPill = '';
       if (!u.active) {
-        statusBadge = '<span style="background: rgba(239,68,68,0.15); color: #EF4444; padding: 3px 8px; border-radius: 8px; font-weight: 700;">غیرفعال</span>';
+        statusPill = `
+          <div class="status-pill" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25); color: #F87171;">
+            <div class="status-dot expired"></div>
+            <span>غیرفعال</span>
+          </div>`;
       } else if (u.expired_reason === 'volume') {
-        statusBadge = '<span style="background: rgba(239,68,68,0.15); color: #EF4444; padding: 3px 8px; border-radius: 8px; font-weight: 700;">اتمام حجم</span>';
+        statusPill = `
+          <div class="status-pill" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25); color: #F87171;">
+            <div class="status-dot expired"></div>
+            <span>اتمام حجم</span>
+          </div>`;
       } else if (u.expired_reason === 'time') {
-        statusBadge = '<span style="background: rgba(245,158,11,0.15); color: #F59E0B; padding: 3px 8px; border-radius: 8px; font-weight: 700;">پایان زمان</span>';
+        statusPill = `
+          <div class="status-pill" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.25); color: #FBBF24;">
+            <div class="status-dot warning"></div>
+            <span>پایان زمان</span>
+          </div>`;
       } else {
-        statusBadge = '<span style="background: rgba(16,185,129,0.15); color: #10B981; padding: 3px 8px; border-radius: 8px; font-weight: 700;">🟢 فعال</span>';
+        statusPill = `
+          <div class="status-pill" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25); color: #34D399;">
+            <div class="status-dot active"></div>
+            <span>فعال</span>
+          </div>`;
       }
 
-      const tierLabel = u.tier === 'vip' ? '🌟 VIP' : (u.tier === 'all' ? '🌐 همه' : '⚡ رایگان');
+      // User Initials
+      const initials = (u.username || 'U').slice(0, 2).toUpperCase();
+
+      // Tier & Device Badge
+      let tierBadge = '';
+      if (u.tier === 'vip') {
+        tierBadge = '<span style="background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 800;">💎 VIP</span>';
+      } else if (u.tier === 'all') {
+        tierBadge = '<span style="background: rgba(0, 245, 255, 0.12); color: #00F5FF; border: 1px solid rgba(0, 245, 255, 0.25); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 800;">🌐 همه</span>';
+      } else {
+        tierBadge = '<span style="background: rgba(255, 255, 255, 0.06); color: #CBD5E1; border: 1px solid rgba(255, 255, 255, 0.1); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 700;">⚡ سرور عادی</span>';
+      }
 
       return `
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
-          <td style="padding: 12px 10px;">
-            <div style="font-weight: 800; font-family: monospace; color: #FFF; font-size: 13.5px;" dir="ltr">${u.username}</div>
-            ${u.note ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${u.note}</div>` : ''}
-          </td>
-          <td style="padding: 12px 10px;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 6px; font-family: monospace; color: #38bdf8;">${u.password || '---'}</code>
-              <button type="button" onclick="navigator.clipboard.writeText('${u.password}'); showToast('رمز کپی شد')" style="background: transparent; border: none; cursor: pointer; color: #94a3b8; font-size: 12px;" title="کپی رمز">📋</button>
+        <tr class="int-user-row">
+          <td>
+            <div class="user-profile-chip">
+              <div class="user-avatar-badge">${initials}</div>
+              <div>
+                <div class="user-meta-name" dir="ltr">${u.username}</div>
+                <div class="user-meta-note">${u.note || 'کاربر سیستم'}</div>
+              </div>
             </div>
           </td>
-          <td style="padding: 12px 10px;">
-            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-              <span style="color: #FFF; font-weight: 700;">${usedGb} GB</span>
-              <span style="color: var(--text-muted);">${totalGb === 'نامحدود' ? 'نامحدود' : totalGb + ' GB'} (${pct}%)</span>
-            </div>
-            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
-              <div style="width: ${pct}%; height: 100%; background: ${barColor}; border-radius: 4px; transition: width 0.3s;"></div>
+          <td>
+            <div class="pass-chip" onclick="navigator.clipboard.writeText('${u.password}'); showToast('رمز عبور ${u.username} کپی شد')" title="کلیک برای کپی رمز">
+              <span>${u.password || '---'}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.7;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </div>
           </td>
-          <td style="padding: 12px 10px; font-size: 12px;">
-            ${expiryStr}
+          <td>
+            <div class="usage-container">
+              <div class="usage-metrics">
+                <div>
+                  <strong style="color: #FFF; font-size: 12.5px;">${usedGb}</strong>
+                  <span style="color: #64748B;"> / ${totalGb === 'نامحدود' ? '∞' : totalGb + ' GB'}</span>
+                </div>
+                <div style="color: ${pctColor}; font-weight: 800; font-size: 11px;">${pct}%</div>
+              </div>
+              <div class="usage-track">
+                <div class="usage-bar" style="width: ${pct}%; background: ${barGrad};"></div>
+              </div>
+            </div>
           </td>
-          <td style="padding: 12px 10px; font-size: 11.5px;">
-            <div style="color: #c084fc; font-weight: 700;">${tierLabel}</div>
-            <div style="color: var(--text-muted); font-size: 11px;">📱 ${u.max_devices || 1} دستگاه</div>
+          <td>
+            ${timerPill}
           </td>
-          <td style="padding: 12px 10px;">
-            ${statusBadge}
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div>${tierBadge}</div>
+              <div style="color: #94A3B8; font-size: 11px;">📱 ${u.max_devices || 1} دستگاه هم‌زمان</div>
+            </div>
           </td>
-          <td style="padding: 12px 10px; text-align: center;">
-            <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
-              <button type="button" onclick="showIntAddQuotaModal(${u.id}, '${u.username}')" style="background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; font-weight: 700; cursor: pointer;" title="افزایش حجم یا زمان">
-                ➕ تمدید
+          <td>
+            ${statusPill}
+          </td>
+          <td style="text-align: center;">
+            <div class="action-toolbar">
+              <button type="button" class="btn-action-renew" onclick="showIntAddQuotaModal(${u.id}, '${u.username}')" title="تمدید یا افزایش حجم و زمان">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>تمدید</span>
               </button>
-              <button type="button" onclick="resetInternalUserTraffic(${u.id}, '${u.username}')" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="صفر کردن ترافیک مصرفی">
-                🔄 ریست
+
+              <button type="button" class="btn-action-icon" onclick="resetInternalUserTraffic(${u.id}, '${u.username}')" title="صفر کردن ترافیک مصرفی">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
               </button>
-              <button type="button" onclick="showIntEditModal(${u.id})" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="ویرایش">
-                ✏️
+
+              <button type="button" class="btn-action-icon" onclick="showIntEditModal(${u.id})" title="ویرایش مشخصات">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
               </button>
-              <button type="button" onclick="toggleInternalUserActive(${u.id}, ${u.active ? 0 : 1})" style="background: rgba(255,255,255,0.06); color: ${u.active ? '#F87171' : '#10B981'}; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="${u.active ? 'غیرفعال کردن' : 'فعال کردن'}">
-                ${u.active ? '⏸️' : '▶️'}
+
+              <button type="button" class="btn-action-icon" onclick="toggleInternalUserActive(${u.id}, ${u.active ? 0 : 1})" title="${u.active ? 'غیرفعال‌سازی کاربر' : 'فعال‌سازی کاربر'}">
+                ${u.active 
+                  ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' 
+                  : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>'
+                }
               </button>
-              <button type="button" onclick="deleteInternalUser(${u.id}, '${u.username}')" style="background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="حذف کاربر">
-                🗑️
+
+              <button type="button" class="btn-action-icon danger" onclick="deleteInternalUser(${u.id}, '${u.username}')" title="حذف کاربر">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
               </button>
             </div>
           </td>
@@ -2932,7 +3223,7 @@ async function fetchFreeConfigsFromWorker() {
     }).join('');
   }
 
-  async function createInternalUser() {
+    async function createInternalUser() {
     const username = (document.getElementById('intNewUsername')?.value || '').trim();
     const password = (document.getElementById('intNewPassword')?.value || '').trim();
     const quotaSel = document.getElementById('intNewQuotaSelect')?.value;
