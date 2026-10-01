@@ -1534,6 +1534,64 @@
       </div>
     </div>
 
+
+    <!-- Card: Shared Servers (3X-UI & Panel Users) -->
+    <div class="card" id="sharedConfigsCard" style="border: 1px solid rgba(56,189,248,0.25); background: linear-gradient(180deg, rgba(15,23,42,0.7), rgba(2,6,23,0.8));">
+      <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
+        <div class="card-title">
+          <span class="icon" style="color: #38BDF8;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" x2="22" y1="12" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </span>
+          <span>سرورهای کاربران ۳X-UI و پنل اختصاصی</span>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <div style="font-size: 11.5px; color: #38BDF8; font-weight: 700; background: rgba(56,189,248,0.12); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.25);" id="sharedCountBadge">۰ سرور ثبت‌شده</div>
+          <button type="button" onclick="fetchSharedConfigsFromWorker()" style="background: rgba(56,189,248,0.15); color: #38BDF8; border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg> بارگذاری مجدد
+          </button>
+        </div>
+      </div>
+
+      <!-- Deduplication & sync notification banner -->
+      <div style="background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(16,185,129,0.08)); border: 1px solid rgba(56,189,248,0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="font-size: 18px; line-height: 1;">🛡️</span>
+        <div style="font-size: 12.5px; line-height: 1.7; color: var(--text-secondary);">
+          <strong style="color: #38BDF8;">سیستم هوشمند فیلتر کانفیگ‌های تکراری:</strong>
+          سرورهایی که در این بخش ثبت می‌کنید به لیست سرورهای کلاینت اپلیکیشن اضافه می‌شوند. اپلیکیشن به صورت خودکار کانفیگ‌های اشتراک ۳X-UI کاربر را با این لیست مقایسه کرده و <strong style="color: #10B981;">از نمایش هرگونه کانفیگ تکراری جلوگیری می‌کند</strong>؛ در نتیجه فقط سرورهای جدید و غیرتکراری به کاربر ارائه می‌گردد.
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label style="font-weight: 700; color: #FFF; margin-bottom: 8px; display: block;">افزودن سرور مشترک جدید:</label>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <input type="text" id="newSharedConfigName" placeholder="نام نمایشی سرور (مثال: 🇩🇪 آلمان پرسرعت ۱)" style="flex: 1.2; min-width: 190px;">
+          <input type="text" id="newSharedConfigUri" placeholder="لینک کانفیگ (vless://, vmess://, trojan://, ss://)" dir="ltr" style="flex: 2; min-width: 250px;">
+          <select id="newSharedConfigTier" style="width: 175px; background: rgba(0,0,0,0.3); color: #FFF; border: 1px solid var(--input-border); border-radius: 10px; padding: 8px 12px; font-family: inherit; font-size: 12.5px;">
+            <option value="broadcast">🌐 همه کاربران (۳X-UI + پنل)</option>
+            <option value="vip">💎 فقط کاربران ویژه VIP</option>
+          </select>
+          <button type="button" onclick="addNewSharedConfig()" style="background: linear-gradient(135deg, #0284C7, #0EA5E9); color: #FFF; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(2,132,199,0.35);">
+            ➕ افزودن سرور
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 0;">
+            لیست سرورهای مشترک فعال در اپلیکیشن:
+          </label>
+        </div>
+        <div id="sharedConfigsList" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 15px;">در حال بارگذاری سرورهای مشترک...</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Card 7: Free Tier Server Management -->
     <div class="card" id="freeConfigsCard">
       <div class="card-header">
@@ -1838,6 +1896,7 @@
     document.getElementById('ghToken').value = savedToken;
     fetchCurrentConfig();
     fetchFreeConfigsFromWorker();
+    fetchSharedConfigsFromWorker();
     fetchClientErrorsFromWorker();
     fetchDashboardStats();
   }
@@ -2118,6 +2177,149 @@ async function fetchFreeConfigsFromWorker() {
       if (data.success) {
         showToast(data.message || 'سرور حذف شد');
         fetchFreeConfigsFromWorker();
+      }
+    } catch (_) {}
+  }
+
+
+  // ---------------- Shared Configs (3X-UI & Panel Users) ----------------
+  async function fetchSharedConfigsFromWorker() {
+    const listEl = document.getElementById('sharedConfigsList');
+    if (!listEl) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/shared-configs`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET, 'User-Agent': 'StrongVPN-Client' }
+      });
+      const data = await res.json();
+      if (!data.success || !Array.isArray(data.configs)) {
+        listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در دریافت سرورهای مشترک</div>';
+        return;
+      }
+      const badge = document.getElementById('sharedCountBadge');
+      if (badge) badge.innerText = `${data.configs.length} سرور ثبت‌شده`;
+
+      if (data.configs.length === 0) {
+        listEl.innerHTML = `
+          <div style="color: var(--text-muted); text-align: center; padding: 25px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px;">
+            هنوز سرور مشترکی ثبت نشده است. از فرم بالا سرور جدید اضافه کنید تا به کاربران ۳X-UI و پنل اختصاصی نمایش داده شود.
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      data.configs.forEach(cfg => {
+        const item = document.createElement('div');
+        item.style = 'display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; transition: all 0.2s;';
+        
+        const isAct = cfg.active === 1;
+        const tierLabel = cfg.tier === 'vip' ? '💎 VIP' : '🌐 عمومی';
+        const tierBadgeStyle = cfg.tier === 'vip' 
+          ? 'background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.3);' 
+          : 'background: rgba(14,165,233,0.15); color: #38BDF8; border: 1px solid rgba(14,165,233,0.3);';
+        
+        const shortUri = cfg.uri.length > 55 ? cfg.uri.slice(0, 52) + '...' : cfg.uri;
+
+        item.innerHTML = `
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+              <span style="font-weight: 700; font-size: 14px; color: #FFF;">${cfg.name || 'بدون نام'}</span>
+              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; ${tierBadgeStyle}">
+                ${tierLabel}
+              </span>
+              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; ${isAct ? 'background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3);' : 'background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3);'}">
+                ${isAct ? '● فعال' : '○ غیرفعال'}
+              </span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); font-family: monospace; direction: ltr; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${shortUri}
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
+            <button type="button" onclick="toggleSharedConfig(${cfg.id})" style="background: rgba(255,255,255,0.06); color: #E2E8F0; border: 1px solid rgba(255,255,255,0.12); padding: 6px 12px; border-radius: 8px; font-size: 11.5px; cursor: pointer; font-family: inherit; font-weight: 600;">
+              ${isAct ? 'غیرفعال‌سازی' : 'فعال‌سازی'}
+            </button>
+            <button type="button" onclick="deleteSharedConfig(${cfg.id})" style="background: rgba(239,68,68,0.12); color: #F87171; border: 1px solid rgba(239,68,68,0.25); padding: 6px 12px; border-radius: 8px; font-size: 11.5px; cursor: pointer; font-family: inherit; font-weight: 600;">
+              حذف
+            </button>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+    } catch (e) {
+      console.error(e);
+      listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در دریافت سرورهای مشترک از ورکر</div>';
+    }
+  }
+
+  async function addNewSharedConfig() {
+    const name = document.getElementById('newSharedConfigName').value.trim();
+    const uri = document.getElementById('newSharedConfigUri').value.trim();
+    const tier = document.getElementById('newSharedConfigTier').value.trim();
+    if (!name || !uri) {
+      showToast('لطفاً هم نام و هم لینک کانفیگ را وارد کنید.', true);
+      return;
+    }
+    showToast('در حال ثبت سرور مشترک...');
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/shared-configs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET,
+          'User-Agent': 'StrongVPN-Client'
+        },
+        body: JSON.stringify({ name, uri, tier })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('سرور مشترک با موفقیت ثبت شد!');
+        document.getElementById('newSharedConfigName').value = '';
+        document.getElementById('newSharedConfigUri').value = '';
+        fetchSharedConfigsFromWorker();
+      } else {
+        showToast('خطا: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (e) {
+      showToast('خطا در برقراری ارتباط با سرور', true);
+    }
+  }
+
+  async function toggleSharedConfig(id) {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/shared-configs/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET,
+          'User-Agent': 'StrongVPN-Client'
+        },
+        body: JSON.stringify({ action: 'toggle' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'وضعیت سرور تغییر یافت');
+        fetchSharedConfigsFromWorker();
+      }
+    } catch (_) {}
+  }
+
+  async function deleteSharedConfig(id) {
+    if (!confirm('آیا از حذف این سرور مشترک اطمینان دارید؟')) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/shared-configs/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET,
+          'User-Agent': 'StrongVPN-Client'
+        },
+        body: JSON.stringify({ action: 'delete' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'سرور مشترک با موفقیت حذف شد');
+        fetchSharedConfigsFromWorker();
       }
     } catch (_) {}
   }
@@ -3460,7 +3662,7 @@ async function fetchFreeConfigsFromWorker() {
     localStorage.setItem('svpn_active_tab', name);
     // Lazy load when switching
     if (name === 'users') { fetchInternalUsers(); }
-    if (name === 'servers') fetchFreeConfigsFromWorker();
+    if (name === 'servers') { fetchFreeConfigsFromWorker(); fetchSharedConfigsFromWorker(); }
     if (name === 'logs') fetchClientErrorsFromWorker();
     if (name === 'ads') updateAdPreview();
   }
