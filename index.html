@@ -890,9 +890,208 @@
 
     </div><!-- /tab-announcement -->
 
-    <!-- Tab: Users Management (3x-ui Sync + App-only Device Limit) -->
+    <!-- Tab: Users Management (Dual System: Internal DB + 3X-UI) -->
     <div class="tab-panel" id="tab-users">
-      <div class="card">
+
+      <!-- Sub-tabs Switcher -->
+      <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 14px; flex-wrap: wrap;">
+        <button type="button" id="subtab-btn-internal" onclick="switchUsersSubTab('internal')" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); color: #FFF; border: 1.5px solid var(--primary); padding: 10px 22px; border-radius: 14px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
+          <span>⚡ کاربران اختصاصی پنل (مستقل از ۳X-UI با محاسبه حجم)</span>
+          <span id="badge-internal-users" style="background: var(--primary); color: #FFF; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700;">0</span>
+        </button>
+        <button type="button" id="subtab-btn-xui" onclick="switchUsersSubTab('xui')" style="background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--card-border); padding: 10px 22px; border-radius: 14px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
+          <span>👥 کاربران اشتراکی ۳X-UI</span>
+          <span id="badge-xui-users" style="background: rgba(255,255,255,0.1); color: #CBD5E1; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700;">0</span>
+        </button>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SUB-TAB 1: INTERNAL PANEL USERS (NEW)     -->
+      <!-- ========================================== -->
+      <div id="subtab-content-internal">
+
+        <!-- Stats Overview Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">👥 کل کاربران اختصاصی</div>
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span id="intStatTotalUsers" style="font-size: 24px; font-weight: 900; color: #FFF;">0</span>
+              <span style="font-size: 12px; color: #10B981;">(<span id="intStatActiveUsers">0</span> فعال)</span>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">📦 کل حجم تخصیص داده شده</div>
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span id="intStatAllocatedGb" style="font-size: 24px; font-weight: 900; color: #38bdf8;">0 GB</span>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">🔥 حجم مصرف شده تا اکنون</div>
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span id="intStatUsedGb" style="font-size: 24px; font-weight: 900; color: #f43f5e;">0 GB</span>
+              <span id="intStatPercent" style="font-size: 12px; color: var(--text-muted);">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Create Internal User Card -->
+        <div class="card" style="margin-bottom: 24px;">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg></span>
+              <span>ساخت کاربر اختصاصی جدید (محاسبه حجم + تایمر اعتبار)</span>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>شماره موبایل یا نام کاربری:</label>
+              <input type="text" id="intNewUsername" placeholder="مثلاً 09120000000 یا user101" dir="ltr">
+              <div class="hint">شناسه ورود کاربر در برنامه StrongVPN</div>
+            </div>
+
+            <div class="form-group">
+              <label>رمز عبور ورود به اپلیکیشن:</label>
+              <input type="text" id="intNewPassword" placeholder="رمز عبور دلخواه (مثلاً 123456)" dir="ltr">
+              <div class="hint">رمز ورودی که کاربر در صفحه لاگین برنامه می‌زند</div>
+            </div>
+
+            <div class="form-group">
+              <label>سقف حجم مجاز (گیگابایت):</label>
+              <select id="intNewQuotaSelect" onchange="onIntQuotaSelectChange(this)">
+                <option value="2">۲ گیگابایت (تست اولیه)</option>
+                <option value="5">۵ گیگابایت</option>
+                <option value="10" selected>۱۰ گیگابایت (استاندارد)</option>
+                <option value="20">۲۰ گیگابایت</option>
+                <option value="50">۵۰ گیگابایت</option>
+                <option value="100">۱۰۰ گیگابایت (ویژه)</option>
+                <option value="0">نامحدود (بدون سقف حجم)</option>
+                <option value="custom">حجم دلخواه دیگر...</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="intCustomQuotaGroup" style="display: none;">
+              <label>مقدار حجم دلخواه (GB):</label>
+              <input type="number" id="intNewCustomQuota" placeholder="مثلاً 15" min="1" max="1000">
+            </div>
+
+            <div class="form-group">
+              <label>مدت زمان اعتبار / تایمر:</label>
+              <select id="intNewDurationSelect" onchange="onIntDurationSelectChange(this)">
+                <option value="hours:2">۲ ساعت اعتبار (تست فوری)</option>
+                <option value="hours:6">۶ ساعت اعتبار</option>
+                <option value="hours:12">۱۲ ساعت اعتبار</option>
+                <option value="hours:24">۲۴ ساعت (۱ روز)</option>
+                <option value="days:3">۳ روز</option>
+                <option value="days:7">۷ روز (۱ هفته)</option>
+                <option value="days:30" selected>۳۰ روز (۱ ماه)</option>
+                <option value="days:60">۶۰ روز (۲ ماه)</option>
+                <option value="days:90">۹۰ روز (۳ ماه)</option>
+                <option value="unlimited">نامحدود (بدون تاریخ انقضا)</option>
+                <option value="custom">زمان دلخواه (ساعت یا روز)...</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="intCustomDurationGroup" style="display: none;">
+              <label>زمان دلخواه:</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="number" id="intNewCustomDurationValue" placeholder="مقدار" value="10" style="flex:1;">
+                <select id="intNewCustomDurationUnit" style="flex:1;">
+                  <option value="hours">ساعت</option>
+                  <option value="days" selected>روز</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>🔒 سقف دستگاه همزمان در اپلیکیشن:</label>
+              <select id="intNewMaxDevices">
+                <option value="1" selected>۱ دستگاه (تک کاربره)</option>
+                <option value="2">۲ دستگاه (دو کاربره)</option>
+                <option value="3">۳ دستگاه</option>
+                <option value="5">۵ دستگاه</option>
+              </select>
+              <div class="hint" style="color: #38bdf8;">کنترل دقیق بر روی تعداد نشست‌های آنلاین هم‌زمان</div>
+            </div>
+
+            <div class="form-group">
+              <label>🌐 سرورهای مجاز برای این کاربر:</label>
+              <select id="intNewServerTier">
+                <option value="free" selected>سرورهای رایگان پنل (تعریف‌شده در تب سرورها)</option>
+                <option value="vip">سرورهای ویژه VIP</option>
+                <option value="all">تمام سرورهای موجود در پنل</option>
+              </select>
+            </div>
+
+            <div class="form-group full">
+              <label>یادداشت / نام صاحب اکانت (اختیاری):</label>
+              <input type="text" id="intNewNote" placeholder="مثلاً: کاربر تست، کاربر رایگان تلگرام، همکار...">
+            </div>
+
+            <div class="form-group full" style="margin-top: 6px;">
+              <button type="button" onclick="createInternalUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 13px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                <span>➕ ثبت کاربر اختصاصی در دیتابیس پنل</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Internal Users List Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></span>
+              <span>لیست زنده کاربران اختصاصی با محاسبه حجم و تایمر</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" onclick="fetchInternalUsers()" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+                🔄 بارگذاری مجدد
+              </button>
+            </div>
+          </div>
+
+          <!-- Search & Filter Bar -->
+          <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+            <input type="text" id="intSearchInput" placeholder="جستجوی شماره، نام یا یادداشت..." dir="ltr" style="flex: 2; min-width: 200px;" onkeyup="filterInternalUsers()">
+            <select id="intStatusFilter" onchange="filterInternalUsers()" style="flex: 1; min-width: 140px;">
+              <option value="all">همه وضعیت‌ها</option>
+              <option value="active">فقط فعال</option>
+              <option value="volume_exhausted">اتمام حجم</option>
+              <option value="time_expired">پایان زمان</option>
+              <option value="disabled">غیرفعال</option>
+            </select>
+          </div>
+
+          <!-- Table Container -->
+          <div style="overflow-x: auto; max-height: 520px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--input-border); color: var(--text-muted); background: rgba(0,0,0,0.2);">
+                  <th style="padding: 10px;">کاربر / شناسه</th>
+                  <th style="padding: 10px;">رمز ورود</th>
+                  <th style="padding: 10px; min-width: 170px;">حجم مصرفی / سقف مجاز</th>
+                  <th style="padding: 10px;">تایمر اعتبار</th>
+                  <th style="padding: 10px;">سرورها و دستگاه</th>
+                  <th style="padding: 10px;">وضعیت</th>
+                  <th style="padding: 10px; text-align: center;">عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="internalUsersTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران از دیتابیس پنل...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /subtab-content-internal -->
+
+      <!-- ========================================== -->
+      <!-- SUB-TAB 2: 3X-UI USERS (EXISTING)          -->
+      <!-- ========================================== -->
+      <div id="subtab-content-xui" style="display: none;">
+        <div class="card">
         <div class="card-header">
           <div class="card-title">
             <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg></span>
@@ -1005,6 +1204,8 @@
           </table>
         </div>
       </div>
+      </div><!-- /subtab-content-xui -->
+
     </div><!-- /tab-users -->
 
 
@@ -2518,12 +2719,456 @@ async function fetchFreeConfigsFromWorker() {
     }
   }
 
+  
+  // ========================================================
+  // INTERNAL USERS MANAGEMENT (Dual Architecture)
+  // ========================================================
+  let allInternalUsers = [];
+
+  function switchUsersSubTab(subtab) {
+    const isInternal = subtab === 'internal';
+    document.getElementById('subtab-content-internal').style.display = isInternal ? 'block' : 'none';
+    document.getElementById('subtab-content-xui').style.display = isInternal ? 'none' : 'block';
+
+    const btnInt = document.getElementById('subtab-btn-internal');
+    const btnXui = document.getElementById('subtab-btn-xui');
+    if (isInternal) {
+      btnInt.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
+      btnInt.style.borderColor = 'var(--primary)';
+      btnInt.style.color = '#FFF';
+      btnXui.style.background = 'rgba(255,255,255,0.04)';
+      btnXui.style.borderColor = 'var(--card-border)';
+      btnXui.style.color = 'var(--text-muted)';
+      fetchInternalUsers();
+    } else {
+      btnXui.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
+      btnXui.style.borderColor = 'var(--primary)';
+      btnXui.style.color = '#FFF';
+      btnInt.style.background = 'rgba(255,255,255,0.04)';
+      btnInt.style.borderColor = 'var(--card-border)';
+      btnInt.style.color = 'var(--text-muted)';
+      fetchXuiUsers();
+    }
+  }
+
+  function onIntQuotaSelectChange(select) {
+    const isCustom = select.value === 'custom';
+    document.getElementById('intCustomQuotaGroup').style.display = isCustom ? 'block' : 'none';
+  }
+
+  function onIntDurationSelectChange(select) {
+    const isCustom = select.value === 'custom';
+    document.getElementById('intCustomDurationGroup').style.display = isCustom ? 'block' : 'none';
+  }
+
+  async function fetchInternalUsers() {
+    const tbody = document.getElementById('internalUsersTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران اختصاصی از سرور ابری...</td></tr>';
+
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (!data.success || !Array.isArray(data.users)) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #F87171; padding: 16px;">خطا در دریافت کاربران: ' + (data.message || 'پاسخ نامعتبر') + '</td></tr>';
+        return;
+      }
+
+      allInternalUsers = data.users;
+      const stats = data.stats || {};
+
+      // Update Header Badges
+      const badgeInt = document.getElementById('badge-internal-users');
+      if (badgeInt) badgeInt.innerText = data.users.length;
+      const badgeNav = document.getElementById('badge-users');
+      if (badgeNav) badgeNav.innerText = data.users.length;
+
+      // Update Stats Cards
+      document.getElementById('intStatTotalUsers').innerText = stats.total_users || data.users.length;
+      document.getElementById('intStatActiveUsers').innerText = stats.active_users || 0;
+
+      const allocGb = ((stats.total_allocated_bytes || 0) / (1024 ** 3)).toFixed(1);
+      document.getElementById('intStatAllocatedGb').innerText = allocGb + ' GB';
+
+      const usedGb = ((stats.total_used_bytes || 0) / (1024 ** 3)).toFixed(2);
+      document.getElementById('intStatUsedGb').innerText = usedGb + ' GB';
+
+      const pct = stats.total_allocated_bytes > 0 ? Math.round((stats.total_used_bytes / stats.total_allocated_bytes) * 100) : 0;
+      document.getElementById('intStatPercent').innerText = pct + '%';
+
+      renderInternalUsers(allInternalUsers);
+    } catch (err) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #F87171; padding: 16px;">خطای ارتباط با سرور: ' + err.message + '</td></tr>';
+    }
+  }
+
+  function filterInternalUsers() {
+    const q = (document.getElementById('intSearchInput')?.value || '').trim().toLowerCase();
+    const status = document.getElementById('intStatusFilter')?.value || 'all';
+
+    const filtered = allInternalUsers.filter(u => {
+      // Search
+      const matchSearch = !q || (u.username && u.username.toLowerCase().includes(q)) || (u.note && u.note.toLowerCase().includes(q));
+      if (!matchSearch) return false;
+
+      // Status
+      if (status === 'active') return u.active && !u.is_expired;
+      if (status === 'volume_exhausted') return u.expired_reason === 'volume';
+      if (status === 'time_expired') return u.expired_reason === 'time';
+      if (status === 'disabled') return !u.active;
+      return true;
+    });
+
+    renderInternalUsers(filtered);
+  }
+
+  function renderInternalUsers(users) {
+    const tbody = document.getElementById('internalUsersTableBody');
+    if (!tbody) return;
+
+    if (users.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">هیچ کاربر اختصاصی یافت نشد. می‌توانید با فرم بالا کاربر بسازید.</td></tr>';
+      return;
+    }
+
+    const nowMs = Date.now();
+    tbody.innerHTML = users.map(u => {
+      const usedGb = ((u.used_bytes || 0) / (1024 ** 3)).toFixed(2);
+      const totalGb = u.total_bytes > 0 ? ((u.total_bytes) / (1024 ** 3)).toFixed(1) : 'نامحدود';
+      const pct = u.total_bytes > 0 ? Math.min(100, Math.round(((u.used_bytes || 0) / u.total_bytes) * 100)) : 0;
+
+      // Color based on pct
+      let barColor = '#10B981';
+      if (pct >= 85) barColor = '#EF4444';
+      else if (pct >= 60) barColor = '#F59E0B';
+
+      // Expiry Timer String
+      let expiryStr = 'نامحدود';
+      let expiryColor = '#10B981';
+      if (u.expiry_time > 0) {
+        const diffMs = u.expiry_time - nowMs;
+        if (diffMs <= 0) {
+          expiryStr = '<span style="color: #EF4444; font-weight: 700;">منقضی شده</span>';
+          expiryColor = '#EF4444';
+        } else {
+          const totalHours = Math.ceil(diffMs / (1000 * 3600));
+          if (totalHours < 24) {
+            expiryStr = `<span style="color: #F59E0B; font-weight: 700;">⏳ ${totalHours} ساعت مانده</span>`;
+          } else {
+            const days = Math.ceil(diffMs / (1000 * 86400));
+            expiryStr = `<span style="color: #38bdf8;">📅 ${days} روز مانده</span>`;
+          }
+        }
+      }
+
+      // Status Badge
+      let statusBadge = '';
+      if (!u.active) {
+        statusBadge = '<span style="background: rgba(239,68,68,0.15); color: #EF4444; padding: 3px 8px; border-radius: 8px; font-weight: 700;">غیرفعال</span>';
+      } else if (u.expired_reason === 'volume') {
+        statusBadge = '<span style="background: rgba(239,68,68,0.15); color: #EF4444; padding: 3px 8px; border-radius: 8px; font-weight: 700;">اتمام حجم</span>';
+      } else if (u.expired_reason === 'time') {
+        statusBadge = '<span style="background: rgba(245,158,11,0.15); color: #F59E0B; padding: 3px 8px; border-radius: 8px; font-weight: 700;">پایان زمان</span>';
+      } else {
+        statusBadge = '<span style="background: rgba(16,185,129,0.15); color: #10B981; padding: 3px 8px; border-radius: 8px; font-weight: 700;">🟢 فعال</span>';
+      }
+
+      const tierLabel = u.tier === 'vip' ? '🌟 VIP' : (u.tier === 'all' ? '🌐 همه' : '⚡ رایگان');
+
+      return `
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+          <td style="padding: 12px 10px;">
+            <div style="font-weight: 800; font-family: monospace; color: #FFF; font-size: 13.5px;" dir="ltr">${u.username}</div>
+            ${u.note ? `<div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${u.note}</div>` : ''}
+          </td>
+          <td style="padding: 12px 10px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 6px; font-family: monospace; color: #38bdf8;">${u.password || '---'}</code>
+              <button type="button" onclick="navigator.clipboard.writeText('${u.password}'); showToast('رمز کپی شد')" style="background: transparent; border: none; cursor: pointer; color: #94a3b8; font-size: 12px;" title="کپی رمز">📋</button>
+            </div>
+          </td>
+          <td style="padding: 12px 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+              <span style="color: #FFF; font-weight: 700;">${usedGb} GB</span>
+              <span style="color: var(--text-muted);">${totalGb === 'نامحدود' ? 'نامحدود' : totalGb + ' GB'} (${pct}%)</span>
+            </div>
+            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
+              <div style="width: ${pct}%; height: 100%; background: ${barColor}; border-radius: 4px; transition: width 0.3s;"></div>
+            </div>
+          </td>
+          <td style="padding: 12px 10px; font-size: 12px;">
+            ${expiryStr}
+          </td>
+          <td style="padding: 12px 10px; font-size: 11.5px;">
+            <div style="color: #c084fc; font-weight: 700;">${tierLabel}</div>
+            <div style="color: var(--text-muted); font-size: 11px;">📱 ${u.max_devices || 1} دستگاه</div>
+          </td>
+          <td style="padding: 12px 10px;">
+            ${statusBadge}
+          </td>
+          <td style="padding: 12px 10px; text-align: center;">
+            <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
+              <button type="button" onclick="showIntAddQuotaModal(${u.id}, '${u.username}')" style="background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; font-weight: 700; cursor: pointer;" title="افزایش حجم یا زمان">
+                ➕ تمدید
+              </button>
+              <button type="button" onclick="resetInternalUserTraffic(${u.id}, '${u.username}')" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="صفر کردن ترافیک مصرفی">
+                🔄 ریست
+              </button>
+              <button type="button" onclick="showIntEditModal(${u.id})" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="ویرایش">
+                ✏️
+              </button>
+              <button type="button" onclick="toggleInternalUserActive(${u.id}, ${u.active ? 0 : 1})" style="background: rgba(255,255,255,0.06); color: ${u.active ? '#F87171' : '#10B981'}; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="${u.active ? 'غیرفعال کردن' : 'فعال کردن'}">
+                ${u.active ? '⏸️' : '▶️'}
+              </button>
+              <button type="button" onclick="deleteInternalUser(${u.id}, '${u.username}')" style="background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer;" title="حذف کاربر">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  async function createInternalUser() {
+    const username = (document.getElementById('intNewUsername')?.value || '').trim();
+    const password = (document.getElementById('intNewPassword')?.value || '').trim();
+    const quotaSel = document.getElementById('intNewQuotaSelect')?.value;
+    const durSel = document.getElementById('intNewDurationSelect')?.value;
+    const maxDevices = parseInt(document.getElementById('intNewMaxDevices')?.value || 1, 10);
+    const tier = document.getElementById('intNewServerTier')?.value || 'free';
+    const note = (document.getElementById('intNewNote')?.value || '').trim();
+
+    if (!username || !password) {
+      showToast('لطفاً شماره موبایل/شناسه و رمز عبور را وارد کنید', true);
+      return;
+    }
+
+    let totalGb = 0;
+    if (quotaSel === 'custom') {
+      totalGb = parseFloat(document.getElementById('intNewCustomQuota')?.value || 0);
+    } else {
+      totalGb = parseFloat(quotaSel);
+    }
+
+    let durationType = 'days';
+    let durationValue = 30;
+
+    if (durSel === 'unlimited') {
+      durationType = 'unlimited';
+      durationValue = 0;
+    } else if (durSel === 'custom') {
+      durationType = document.getElementById('intNewCustomDurationUnit')?.value || 'days';
+      durationValue = parseFloat(document.getElementById('intNewCustomDurationValue')?.value || 1);
+    } else if (durSel.startsWith('hours:')) {
+      durationType = 'hours';
+      durationValue = parseFloat(durSel.split(':')[1]);
+    } else if (durSel.startsWith('days:')) {
+      durationType = 'days';
+      durationValue = parseFloat(durSel.split(':')[1]);
+    }
+
+    showToast('در حال ثبت کاربر در دیتابیس ابری...');
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          total_gb: totalGb,
+          duration_type: durationType,
+          duration_value: durationValue,
+          max_devices: maxDevices,
+          tier,
+          note
+        })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        showToast('خطا در ثبت کاربر: ' + (data.message || 'نامشخص'), true);
+        return;
+      }
+
+      showToast('✅ ' + data.message);
+      // Reset form
+      document.getElementById('intNewUsername').value = '';
+      document.getElementById('intNewPassword').value = '';
+      document.getElementById('intNewNote').value = '';
+      fetchInternalUsers();
+    } catch (err) {
+      showToast('خطای شبکه: ' + err.message, true);
+    }
+  }
+
+  async function resetInternalUserTraffic(id, username) {
+    if (!confirm(`آیا از صفر کردن ترافیک مصرفی کاربر ${username} اطمینان دارید؟`)) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users/reset-traffic`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('✅ ترافیک مصرفی با موفقیت ریست شد');
+        fetchInternalUsers();
+      } else {
+        showToast('خطا: ' + data.message, true);
+      }
+    } catch (err) {
+      showToast('خطای شبکه: ' + err.message, true);
+    }
+  }
+
+  function showIntAddQuotaModal(id, username) {
+    document.getElementById('intQuotaModalUserId').value = id;
+    document.getElementById('intQuotaModalUsername').innerText = username;
+    document.getElementById('intQuotaAddGb').value = '10';
+    document.getElementById('intQuotaAddTimeValue').value = '30';
+    document.getElementById('intQuotaModalOverlay').classList.add('active');
+  }
+
+  function closeIntQuotaModal() {
+    document.getElementById('intQuotaModalOverlay').classList.remove('active');
+  }
+
+  async function submitIntAddQuota() {
+    const id = parseInt(document.getElementById('intQuotaModalUserId').value, 10);
+    const addGb = parseFloat(document.getElementById('intQuotaAddGb').value || 0);
+    const timeVal = parseFloat(document.getElementById('intQuotaAddTimeValue').value || 0);
+    const timeUnit = document.getElementById('intQuotaAddTimeUnit').value;
+
+    const payload = { id, add_gb: addGb };
+    if (timeUnit === 'hours') payload.add_hours = timeVal;
+    else payload.add_days = timeVal;
+
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users/add-quota`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('✅ حجم و زمان با موفقیت اضافه شد');
+        closeIntQuotaModal();
+        fetchInternalUsers();
+      } else {
+        showToast('خطا: ' + data.message, true);
+      }
+    } catch (err) {
+      showToast('خطای شبکه: ' + err.message, true);
+    }
+  }
+
+  function showIntEditModal(id) {
+    const user = allInternalUsers.find(u => u.id === id);
+    if (!user) return;
+    document.getElementById('intEditModalUserId').value = id;
+    document.getElementById('intEditModalUsername').innerText = user.username;
+    document.getElementById('intEditPassword').value = user.password || '';
+    document.getElementById('intEditMaxDevices').value = user.max_devices || 1;
+    document.getElementById('intEditServerTier').value = user.tier || 'free';
+    document.getElementById('intEditNote').value = user.note || '';
+    document.getElementById('intEditModalOverlay').classList.add('active');
+  }
+
+  function closeIntEditModal() {
+    document.getElementById('intEditModalOverlay').classList.remove('active');
+  }
+
+  async function submitIntEditUser() {
+    const id = parseInt(document.getElementById('intEditModalUserId').value, 10);
+    const password = document.getElementById('intEditPassword').value.trim();
+    const maxDevices = parseInt(document.getElementById('intEditMaxDevices').value, 10);
+    const tier = document.getElementById('intEditServerTier').value;
+    const note = document.getElementById('intEditNote').value.trim();
+
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ id, password, max_devices: maxDevices, tier, note })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('✅ مشخصات کاربر به‌روزرسانی شد');
+        closeIntEditModal();
+        fetchInternalUsers();
+      } else {
+        showToast('خطا: ' + data.message, true);
+      }
+    } catch (err) {
+      showToast('خطای شبکه: ' + err.message, true);
+    }
+  }
+
+  async function toggleInternalUserActive(id, newStatus) {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ id, active: newStatus })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(newStatus ? '✅ کاربر فعال شد' : '⏸️ کاربر غیرفعال شد');
+        fetchInternalUsers();
+      } else {
+        showToast('خطا: ' + data.message, true);
+      }
+    } catch (err) {
+      showToast('خطای شبکه: ' + err.message, true);
+    }
+  }
+
+  async function deleteInternalUser(id, username) {
+    if (!confirm(`آیا از حذف دائم کاربر اختصاصی ${username} اطمینان دارید؟`)) return;
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('🗑️ ' + data.message);
+        fetchInternalUsers();
+      } else {
+        showToast('خطا: ' + data.message, true);
+      }
+    } catch (err) {
+      showToast('خطای شبکه: ' + err.message, true);
+    }
+  }
+
   function switchTab(name) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
     localStorage.setItem('svpn_active_tab', name);
     // Lazy load when switching
-    if (name === 'users') fetchXuiUsers();
+    if (name === 'users') { fetchInternalUsers(); }
     if (name === 'servers') fetchFreeConfigsFromWorker();
     if (name === 'logs') fetchClientErrorsFromWorker();
     if (name === 'ads') updateAdPreview();
@@ -2579,6 +3224,98 @@ async function fetchFreeConfigsFromWorker() {
 
     <div id="devicesModalList" style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto;">
       <div style="color: var(--text-muted); text-align: center; padding: 20px;">در حال دریافت نشست‌های فعال...</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal: Add Quota / Time to Internal User -->
+<div class="app-modal-overlay" id="intQuotaModalOverlay" onclick="if(event.target===this) closeIntQuotaModal()">
+  <div class="app-modal" style="max-width: 440px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;">
+        ➕ افزایش حجم و زمان: <span id="intQuotaModalUsername" style="color: #38bdf8;"></span>
+      </h3>
+      <button type="button" onclick="closeIntQuotaModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+    </div>
+
+    <input type="hidden" id="intQuotaModalUserId">
+
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>افزودن حجم (گیگابایت):</label>
+        <input type="number" id="intQuotaAddGb" placeholder="مثلاً 5 یا 10 گیگ (0 = بدون تغییر)" min="0" value="10">
+        <div class="hint">حجم مشخص شده به سقف مجاز کاربر اضافه می‌شود.</div>
+      </div>
+
+      <div class="form-group full">
+        <label>افزودن زمان اعتبار:</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="number" id="intQuotaAddTimeValue" placeholder="مقدار" value="30" style="flex: 1;">
+          <select id="intQuotaAddTimeUnit" style="flex: 1;">
+            <option value="days" selected>روز</option>
+            <option value="hours">ساعت</option>
+          </select>
+        </div>
+        <div class="hint">زمان جدید به اعتبار باقی‌مانده اضافه می‌گردد.</div>
+      </div>
+
+      <div class="form-group full" style="margin-top: 10px;">
+        <button type="button" onclick="submitIntAddQuota()" style="background: linear-gradient(90deg, #10B981, #00D2FF); color: #FFF; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit;">
+          💾 ثبت و افزایش آنی اعتبار
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Edit Internal User -->
+<div class="app-modal-overlay" id="intEditModalOverlay" onclick="if(event.target===this) closeIntEditModal()">
+  <div class="app-modal" style="max-width: 460px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;">
+        ✏️ ویرایش مشخصات کاربر: <span id="intEditModalUsername" style="color: #c084fc;"></span>
+      </h3>
+      <button type="button" onclick="closeIntEditModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+    </div>
+
+    <input type="hidden" id="intEditModalUserId">
+
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>رمز عبور ورود به اپ:</label>
+        <input type="text" id="intEditPassword" dir="ltr">
+      </div>
+
+      <div class="form-group full">
+        <label>🔒 سقف دستگاه‌های هم‌زمان:</label>
+        <select id="intEditMaxDevices">
+          <option value="1">۱ دستگاه</option>
+          <option value="2">۲ دستگاه</option>
+          <option value="3">۳ دستگاه</option>
+          <option value="5">۵ دستگاه</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>🌐 دسته سرورها:</label>
+        <select id="intEditServerTier">
+          <option value="free">سرورهای رایگان پنل</option>
+          <option value="vip">سرورهای ویژه VIP</option>
+          <option value="all">تمام سرورها</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>یادداشت / توضیحات:</label>
+        <input type="text" id="intEditNote">
+      </div>
+
+      <div class="form-group full" style="margin-top: 10px;">
+        <button type="button" onclick="submitIntEditUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit;">
+          💾 ذخیره تغییرات
+        </button>
+      </div>
     </div>
   </div>
 </div>
