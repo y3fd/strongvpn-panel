@@ -1,8 +1,8 @@
 {
-  "version": 1790629779684,
+  "version": 1790880510457,
   "announcement": {
-    "id": 1790629779,
-    "active": false,
+    "id": 1790267432,
+    "active": true,
     "type": "update",
     "title": "اطلاعیه",
     "message": "نسخه جدید اپلیکیشن",
@@ -17,21 +17,13 @@
     "shop_base_url": "https://shop.strongdev.space"
   },
   "app": {
-    "latest_version": "1.0.3",
+    "latest_version": "1.0.0",
     "min_version": "1.0.0",
-    "apk_url": "https://auth.djanah99.ir/download/universal"
+    "apk_url": "https://auth.djanah99.ir/download/universal",
+    "apk_arm64_url": "https://auth.djanah99.ir/download/arm64",
+    "windows_url": "https://auth.djanah99.ir/download/windows",
+    "windows_portable_url": "https://auth.djanah99.ir/download/windows-portable"
   },
   "fallback_configs": [],
-  "ad_settings": {
-    "ad_active": true,
-    "ad_type": "image",
-    "ad_title": "🎉 پلن ویژه جدید اضافه شد! 🌟",
-    "ad_body": "📦 100 گیگابایت (30 روز) فقط 600,000 تومان - مخصوص کاربران پرمصرف! خرید از ربات @strong1vpn_bot",
-    "ad_image_url": "https://auth.djanah99.ir/ad/plan100.jpg",
-    "ad_link": "https://t.me/strong1vpn_bot",
-    "free_ad_sec": 18000,
-    "free_ad_watch_sec": 15,
-    "free_ad_max_per_day": 3,
-    "free_ad_min_gap": 30
-  }
+  "clear_cache_revision": 4
 }
