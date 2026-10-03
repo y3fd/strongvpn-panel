@@ -1,7 +1,7 @@
 {
-  "version": 1790880510457,
+  "version": 1791032366944,
   "announcement": {
-    "id": 1790267432,
+    "id": 1791032366,
     "active": true,
     "type": "update",
     "title": "اطلاعیه",
@@ -19,11 +19,19 @@
   "app": {
     "latest_version": "1.0.0",
     "min_version": "1.0.0",
-    "apk_url": "https://auth.djanah99.ir/download/universal",
-    "apk_arm64_url": "https://auth.djanah99.ir/download/arm64",
-    "windows_url": "https://auth.djanah99.ir/download/windows",
-    "windows_portable_url": "https://auth.djanah99.ir/download/windows-portable"
+    "apk_url": "https://auth.djanah99.ir/download/universal"
   },
   "fallback_configs": [],
-  "clear_cache_revision": 4
+  "ad_settings": {
+    "ad_active": true,
+    "ad_type": "image",
+    "ad_title": "تبلیغ ویژه",
+    "ad_body": "با دیدن این تبلیغ ۵ ساعت اتصال رایگان بگیرید",
+    "ad_image_url": "https://auth.djanah99.ir/ad/plan100.jpg",
+    "ad_link": "",
+    "free_ad_sec": 18000,
+    "free_ad_watch_sec": 15,
+    "free_ad_max_per_day": 3,
+    "free_ad_min_gap": 30
+  }
 }
