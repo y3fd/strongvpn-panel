@@ -6,34 +6,70 @@
   <title>کنترل پنل مدیریت Strong VPN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #070B14;
-      --card-bg: #0E1626;
-      --card-border: rgba(255, 255, 255, 0.08);
-      --primary: #A855F7;
-      --primary-glow: rgba(168, 85, 247, 0.35);
-      --cyan: #00F5FF;
-      --cyan-glow: rgba(0, 245, 255, 0.35);
-      --green: #10B981;
-      --yellow: #F59E0B;
-      --red: #EF4444;
-      --text: #F8FAFC;
-      --text-muted: #94A3B8;
-      --input-bg: #141E33;
-      --input-border: rgba(255, 255, 255, 0.12);
+      /* ===== Design tokens - "network operations rack" ===== */
+      /* surfaces: one cold graphite hue, lightness shifts only */
+      --bg: #090C11;
+      --surface-1: #0E1218;
+      --surface-2: #141922;
+      --surface-3: #1A2029;
+      --surface-inset: #0A0E14;
+      --card-bg: var(--surface-1);
+      --card-border: rgba(255, 255, 255, 0.09);
+      /* structure: hairline borders, no glow */
+      --border: rgba(255, 255, 255, 0.07);
+      --border-soft: rgba(255, 255, 255, 0.045);
+      --border-strong: rgba(255, 255, 255, 0.13);
+      --ring: rgba(255, 255, 255, 0.2);
+      /* one accent: signal cyan (link / transmit) */
+      --accent: #38C6E8;
+      --accent-rgb: 56, 198, 232;
+      --accent-strong: #74DAF3;
+      --accent-ink: #04131A;
+      --primary: var(--accent);
+      --cyan: var(--accent);
+      --primary-glow: rgba(var(--accent-rgb), 0.22);
+      --cyan-glow: rgba(var(--accent-rgb), 0.22);
+      /* semantic: status only */
+      --success: var(--success);
+      --success-rgb: 52, 211, 153;
+      --warning: #F0B429;
+      --warning-rgb: 240, 180, 41;
+      --danger: #F16A6A;
+      --danger-rgb: 241, 106, 106;
+      --green: var(--success);
+      --yellow: var(--warning);
+      --red: var(--danger);
+      /* four text tiers */
+      --text: #E9EEF6;
+      --text-2: #B7C1D0;
+      --text-3: #8D9AAC;
+      --text-4: #6E7B8D;
+      --text-muted: var(--text-3);
+      /* controls are inset: darker than their surface */
+      --input-bg: var(--surface-inset);
+      --input-border: rgba(255, 255, 255, 0.1);
+      /* radius scale (concentric) */
+      --r-xs: 6px;
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-pill: 999px;
+      /* motion */
+      --ease: cubic-bezier(0.23, 1, 0.32, 1);
+      --dur: 140ms;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; }
     body {
       background-color: var(--bg);
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 30%, rgba(0, 245, 255, 0.06) 0%, transparent 45%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* ---------------- LOGIN SCREEN ---------------- */
@@ -47,16 +83,15 @@
     .login-card {
       width: 100%;
       max-width: 420px;
-      background: rgba(14, 22, 38, 0.85);
-      backdrop-filter: blur(25px);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(168, 85, 247, 0.2);
-      border-radius: 28px;
-      padding: 36px 28px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      border-radius: var(--r-lg);
+      padding: 32px 28px;
       text-align: center;
       position: relative;
       overflow: hidden;
-      transition: transform 0.3s;
+      transition: transform var(--dur) var(--ease);
     }
     .login-card.shake {
       animation: shakeAnim 0.4s ease-in-out;
@@ -67,25 +102,22 @@
       40%, 80% { transform: translateX(10px); }
     }
     .login-logo {
-      width: 96px;
-      height: 96px;
-      border-radius: 28px;
-      background: radial-gradient(circle at 50% 40%, #1c143d 0%, #0a0b16 100%);
-      border: 2px solid rgba(168, 85, 247, 0.6);
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.35), inset 0 0 20px rgba(0, 245, 255, 0.25);
+      width: 72px;
+      height: 72px;
+      border-radius: var(--r-md);
+      background: var(--surface-2);
+      border: 1px solid rgba(var(--accent-rgb), 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
+      margin: 0 auto 18px;
     }
     .login-card h2 {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      background: linear-gradient(90deg, #FFFFFF, var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
       margin-bottom: 6px;
+      text-wrap: balance;
     }
     .login-card p {
       font-size: 13px;
@@ -99,53 +131,52 @@
     .login-field label {
       display: block;
       font-size: 12.5px;
-      font-weight: 600;
+      font-weight: 500;
       color: var(--text-muted);
       margin-bottom: 8px;
     }
     .login-field input {
       width: 100%;
-      background: var(--input-bg);
+      background: var(--surface-inset);
       border: 1px solid var(--input-border);
-      border-radius: 14px;
-      color: #FFF;
-      padding: 13px 16px;
+      border-radius: var(--r-sm);
+      color: var(--text);
+      padding: 12px 14px;
       font-size: 14px;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
     }
     .login-field input:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 15px var(--cyan-glow);
+      border-color: rgba(var(--accent-rgb), 0.7);
+      box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
     }
     .login-error {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #F87171;
+      background: rgba(var(--danger-rgb), 0.15);
+      border: 1px solid rgba(var(--danger-rgb), 0.3);
+      color: var(--danger);
       padding: 10px 14px;
       border-radius: 12px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 18px;
       display: none;
     }
     .login-btn {
       width: 100%;
-      background: linear-gradient(90deg, #A855F7, #00D2FF);
-      color: #FFF;
+      background: var(--accent);
+      color: var(--accent-ink);
       border: none;
-      padding: 14px;
-      border-radius: 16px;
+      padding: 13px;
+      border-radius: var(--r-sm);
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 700;
+      font-family: inherit;
       cursor: pointer;
-      box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
-      transition: all 0.2s;
+      transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
       margin-top: 6px;
     }
     .login-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0, 210, 255, 0.5);
+      background: var(--accent-strong);
     }
 
     /* ---------------- MAIN DASHBOARD ---------------- */
@@ -173,27 +204,25 @@
       gap: 14px;
     }
     .logo-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #1C1236, #0A0E1A);
-      border: 1px solid var(--primary);
-      box-shadow: 0 0 20px var(--primary-glow);
+      width: 44px;
+      height: 44px;
+      border-radius: var(--r-md);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .logo-text h1 {
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      background: linear-gradient(90deg, #FFFFFF, var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      text-wrap: balance;
     }
     .logo-text p {
       font-size: 12px;
-      color: var(--text-muted);
+      color: var(--text-3);
+      margin-top: 2px;
     }
     .user-pill {
       display: flex;
@@ -203,107 +232,114 @@
     .status-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      color: var(--green);
-      font-weight: 600;
+      gap: 7px;
+      background: rgba(var(--success-rgb), 0.1);
+      border: 1px solid rgba(var(--success-rgb), 0.3);
+      padding: 5px 12px;
+      border-radius: var(--r-pill);
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
     }
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
+      background: currentColor;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
     }
     .logout-btn {
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #F87171;
+      background: transparent;
+      border: 1px solid rgba(var(--danger-rgb), 0.35);
+      color: var(--danger);
       padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
+      border-radius: var(--r-pill);
+      font-size: 12.5px;
+      font-weight: 500;
+      font-family: inherit;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
     }
     .logout-btn:hover {
-      background: rgba(239, 68, 68, 0.25);
+      background: rgba(var(--danger-rgb), 0.14);
     }
 
     /* Token Box */
     .token-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 16px 20px;
-      margin-bottom: 24px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 18px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
     }
     .token-box label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-3);
       white-space: nowrap;
     }
     .token-box input {
       flex: 1;
       min-width: 220px;
-      background: var(--input-bg);
+      background: var(--surface-inset);
       border: 1px solid var(--input-border);
-      color: #FFF;
-      padding: 8px 14px;
-      border-radius: 10px;
+      color: var(--text-2);
+      padding: 8px 12px;
+      border-radius: var(--r-sm);
       font-size: 13px;
-      font-family: monospace;
+      font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
       outline: none;
       direction: ltr;
     }
     .token-box button {
-      background: rgba(255, 255, 255, 0.08);
-      color: #FFF;
-      border: 1px solid var(--card-border);
-      padding: 8px 16px;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      padding: 8px 15px;
+      border-radius: var(--r-sm);
       cursor: pointer;
       font-size: 13px;
-      font-weight: 600;
-      transition: all 0.2s;
+      font-weight: 500;
+      font-family: inherit;
+      transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
     }
     .token-box button:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border-color: var(--border-strong);
     }
 
     /* Cards */
     .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02);
       position: relative;
     }
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--border-soft);
     }
     .card-title {
-      font-size: 17px;
-      font-weight: 800;
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--text);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
+      text-wrap: balance;
     }
     .card-title .icon {
       font-size: 20px;
@@ -326,9 +362,9 @@
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #334155;
-      transition: .3s;
-      border-radius: 26px;
+      background-color: #232B37;
+      transition: background-color var(--dur) var(--ease);
+      border-radius: var(--r-pill);
     }
     .slider:before {
       position: absolute;
@@ -337,12 +373,12 @@
       width: 20px;
       left: 3px;
       bottom: 3px;
-      background-color: white;
-      transition: .3s;
+      background-color: #fff;
+      transition: transform var(--dur) var(--ease);
       border-radius: 50%;
     }
     input:checked + .slider {
-      background: linear-gradient(90deg, var(--primary), var(--cyan));
+      background: var(--accent);
     }
     input:checked + .slider:before {
       transform: translateX(22px);
@@ -361,25 +397,25 @@
     }
     .form-group label {
       display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      margin-bottom: 7px;
     }
     .form-group input, .form-group textarea, .form-group select {
       width: 100%;
-      background: var(--input-bg);
+      background: var(--surface-inset);
       border: 1px solid var(--input-border);
-      border-radius: 12px;
-      color: #FFF;
-      padding: 12px 14px;
+      border-radius: var(--r-sm);
+      color: var(--text);
+      padding: 11px 13px;
       font-size: 14px;
       outline: none;
-      transition: border 0.2s, box-shadow 0.2s;
+      transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
     }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 12px var(--cyan-glow);
+      border-color: rgba(var(--accent-rgb), 0.7);
+      box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
     }
     .form-group textarea {
       resize: vertical;
@@ -387,7 +423,7 @@
     }
     .form-group .hint {
       font-size: 11.5px;
-      color: #64748B;
+      color: var(--text-4);
       margin-top: 6px;
     }
     /* Type selector */
@@ -397,130 +433,139 @@
       flex-wrap: wrap;
     }
     .type-chip {
-      padding: 8px 16px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
+      padding: 7px 15px;
+      border-radius: var(--r-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
-      color: var(--text-muted);
+      transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+      color: var(--text-3);
+      font-family: inherit;
     }
     .type-chip.selected {
-      background: rgba(168, 85, 247, 0.2);
-      border-color: var(--primary);
-      color: #FFF;
-      box-shadow: 0 0 15px var(--primary-glow);
+      background: rgba(var(--accent-rgb), 0.14);
+      border-color: rgba(var(--accent-rgb), 0.45);
+      color: var(--accent);
     }
     .type-chip[data-type="warning"].selected {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(var(--warning-rgb), 0.2);
       border-color: var(--yellow);
     }
     .type-chip[data-type="info"].selected {
-      background: rgba(0, 245, 255, 0.2);
+      background: rgba(var(--accent-rgb), 0.2);
       border-color: var(--cyan);
     }
     .type-chip[data-type="update"].selected {
-      background: rgba(168, 85, 247, 0.2);
+      background: rgba(var(--accent-rgb), 0.2);
       border-color: var(--primary);
     }
     /* Mobile Mockup Preview */
     .preview-modal {
-      background: #0D1527;
-      border: 1.5px solid rgba(168, 85, 247, 0.6);
-      box-shadow: 0 0 35px var(--primary-glow);
-      border-radius: 24px;
-      padding: 24px;
+      background: var(--surface-1);
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+      border-radius: var(--r-lg);
+      padding: 22px;
       text-align: center;
       max-width: 380px;
       margin: 15px auto;
     }
     .preview-icon {
-      width: 58px;
-      height: 58px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
-      background: rgba(168, 85, 247, 0.15);
-      border: 2px solid var(--primary);
+      background: rgba(var(--accent-rgb), 0.12);
+      border: 1px solid rgba(var(--accent-rgb), 0.4);
+      color: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 14px;
-      font-size: 26px;
+      font-size: 24px;
     }
     .preview-title {
-      font-size: 17px;
-      font-weight: 800;
-      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-wrap: balance;
     }
     .preview-body {
       font-size: 13.5px;
-      color: #CBD5E1;
+      color: var(--text-2);
       line-height: 1.6;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      text-wrap: pretty;
     }
     .preview-btn {
       width: 100%;
-      background: var(--primary);
-      color: #FFF;
+      background: var(--accent);
+      color: var(--accent-ink);
       font-weight: 700;
+      font-family: inherit;
       padding: 12px;
-      border-radius: 14px;
+      border-radius: var(--r-sm);
       border: none;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
     }
     .preview-close {
       width: 100%;
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-muted);
+      border: 1px solid var(--border);
+      color: var(--text-3);
       padding: 10px;
-      border-radius: 14px;
+      border-radius: var(--r-sm);
       font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
     }
     /* Bottom Bar */
     .bottom-bar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(14, 22, 38, 0.85);
-      backdrop-filter: blur(20px);
-      border-top: 1px solid var(--card-border);
-      padding: 16px 24px;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 900px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--r-lg);
+      padding: 13px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      z-index: 1000;
-      max-width: 900px;
-      margin: 0 auto;
-      border-radius: 24px 24px 0 0;
+      gap: 16px;
+      z-index: 500;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
     }
     .save-btn {
-      background: linear-gradient(90deg, #A855F7, #00D2FF);
-      color: #FFF;
+      background: var(--accent);
+      color: var(--accent-ink);
       border: none;
-      padding: 14px 32px;
-      border-radius: 16px;
-      font-size: 16px;
-      font-weight: 800;
+      padding: 12px 28px;
+      border-radius: var(--r-sm);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
-      transition: all 0.2s;
+      gap: 9px;
+      transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
     }
     .save-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0, 210, 255, 0.5);
+      background: var(--accent-strong);
     }
     .last-updated {
       font-size: 12px;
-      color: var(--text-muted);
+      color: var(--text-4);
+      font-variant-numeric: tabular-nums;
     }
 
     /* ---------------- Tab Navigation ---------------- */
@@ -534,41 +579,40 @@
       padding-bottom: 2px;
     }
     .tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { font-family: 'Vazirmatn', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+    .tab-btn {
       flex: 0 0 auto;
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 9px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      background: rgba(255,255,255,0.04);
-      color: var(--text-muted);
+      padding: 8px 15px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-1);
+      color: var(--text-3);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
       font-family: inherit;
       white-space: nowrap;
     }
     .tab-btn:hover {
-      background: rgba(255,255,255,0.08);
-      color: #FFF;
-      border-color: rgba(168,85,247,0.3);
+      background: var(--surface-2);
+      color: var(--text);
     }
     .tab-btn.active {
-      background: linear-gradient(135deg, #A855F7, #6366F1);
-      color: #FFF;
-      border-color: transparent;
-      box-shadow: 0 4px 14px rgba(168,85,247,0.4);
+      background: var(--surface-3);
+      color: var(--text);
+      border-color: var(--border-strong);
+      font-weight: 600;
     }
     .tab-btn .tab-badge {
       background: rgba(255,255,255,0.2);
-      color: #FFF;
+      color: var(--text);
       font-size: 11px;
       padding: 1px 7px;
       border-radius: 20px;
-      font-weight: 800;
+      font-weight: 700;
     }
     .tab-btn.active .tab-badge {
       background: rgba(255,255,255,0.3);
@@ -592,50 +636,56 @@
       margin-bottom: 20px;
     }
     .stat-card {
-      background: rgba(14, 22, 38, 0.7);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
       padding: 14px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 13px;
       position: relative;
       overflow: hidden;
-      transition: all 0.2s;
+      transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
     }
     .stat-card:hover {
-      border-color: rgba(168, 85, 247, 0.4);
-      transform: translateY(-2px);
+      border-color: var(--border-strong);
+      background: var(--surface-2);
     }
     .stat-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--r-sm);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-2);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 17px;
       flex-shrink: 0;
     }
     .stat-val {
-      font-size: 20px;
-      font-weight: 900;
-      color: #FFF;
+      font-size: 24px;
       line-height: 1.1;
-      font-family: monospace, inherit;
+      font-weight: 700;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.01em;
+      direction: ltr;
+      text-align: right;
     }
     .stat-label {
       font-size: 11.5px;
-      color: var(--text-muted);
-      margin-top: 2px;
+      color: var(--text-2);
+      letter-spacing: 0.06em;
       font-weight: 600;
     }
     /* Modal styles for Option C (QR & Devices) */
     .app-modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(10px);
+      background: rgba(5, 7, 10, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 3000;
       display: none;
       align-items: center;
@@ -646,55 +696,56 @@
       display: flex !important;
     }
     .btn-xs-pill {
-      background: rgba(255, 255, 255, 0.06);
-      color: #94A3B8;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xs);
       padding: 3px 8px;
       font-size: 11px;
       font-family: inherit;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
     }
     .btn-xs-pill:hover {
-      background: rgba(168, 85, 247, 0.2);
-      color: #FFF;
-      border-color: #A855F7;
+      background: rgba(var(--accent-rgb), 0.14);
+      color: var(--accent);
+      border-color: rgba(var(--accent-rgb), 0.45);
     }
     .app-modal {
-      background: #0E1626;
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(168,85,247,0.25);
-      border-radius: 24px;
+      background: var(--surface-1);
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+      border-radius: var(--r-lg);
       width: 100%;
       max-width: 460px;
-      padding: 24px;
+      padding: 22px;
       position: relative;
-      animation: modalZoom 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      animation: modalZoom 0.18s var(--ease);
     }
-    @keyframes modalZoom { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes modalZoom { from { transform: scale(0.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
     /* Toast */
     #toast {
       position: fixed;
-      top: 24px;
+      top: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: #10B981;
-      color: #FFF;
-      padding: 12px 28px;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      transform: translateX(-50%) translateY(-120%);
+      background: var(--success);
+      color: #052E1F;
+      padding: 11px 22px;
+      border-radius: var(--r-pill);
+      font-weight: 600;
+      font-size: 13.5px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      transition: transform .2s var(--ease);
       z-index: 2000;
     }
     #toast.show {
       transform: translateX(-50%) translateY(0);
     }
     #toast.error {
-      background: var(--red);
+      background: var(--danger);
+      color: #2B0B0B;
     }
   
     /* Modern Dashboard Table Styling for Internal Users */
@@ -706,28 +757,27 @@
       text-align: right;
     }
     .int-users-table thead th {
-      padding: 12px 14px;
-      color: #94A3B8;
-      font-weight: 700;
-      font-size: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: transparent;
-      white-space: nowrap;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.05em;
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border-strong);
     }
     .int-user-row {
-      background: rgba(255, 255, 255, 0.02);
-      transition: all 0.2s ease;
-      border-radius: 14px;
+      background: var(--surface-1);
+      transition: background-color var(--dur) var(--ease);
+      border-radius: var(--r-sm);
     }
     .int-user-row:hover {
-      background: rgba(255, 255, 255, 0.045);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      background: var(--surface-2);
     }
     .int-user-row td {
-      padding: 12px 14px;
+      padding: 11px 14px;
       vertical-align: middle;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      font-variant-numeric: tabular-nums;
     }
     .int-user-row td:first-child {
       border-right: 1px solid rgba(255, 255, 255, 0.04);
@@ -747,30 +797,28 @@
       gap: 12px;
     }
     .user-avatar-badge {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(0, 245, 255, 0.2));
-      border: 1px solid rgba(168, 85, 247, 0.4);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--r-sm);
+      background: rgba(var(--accent-rgb), 0.14);
+      border: 1px solid rgba(var(--accent-rgb), 0.3);
+      color: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 13px;
-      color: #FFF;
+      font-weight: 600;
+      font-size: 12.5px;
       flex-shrink: 0;
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+      font-variant-numeric: tabular-nums;
     }
     .user-meta-name {
-      font-weight: 800;
-      color: #F8FAFC;
+      font-weight: 600;
+      color: var(--text);
       font-size: 13.5px;
-      letter-spacing: 0.3px;
-      font-family: 'Vazirmatn', monospace, sans-serif;
     }
     .user-meta-note {
       font-size: 11px;
-      color: #94A3B8;
+      color: var(--text-3);
       margin-top: 2px;
     }
 
@@ -779,20 +827,21 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--surface-inset);
+      border: 1px solid var(--border);
       padding: 5px 10px;
-      border-radius: 10px;
+      border-radius: var(--r-sm);
       cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: monospace;
+      transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+      font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
       font-size: 12.5px;
-      color: #38BDF8;
+      color: var(--accent);
+      direction: ltr;
     }
     .pass-chip:hover {
-      background: rgba(56, 189, 248, 0.12);
-      border-color: rgba(56, 189, 248, 0.4);
-      color: #FFF;
+      background: rgba(var(--accent-rgb), 0.1);
+      border-color: rgba(var(--accent-rgb), 0.4);
+      color: var(--accent-strong);
     }
 
     /* Volume Usage Bar */
@@ -806,20 +855,23 @@
       font-size: 11.5px;
       margin-bottom: 6px;
       direction: ltr;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-3);
     }
     .usage-track {
+      position: relative;
       width: 100%;
-      height: 7px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 999px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.055);
+      border-radius: 2px;
       overflow: hidden;
-      padding: 1px;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+      -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 6px, transparent 6px 8px);
+      mask-image: repeating-linear-gradient(90deg, #000 0 6px, transparent 6px 8px);
     }
     .usage-bar {
       height: 100%;
-      border-radius: 999px;
-      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--success);
+      transition: width .4s var(--ease);
     }
 
     /* Status Pill */
@@ -827,11 +879,12 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
-      border-radius: 999px;
+      padding: 4px 11px;
+      border-radius: var(--r-pill);
       font-size: 11.5px;
-      font-weight: 700;
+      font-weight: 500;
       white-space: nowrap;
+      font-variant-numeric: tabular-nums;
     }
     .status-dot {
       width: 7px;
@@ -840,30 +893,29 @@
       position: relative;
     }
     .status-dot.active {
-      background: #10B981;
-      box-shadow: 0 0 10px #10B981;
+      background: rgba(var(--success-rgb), 1);
+      box-shadow: 0 0 0 3px rgba(var(--success-rgb), 0.18);
     }
     .status-dot.expired {
-      background: #EF4444;
-      box-shadow: 0 0 10px #EF4444;
+      background: rgba(var(--danger-rgb), 1);
+      box-shadow: 0 0 0 3px rgba(var(--danger-rgb), 0.18);
     }
     .status-dot.warning {
-      background: #F59E0B;
-      box-shadow: 0 0 10px #F59E0B;
+      background: rgba(var(--warning-rgb), 1);
+      box-shadow: 0 0 0 3px rgba(var(--warning-rgb), 0.18);
     }
 
     /* Timer Pill */
     .timer-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-pill);
+      padding: 4px 11px;
+      font-size: 11.5px;
+      font-weight: 600;
       white-space: nowrap;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-variant-numeric: tabular-nums;
     }
 
     /* Action Toolbar */
@@ -874,49 +926,50 @@
       gap: 6px;
     }
     .btn-action-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 9px;
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--r-sm);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #CBD5E1;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid var(--border);
+      color: var(--text-2);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
       outline: none;
+      font-family: inherit;
     }
     .btn-action-icon:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #FFF;
-      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border-color: var(--border-strong);
     }
     .btn-action-icon.danger:hover {
-      background: rgba(239, 68, 68, 0.2);
-      border-color: rgba(239, 68, 68, 0.4);
-      color: #EF4444;
+      background: rgba(var(--danger-rgb), 0.2);
+      border-color: rgba(var(--danger-rgb), 0.4);
+      color: var(--danger);
     }
     .btn-action-renew {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(0, 210, 255, 0.2));
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #34D399;
-      font-weight: 800;
+      background: rgba(var(--success-rgb), 0.12);
+      border: 1px solid rgba(var(--success-rgb), 0.32);
+      color: var(--success);
+      font-weight: 600;
       font-size: 12px;
       padding: 6px 12px;
-      border-radius: 9px;
+      border-radius: var(--r-sm);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
       font-family: inherit;
     }
     .btn-action-renew:hover {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(0, 210, 255, 0.35));
-      color: #FFF;
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-      transform: translateY(-1px);
+      background: rgba(var(--success-rgb), 0.2);
+      border-color: rgba(var(--success-rgb), 0.5);
+      color: var(--text);
     }
 
 
@@ -927,14 +980,12 @@
     /* 4-Category Segmented Nav on Desktop/Tablet */
     .nav-categories-bar {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 18px;
-      background: rgba(14, 22, 38, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 6px;
-      border-radius: 18px;
-      border: 1px solid var(--card-border);
+      background: var(--surface-1);
+      padding: 5px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -942,83 +993,77 @@
     .nav-categories-bar::-webkit-scrollbar { display: none; }
     
     .cat-nav-btn {
-      flex: 1;
-      min-width: 120px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--r-md);
+      padding: 9px 14px;
+      color: var(--text-2);
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 16px;
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid transparent;
-      border-radius: 13px;
-      font-size: 13px;
-      font-weight: 700;
+      gap: 7px;
       font-family: inherit;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      white-space: nowrap;
+      transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
     }
     .cat-nav-btn:hover {
-      color: #FFF;
+      color: var(--text);
       background: rgba(255, 255, 255, 0.05);
     }
     .cat-nav-btn.active {
-      color: #FFF;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.28), rgba(0, 210, 255, 0.28));
-      border-color: rgba(168, 85, 247, 0.5);
-      box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
+      color: var(--text);
+      background: var(--surface-3);
+      border-color: var(--border-strong);
+      font-weight: 600;
     }
     .cat-nav-btn .cat-badge {
-      background: rgba(255, 255, 255, 0.12);
-      color: #FFF;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-2);
       font-size: 10.5px;
       padding: 2px 7px;
-      border-radius: 10px;
-      font-weight: 700;
+      border-radius: var(--r-pill);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
     }
     .cat-nav-btn.active .cat-badge {
-      background: var(--primary);
+      background: rgba(var(--accent-rgb), 0.18);
+      color: var(--accent);
     }
 
     /* Sub-tabs inside Category */
     .subtabs-pill-bar {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 18px;
       padding: 4px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: var(--surface-inset);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
       width: fit-content;
       max-width: 100%;
       overflow-x: auto;
     }
     .subtab-pill-btn {
-      padding: 8px 18px;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: 10px;
-      color: var(--text-muted);
+      padding: 7px 16px;
+      border-radius: var(--r-pill);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      font-weight: 600;
       font-size: 12.5px;
-      font-weight: 700;
-      font-family: inherit;
       cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
+      font-family: inherit;
+      transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
     }
     .subtab-pill-btn:hover {
-      color: #FFF;
+      color: var(--text);
     }
     .subtab-pill-btn.active {
-      background: rgba(255, 255, 255, 0.1);
-      color: #38bdf8;
-      border-color: rgba(56, 189, 248, 0.35);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      background: var(--surface-3);
+      color: var(--text);
+      border-color: var(--border-strong);
+      font-weight: 600;
     }
 
     /* Mobile Bottom Navigation (Hidden on Desktop) */
@@ -1036,25 +1081,22 @@
 
     /* User Mobile Card Styling */
     .mobile-user-card {
-      background: rgba(14, 22, 38, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 14px 14px 12px 14px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px;
       margin-bottom: 12px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-      transition: border-color 0.2s;
+      transition: border-color var(--dur) var(--ease);
     }
     .mobile-user-card:hover {
-      border-color: rgba(168, 85, 247, 0.4);
+      border-color: var(--border-strong);
     }
 
     /* Responsive Mobile Breakpoint (iPhone & Smartphones) */
     @media (max-width: 768px) {
       /* Safe area padding for notch & home bar */
       body {
-        padding-bottom: calc(75px + env(safe-area-inset-bottom, 20px)) !important;
+        padding-bottom: calc(150px + env(safe-area-inset-bottom, 20px)) !important;
       }
       .container {
         padding: 8px 10px !important;
@@ -1089,7 +1131,7 @@
       }
       .stat-card {
         padding: 10px 12px !important;
-        border-radius: 14px !important;
+        border-radius: var(--r-md) !important;
       }
       .stat-card .stat-val {
         font-size: 19px !important;
@@ -1101,7 +1143,7 @@
       /* Card styles on mobile */
       .card {
         padding: 14px 12px !important;
-        border-radius: 16px !important;
+        border-radius: var(--r-md) !important;
         margin-bottom: 14px !important;
       }
       .card-header {
@@ -1153,10 +1195,10 @@
         background: rgba(14, 22, 38, 0.95) !important;
         backdrop-filter: blur(25px) !important;
         -webkit-backdrop-filter: blur(25px) !important;
-        border-top: 1px solid rgba(168, 85, 247, 0.25) !important;
+        border-top: 1px solid var(--border) !important;
         padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 12px)) 6px !important;
         justify-content: space-around !important;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6) !important;
+        box-shadow: 0 -1px 0 var(--border) !important;
       }
       .mobile-nav-item {
         flex: 1 !important;
@@ -1169,7 +1211,7 @@
         color: #94a3b8 !important;
         font-family: inherit !important;
         font-size: 10.5px !important;
-        font-weight: 700 !important;
+        font-weight: 600 !important;
         cursor: pointer !important;
         padding: 3px 0 !important;
         transition: all 0.2s ease !important;
@@ -1179,22 +1221,22 @@
         transition: transform 0.2s ease;
       }
       .mobile-nav-item.active {
-        color: #00F5FF !important;
+        color: var(--accent) !important;
       }
       .mobile-nav-item.active svg {
         transform: translateY(-2px);
-        stroke: #00F5FF !important;
+        stroke: var(--accent) !important;
       }
       .mobile-nav-item .mobile-nav-badge {
         position: absolute;
         top: 0;
         right: calc(50% - 16px);
         background: var(--primary);
-        color: #FFF;
+        color: var(--text);
         font-size: 9px;
         padding: 1px 5px;
         border-radius: 8px;
-        font-weight: 800;
+        font-weight: 700;
       }
 
       /* Switch from Desktop Table to Mobile Cards */
@@ -1214,18 +1256,130 @@
         width: 100% !important;
         max-width: 100% !important;
         max-height: 88vh !important;
-        border-radius: 24px 24px 0 0 !important;
+        border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
         padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 15px)) 16px !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
-        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8) !important;
+        box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.55) !important;
         animation: slideUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+      /* Save bar lifts clear of the bottom navigation */
+      .bottom-bar {
+        bottom: calc(74px + env(safe-area-inset-bottom, 12px)) !important;
+        width: calc(100% - 20px) !important;
+        padding: 10px 12px !important;
+        border-radius: var(--r-md) !important;
+        gap: 10px !important;
+      }
+      .bottom-bar .save-btn { min-height: 40px; padding: 8px 14px !important; }
+      .logout-btn { min-height: 38px; }
+      .token-box button { min-height: 38px; }
+      .subtab-pill-btn { min-height: 38px; }
+      .stats-grid .stat-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+      .mobile-nav-item.active { font-weight: 700 !important; }
+      .mobile-nav-item.active::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--accent);
       }
       @keyframes slideUpModal {
         from { transform: translateY(100%); }
         to { transform: translateY(0); }
       }
     }
+
+    /* ====================================================
+       CRAFT LAYER - states, focus, density, reduced motion
+       ==================================================== */
+    h1, h2, h3, .card-title, .preview-title { text-wrap: balance; }
+    p, .stat-label, .hint, .preview-body, .logo-text p { text-wrap: pretty; }
+
+    /* every control shows focus for keyboard users */
+    :where(button, a, input, select, textarea, [tabindex]):focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    /* press feedback on anything clickable */
+    button:active, .type-chip:active, .subtab-pill-btn:active, .cat-nav-btn:active { transform: scale(0.98); }
+    .login-btn:active, .save-btn:active, .preview-btn:active { transform: scale(0.985); }
+    /* enlarged hit area for the compact table actions (visual 34px, target 42px) */
+    .btn-action-icon::after { content: ""; position: absolute; inset: -4px; }
+
+    /* empty state: one clear read + one next action */
+    .empty-state {
+      padding: 30px 16px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+.empty-state strong { color: var(--text-2); font-weight: 600; }
+    .empty-action {
+      margin-top: 12px;
+      background: rgba(var(--accent-rgb), 0.14);
+      border: 1px solid rgba(var(--accent-rgb), 0.45);
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    }
+    .empty-action:hover { background: rgba(var(--accent-rgb), 0.22); border-color: rgba(var(--accent-rgb), 0.7); }
+    .empty-action:active { transform: scale(0.98); }
+
+    /* data never jitters */
+    .stat-val, td, th, .usage-metrics, .timer-pill, .status-pill, .stat-label,
+    .tab-badge, .cat-badge, .badge-admin, #toast { font-variant-numeric: tabular-nums; }
+
+    /* quiet scrollbars that match the canvas */
+    ::-webkit-scrollbar { width: 10px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--r-pill);
+      border: 3px solid var(--bg);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.18); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Unstyled controls inherit the system instead of the browser default */
+    input:not([class]):not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select:not([class]), textarea:not([class]) {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      border-radius: var(--r-sm);
+      padding: 9px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+    }
+    input:not([class]):not([type="checkbox"]):not([type="radio"]):focus,
+    select:not([class]):focus, textarea:not([class]):focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
+      outline: none;
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-4); opacity: 1; }
+    input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
+    input[type="radio"] { accent-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -1236,10 +1390,10 @@
 <div id="loginView">
   <div class="login-card" id="loginCard">
     <div class="login-logo">
-      <svg width="68" height="68" viewBox="0 0 500 500" fill="none" style="filter: drop-shadow(0 0 10px rgba(0,245,255,0.5));">
-        <polygon points="50,195 205,120 180,310 70,365" fill="#00F5FF" stroke="#70FFFF" stroke-width="6" />
+      <svg width="68" height="68" viewBox="0 0 500 500" fill="none" style="">
+        <polygon points="50,195 205,120 180,310 70,365" fill="var(--accent)" stroke="#70FFFF" stroke-width="6" />
         <polygon points="450,195 295,120 320,310 430,365" fill="#C026D3" stroke="#FF88FC" stroke-width="6" />
-        <polygon points="300,35 175,235 260,235 205,465 355,220 265,220" fill="#FFFFFF" stroke="#C084FC" stroke-width="12" stroke-linejoin="round" />
+        <polygon points="300,35 175,235 260,235 205,465 355,220 265,220" fill="#FFFFFF" stroke="var(--accent)" stroke-width="12" stroke-linejoin="round" />
         <polygon points="292,60 195,230 260,230 220,425 330,225 265,225" fill="#E0F7FF" opacity="0.9" />
       </svg>
     </div>
@@ -1275,10 +1429,10 @@
     <div class="header">
       <div class="logo-area">
         <div class="logo-icon">
-          <svg width="42" height="42" viewBox="0 0 500 500" fill="none" style="filter: drop-shadow(0 0 8px rgba(0,245,255,0.4));">
-            <polygon points="50,195 205,120 180,310 70,365" fill="#00F5FF" stroke="#70FFFF" stroke-width="6" />
+          <svg width="42" height="42" viewBox="0 0 500 500" fill="none" style="">
+            <polygon points="50,195 205,120 180,310 70,365" fill="var(--accent)" stroke="#70FFFF" stroke-width="6" />
             <polygon points="450,195 295,120 320,310 430,365" fill="#C026D3" stroke="#FF88FC" stroke-width="6" />
-            <polygon points="300,35 175,235 260,235 205,465 355,220 265,220" fill="#FFFFFF" stroke="#C084FC" stroke-width="10" stroke-linejoin="round" />
+            <polygon points="300,35 175,235 260,235 205,465 355,220 265,220" fill="#FFFFFF" stroke="var(--accent)" stroke-width="10" stroke-linejoin="round" />
           </svg>
         </div>
         <div class="logo-text">
@@ -1304,7 +1458,7 @@
       <div class="token-extra" style="display:flex; align-items:center; gap:10px; flex:1; flex-wrap:wrap;">
 
       <label>توکن اتصال به گیت‌هاب (PAT):</label>
-      <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
+      <input type="password" id="ghToken" dir="ltr" style="text-align:left;" placeholder="ghp_xxxxxxxxxxxx" />
       <button onclick="saveToken()">ذخیره توکن</button>
       <button onclick="fetchCurrentConfig()">بروزرسانی داده‌ها</button>
       </div>
@@ -1313,7 +1467,7 @@
     <!-- Option A: Top Summary Analytics Grid -->
     <div class="stats-grid" id="statsGrid">
       <div class="stat-card">
-        <div class="stat-icon" style="background: rgba(168,85,247,0.15); color: #c084fc;">
+        <div class="stat-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
         </div>
         <div>
@@ -1323,7 +1477,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon" style="background: rgba(0,245,255,0.15); color: #00F5FF;">
+        <div class="stat-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg>
         </div>
         <div>
@@ -1333,7 +1487,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon" style="background: rgba(16,185,129,0.15); color: #10B981;">
+        <div class="stat-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
         </div>
         <div>
@@ -1343,7 +1497,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon" style="background: rgba(56,189,248,0.15); color: #38bdf8;">
+        <div class="stat-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg>
         </div>
         <div>
@@ -1353,7 +1507,7 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon" style="background: rgba(239,68,68,0.15); color: #F87171;">
+        <div class="stat-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg>
         </div>
         <div>
@@ -1410,7 +1564,7 @@
           <span>نوتیفیکیشن بازشو اپلیکیشن (Popup Announcement)</span>
         </div>
         <label class="switch-container">
-          <span style="font-size: 13px; font-weight: 700;" id="switchLabel">فعال</span>
+          <span style="font-size: 13px; font-weight: 600;" id="switchLabel">فعال</span>
           <div class="switch">
             <input type="checkbox" id="annActive" onchange="updatePreview()">
             <span class="slider"></span>
@@ -1451,7 +1605,7 @@
 
       <!-- Live Preview -->
       <div style="margin-top: 20px;">
-        <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 10px;">
+        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 10px;">
           📱 پیش‌نمایش نحوه نمایش پاپ‌آپ در گوشی کاربر:
         </label>
         <div class="preview-modal" id="previewModal">
@@ -1471,13 +1625,13 @@
 
       <!-- Sub-tabs Switcher -->
       <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 14px; flex-wrap: wrap;">
-        <button type="button" id="subtab-btn-xui" onclick="switchUsersSubTab('xui')" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); color: #FFF; border: 1.5px solid var(--primary); padding: 10px 22px; border-radius: 14px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
+        <button type="button" id="subtab-btn-xui" class="subtab-pill-btn active" onclick="switchUsersSubTab('xui')">
           <span>👥 کاربران ۳X-UI (اتصال مستقیم و اپلیکیشن)</span>
-          <span id="badge-xui-users" style="background: var(--primary); color: #FFF; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700;">0</span>
+          <span id="badge-xui-users" style="background: rgba(var(--accent-rgb), 0.18); color: var(--accent); font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">0</span>
         </button>
-        <button type="button" id="subtab-btn-internal" onclick="switchUsersSubTab('internal')" style="background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--card-border); padding: 10px 22px; border-radius: 14px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
+        <button type="button" id="subtab-btn-internal" class="subtab-pill-btn" onclick="switchUsersSubTab('internal')">
           <span>⚡ کاربران سرورهای اختصاصی پنل</span>
-          <span id="badge-internal-users" style="background: rgba(255,255,255,0.1); color: #CBD5E1; font-size: 11px; padding: 2px 8px; border-radius: 10px;">0</span>
+          <span id="badge-internal-users" style="background: rgba(255,255,255,0.1); color: var(--text-2); font-size: 11px; padding: 2px 8px; border-radius: 10px;">0</span>
         </button></div>
 
       <!-- ========================================== -->
@@ -1490,20 +1644,20 @@
           <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px;">
             <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">👥 کل کاربران اختصاصی</div>
             <div style="display: flex; align-items: baseline; gap: 6px;">
-              <span id="intStatTotalUsers" style="font-size: 24px; font-weight: 900; color: #FFF;">0</span>
-              <span style="font-size: 12px; color: #10B981;">(<span id="intStatActiveUsers">0</span> فعال)</span>
+              <span id="intStatTotalUsers" style="font-size: 24px; font-weight: 700; color: var(--text);">0</span>
+              <span style="font-size: 12px; color: var(--success);">(<span id="intStatActiveUsers">0</span> فعال)</span>
             </div>
           </div>
           <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px;">
             <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">📦 کل حجم تخصیص داده شده</div>
             <div style="display: flex; align-items: baseline; gap: 6px;">
-              <span id="intStatAllocatedGb" style="font-size: 24px; font-weight: 900; color: #38bdf8;">0 GB</span>
+              <span id="intStatAllocatedGb" style="font-size: 24px; font-weight: 700; color: var(--accent);">0 GB</span>
             </div>
           </div>
           <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 16px;">
             <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">🔥 حجم مصرف شده تا اکنون</div>
             <div style="display: flex; align-items: baseline; gap: 6px;">
-              <span id="intStatUsedGb" style="font-size: 24px; font-weight: 900; color: #f43f5e;">0 GB</span>
+              <span id="intStatUsedGb" style="font-size: 24px; font-weight: 700; color: #f43f5e;">0 GB</span>
               <span id="intStatPercent" style="font-size: 12px; color: var(--text-muted);">0%</span>
             </div>
           </div>
@@ -1586,7 +1740,7 @@
                 <option value="3">۳ دستگاه</option>
                 <option value="5">۵ دستگاه</option>
               </select>
-              <div class="hint" style="color: #38bdf8;">کنترل دقیق بر روی تعداد نشست‌های آنلاین هم‌زمان</div>
+              <div class="hint" style="color: var(--text-2);">کنترل دقیق بر روی تعداد نشست‌های آنلاین هم‌زمان</div>
             </div>
 
             <div class="form-group">
@@ -1604,7 +1758,7 @@
             </div>
 
             <div class="form-group full" style="margin-top: 6px;">
-              <button type="button" onclick="createInternalUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 13px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+              <button type="button" onclick="createInternalUser()" style="background: var(--accent); color: var(--accent-ink); border: none; padding: 13px 24px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
                 <span>➕ ثبت کاربر اختصاصی در دیتابیس پنل</span>
               </button>
             </div>
@@ -1619,7 +1773,7 @@
               <span>لیست زنده کاربران اختصاصی با محاسبه حجم و تایمر</span>
             </div>
             <div style="display: flex; gap: 8px;">
-              <button type="button" onclick="fetchInternalUsers()" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+              <button type="button" onclick="fetchInternalUsers()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
                 🔄 بارگذاری مجدد
               </button>
             </div>
@@ -1712,11 +1866,11 @@
               <option value="5">۵ دستگاه</option>
               <option value="10">نامحدود (بدون محدودیت اپ)</option>
             </select>
-            <div class="hint" style="color: #38bdf8;">⚡ این محدودیت مستقلاً در سرور اپلیکیشن اعمال می‌شود و به 3x-ui کاری ندارد.</div>
+            <div class="hint" style="color: var(--text-2);">⚡ این محدودیت مستقلاً در سرور اپلیکیشن اعمال می‌شود و به 3x-ui کاری ندارد.</div>
           </div>
 
           <div class="form-group full" style="margin-top: 6px;">
-            <button type="button" onclick="createXuiUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 13px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+            <button type="button" onclick="createXuiUser()" style="background: var(--accent); color: var(--accent-ink); border: none; padding: 13px 24px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
               <span>➕ ساخت اشتراک در 3x-ui و تنظیم محدودیت اپ</span>
             </button>
           </div>
@@ -1725,15 +1879,15 @@
         <!-- Generated Result Modal / Box -->
         <div id="newCreatedUserBox" style="display: none; margin-top: 18px; background: rgba(16,185,129,0.08); border: 1.5px solid rgba(16,185,129,0.3); border-radius: 16px; padding: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <strong style="color: #10B981; font-size: 14px;">✅ کاربر با موفقیت در 3x-ui ساخته شد!</strong>
+            <strong style="color: var(--success); font-size: 14px;">✅ کاربر با موفقیت در 3x-ui ساخته شد!</strong>
             <button type="button" onclick="document.getElementById('newCreatedUserBox').style.display='none'" style="background: transparent; border: none; color: #94a3b8; font-size: 16px; cursor: pointer;">✕</button>
           </div>
           <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
             لینک سابسکریپشن اختصاصی:
           </div>
           <div style="display: flex; gap: 8px; align-items: center;">
-            <input type="text" id="createdSubUrl" readonly dir="ltr" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #38bdf8; padding: 8px 12px; font-family: monospace; font-size: 12.5px; flex: 1;">
-            <button type="button" onclick="copyCreatedSubUrl()" style="background: #10B981; color: #FFF; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 12.5px; white-space: nowrap;">
+            <input type="text" id="createdSubUrl" readonly dir="ltr" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: var(--accent); padding: 8px 12px; font-family: monospace; font-size: 12.5px; flex: 1;">
+            <button type="button" onclick="copyCreatedSubUrl()" style="background: var(--success); color: #04231A; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 12.5px; white-space: nowrap;">
               📋 کپی لینک
             </button>
           </div>
@@ -1748,7 +1902,7 @@
             <span>لیست زنده کاربران 3x-ui و سقف دستگاه در اپ</span>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button type="button" onclick="fetchXuiUsers()" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+            <button type="button" onclick="fetchXuiUsers()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
               🔄 بارگذاری مجدد
             </button>
           </div>
@@ -1757,7 +1911,7 @@
         <!-- Search Bar -->
         <div style="display: flex; gap: 8px; margin-bottom: 14px;">
           <input type="text" id="xuiSearchInput" placeholder="جستجوی شماره یا ایمیل کاربر..." dir="ltr" style="flex: 1;" onkeyup="if(event.key==='Enter') fetchXuiUsers()">
-          <button type="button" onclick="fetchXuiUsers()" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 12px; font-weight: 700; cursor: pointer;">
+          <button type="button" onclick="fetchXuiUsers()" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 12px; font-weight: 600; cursor: pointer;">
             🔍 جستجو
           </button>
         </div>
@@ -1838,17 +1992,17 @@
 
 
     <!-- Card: Remote API Control Center -->
-    <div class="card" id="remoteControlCard" style="border: 1px solid rgba(168,85,247,0.3); background: linear-gradient(180deg, rgba(30,15,50,0.6), rgba(15,23,42,0.8));">
+    <div class="card" id="remoteControlCard" style="border: 1px solid rgba(var(--accent-rgb), 0.3); background: rgba(15, 19, 26, 0.92);">
       <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
         <div class="card-title">
-          <span class="icon" style="color: #C084FC;">
+          <span class="icon" style="color: var(--accent);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
           </span>
           <span>مرکز کنترل از راه دور اپلیکیشن (Remote API Control)</span>
         </div>
-        <div style="font-size: 11.5px; color: #10B981; font-weight: 700; background: rgba(16,185,129,0.12); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.25);">
+        <div style="font-size: 11.5px; color: var(--success); font-weight: 600; background: rgba(16,185,129,0.12); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.25);">
           ● مدیریت ابری بدون نیاز به آپدیت کلاینت
         </div>
       </div>
@@ -1857,8 +2011,8 @@
         <!-- Feature 1: Dedup Status -->
         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <strong style="color: #38BDF8; font-size: 13.5px;">🛡️ فیلتر تکراری ابری (Server-side Dedup)</strong>
-            <span style="background: rgba(16,185,129,0.15); color: #10B981; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;">فعال در کلودفلر</span>
+            <strong style="color: var(--accent); font-size: 13.5px;">🛡️ فیلتر تکراری ابری (Server-side Dedup)</strong>
+            <span style="background: rgba(16,185,129,0.15); color: var(--success); font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600;">فعال در کلودفلر</span>
           </div>
           <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
             کانفیگ‌های ۳X-UI مستقیماً در ورکر با سرورهای پنل تطبیق داده می‌شوند و بدون نیاز به بیلد یا آپدیت APK، تکراری‌ها در تمام نسخه‌ها فیلتر می‌شوند.
@@ -1868,12 +2022,12 @@
         <!-- Feature 2: Cache Purge Command -->
         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            <strong style="color: #FBBF24; font-size: 13.5px; display: block; margin-bottom: 6px;">⚡ پاکسازی آنی کش کلاینت‌ها (Remote Purge)</strong>
+            <strong style="color: var(--warning); font-size: 13.5px; display: block; margin-bottom: 6px;">⚡ پاکسازی آنی کش کلاینت‌ها (Remote Purge)</strong>
             <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
               ارسال فرمان فوری به تمام اپلیکیشن‌های نصب‌شده برای پاکسازی حافظه محلی و دریافت سرورها و تنظیمات تازه.
             </div>
           </div>
-          <button type="button" onclick="triggerRemoteCachePurge()" style="background: linear-gradient(135deg, #D97706, #B45309); color: #FFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(217,119,6,0.25);">
+          <button type="button" onclick="triggerRemoteCachePurge()" style="background: #B45309; color: #FFF3E2; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(217,119,6,0.25);">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg>
             ارسال فرمان پاکسازی کش به تمام کاربران
           </button>
@@ -1941,10 +2095,10 @@
 
 
     <!-- Card: Shared Servers (3X-UI & Panel Users) -->
-    <div class="card" id="sharedConfigsCard" style="border: 1px solid rgba(56,189,248,0.25); background: linear-gradient(180deg, rgba(15,23,42,0.7), rgba(2,6,23,0.8));">
+    <div class="card" id="sharedConfigsCard" style="border: 1px solid rgba(var(--accent-rgb), 0.25); background: rgba(10, 13, 18, 0.92);">
       <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
         <div class="card-title">
-          <span class="icon" style="color: #38BDF8;">
+          <span class="icon" style="color: var(--accent);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="2" x2="22" y1="12" y2="12"></line>
@@ -1954,32 +2108,32 @@
           <span>سرورهای کاربران ۳X-UI و پنل اختصاصی</span>
         </div>
         <div style="display: flex; gap: 8px; align-items: center;">
-          <div style="font-size: 11.5px; color: #38BDF8; font-weight: 700; background: rgba(56,189,248,0.12); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.25);" id="sharedCountBadge">۰ سرور ثبت‌شده</div>
-          <button type="button" onclick="fetchSharedConfigsFromWorker()" style="background: rgba(56,189,248,0.15); color: #38BDF8; border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px;">
+          <div style="font-size: 11.5px; color: var(--accent); font-weight: 600; background: rgba(var(--accent-rgb), 0.12); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(var(--accent-rgb), 0.25);" id="sharedCountBadge">۰ سرور ثبت‌شده</div>
+          <button type="button" onclick="fetchSharedConfigsFromWorker()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg> بارگذاری مجدد
           </button>
         </div>
       </div>
 
       <!-- Deduplication & sync notification banner -->
-      <div style="background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(16,185,129,0.08)); border: 1px solid rgba(56,189,248,0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px;">
+      <div style="background: rgba(var(--accent-rgb), 0.07); border: 1px solid rgba(var(--accent-rgb), 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px;">
         <span style="font-size: 18px; line-height: 1;">🛡️</span>
         <div style="font-size: 12.5px; line-height: 1.7; color: var(--text-secondary);">
-          <strong style="color: #38BDF8;">سیستم هوشمند فیلتر کانفیگ‌های تکراری:</strong>
-          سرورهایی که در این بخش ثبت می‌کنید به لیست سرورهای کلاینت اپلیکیشن اضافه می‌شوند. اپلیکیشن به صورت خودکار کانفیگ‌های اشتراک ۳X-UI کاربر را با این لیست مقایسه کرده و <strong style="color: #10B981;">از نمایش هرگونه کانفیگ تکراری جلوگیری می‌کند</strong>؛ در نتیجه فقط سرورهای جدید و غیرتکراری به کاربر ارائه می‌گردد.
+          <strong style="color: var(--accent);">سیستم هوشمند فیلتر کانفیگ‌های تکراری:</strong>
+          سرورهایی که در این بخش ثبت می‌کنید به لیست سرورهای کلاینت اپلیکیشن اضافه می‌شوند. اپلیکیشن به صورت خودکار کانفیگ‌های اشتراک ۳X-UI کاربر را با این لیست مقایسه کرده و <strong style="color: var(--success);">از نمایش هرگونه کانفیگ تکراری جلوگیری می‌کند</strong>؛ در نتیجه فقط سرورهای جدید و غیرتکراری به کاربر ارائه می‌گردد.
         </div>
       </div>
 
       <div class="form-group full">
-        <label style="font-weight: 700; color: #FFF; margin-bottom: 8px; display: block;">افزودن سرور مشترک جدید:</label>
+        <label style="font-weight: 600; color: var(--text); margin-bottom: 8px; display: block;">افزودن سرور مشترک جدید:</label>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
           <input type="text" id="newSharedConfigName" placeholder="نام نمایشی سرور (مثال: 🇩🇪 آلمان پرسرعت ۱)" style="flex: 1.2; min-width: 190px;">
           <input type="text" id="newSharedConfigUri" placeholder="لینک کانفیگ (vless://, vmess://, trojan://, ss://)" dir="ltr" style="flex: 2; min-width: 250px;">
-          <select id="newSharedConfigTier" style="width: 175px; background: rgba(0,0,0,0.3); color: #FFF; border: 1px solid var(--input-border); border-radius: 10px; padding: 8px 12px; font-family: inherit; font-size: 12.5px;">
+          <select id="newSharedConfigTier" style="width: 175px; background: rgba(0,0,0,0.3); color: var(--text); border: 1px solid var(--input-border); border-radius: 10px; padding: 8px 12px; font-family: inherit; font-size: 12.5px;">
             <option value="broadcast">🌐 همه کاربران (۳X-UI + پنل)</option>
             <option value="vip">💎 فقط کاربران ویژه VIP</option>
           </select>
-          <button type="button" onclick="addNewSharedConfig()" style="background: linear-gradient(135deg, #0284C7, #0EA5E9); color: #FFF; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(2,132,199,0.35);">
+          <button type="button" onclick="addNewSharedConfig()" style="background: var(--accent); color: var(--accent-ink); border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(2,132,199,0.35);">
             ➕ افزودن سرور
           </button>
         </div>
@@ -1987,7 +2141,7 @@
 
       <div style="margin-top: 18px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 0;">
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 0;">
             لیست سرورهای مشترک فعال در اپلیکیشن:
           </label>
         </div>
@@ -2005,10 +2159,10 @@
           <span>مدیریت سرورهای رایگان (Free Tier Servers)</span>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button type="button" onclick="testFreeServersHealth()" style="background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+          <button type="button" onclick="testFreeServersHealth()" style="background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> تست سلامت سرورها
           </button>
-          <button type="button" onclick="fetchFreeConfigsFromWorker()" style="background: rgba(0,245,255,0.15); color: #00F5FF; border: 1px solid rgba(0,245,255,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+          <button type="button" onclick="fetchFreeConfigsFromWorker()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg> بارگذاری مجدد
           </button>
         </div>
@@ -2019,14 +2173,14 @@
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <input type="text" id="newFreeConfigName" placeholder="نام نمایشی (مثال: 🇩🇪 آلمان رایگان)" style="flex: 1; min-width: 170px;">
           <input type="text" id="newFreeConfigUri" placeholder="لینک کانفیگ (vless://, vmess://, ss://, trojan://)" dir="ltr" style="flex: 2; min-width: 240px;">
-          <button type="button" onclick="addNewFreeConfig()" style="background: linear-gradient(90deg, #10B981, #059669); color: #FFF; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; font-family: inherit;">
+          <button type="button" onclick="addNewFreeConfig()" style="background: var(--success); color: #04231A; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 600; cursor: pointer; font-family: inherit;">
             ➕ ثبت سرور
           </button>
         </div>
       </div>
 
       <div style="margin-top: 14px;">
-        <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 8px;">
+        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">
           لیست سرورهای رایگان فعال (اهدایی در تماشای تبلیغ):
         </label>
         <div id="freeConfigsList" style="display: flex; flex-direction: column; gap: 8px;">
@@ -2046,10 +2200,10 @@
           <span>لاگ و گزارش خطاهای کاربران (Client Error Telemetry)</span>
         </div>
         <div style="display: flex; gap: 6px;">
-          <button type="button" onclick="fetchClientErrorsFromWorker()" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+          <button type="button" onclick="fetchClientErrorsFromWorker()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg> تازه‌سازی
           </button>
-          <button type="button" onclick="clearClientErrorsFromWorker()" style="background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
+          <button type="button" onclick="clearClientErrorsFromWorker()" style="background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg> پاکسازی لاگ
           </button>
         </div>
@@ -2085,7 +2239,7 @@
           <span>تبلیغات درون‌برنامه‌ای و اتصال رایگان (In-App Ads)</span>
         </div>
         <label class="switch-container">
-          <span style="font-size: 13px; font-weight: 700;" id="adSwitchLabel">فعال</span>
+          <span style="font-size: 13px; font-weight: 600;" id="adSwitchLabel">فعال</span>
           <div class="switch">
             <input type="checkbox" id="adActive" onchange="updateAdPreview()" checked>
             <span class="slider"></span>
@@ -2096,13 +2250,13 @@
       <div class="form-group full">
         <label>انتخاب سریع بنر تبلیغ (یا آپلود تصویر سفارشی):</label>
         <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
-          <button type="button" onclick="selectAdPreset('plan100')" style="background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 700; font-family: inherit;">
+          <button type="button" onclick="selectAdPreset('plan100')" style="background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 600; font-family: inherit;">
             🔥 بنر پلن ویژه ۱۰۰ گیگ (جدید)
           </button>
-          <button type="button" onclick="selectAdPreset('default')" style="background: rgba(14,165,233,0.15); color: #38bdf8; border: 1px solid rgba(14,165,233,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 700; font-family: inherit;">
+          <button type="button" onclick="selectAdPreset('default')" style="background: rgba(14,165,233,0.15); color: var(--accent); border: 1px solid rgba(14,165,233,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 600; font-family: inherit;">
             ⭐ بنر ۵ ساعت دسترسی (پیش‌فرض)
           </button>
-          <label style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 700; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; margin: 0;">
+          <label style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.35); border-radius: 10px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 600; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; margin: 0;">
             <span>📤 آپلود تصویر بنر از گوشی</span>
             <input type="file" id="adImageUpload" accept="image/*" style="display: none;" onchange="handleAdImageUpload(event)">
           </label>
@@ -2158,7 +2312,7 @@
 
       <!-- Live Mobile Ad Preview -->
       <div style="margin-top: 24px;">
-        <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 12px;">
+        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 12px;">
           📱 پیش‌نمایش نحوه نمایش تبلیغ در گوشی کاربر (سایز و فریم اپلیکیشن):
         </label>
         <div style="display: flex; justify-content: center;">
@@ -2166,7 +2320,7 @@
             
             <!-- Top bar -->
             <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-              <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #38bdf8; font-weight: 700;">
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--accent); font-weight: 600;">
                 <span>⏳</span>
                 <span>دیدن تبلیغ تا پاداش: <b id="adPrevTimer" style="color: #fbbf24;">15s</b></span>
               </div>
@@ -2178,14 +2332,14 @@
               <img id="adPrevImage" src="https://auth.djanah99.ir/ad/plan100.jpg" alt="بنر تبلیغ" style="width: 100%; height: auto; display: block; object-fit: contain;">
               <div id="adPrevTextCard" style="display: none; padding: 20px; text-align: center;">
                 <div style="font-size: 32px; margin-bottom: 8px;">🎁</div>
-                <div id="adPrevTextTitle" style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px;">عنوان تبلیغ</div>
+                <div id="adPrevTextTitle" style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px;">عنوان تبلیغ</div>
                 <div id="adPrevTextBody" style="font-size: 12px; color: #94a3b8; line-height: 1.5;">متن توضیحات تبلیغ</div>
               </div>
             </div>
 
             <!-- Reward Button -->
             <div style="margin-top: 4px;">
-              <button type="button" style="width: 100%; background: linear-gradient(135deg, #10B981, #059669); color: #fff; border: none; padding: 11px; border-radius: 12px; font-size: 13px; font-weight: 800; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(16,185,129,0.35);">
+              <button type="button" style="width: 100%; background: var(--success); color: #04231A; border: none; padding: 11px; border-radius: 12px; font-size: 13px; font-weight: 700; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(16,185,129,0.35);">
                 <span>🎁</span>
                 <span id="adPrevBtnText">دریافت ۵ ساعت دسترسی رایگان</span>
               </button>
@@ -2200,7 +2354,7 @@
   <!-- Floating Bottom Bar -->
   <div class="bottom-bar">
     <div>
-      <div style="font-weight: 800; font-size: 15px;">ذخیره و انتشار تغییرات</div>
+      <div style="font-weight: 700; font-size: 15px;">ذخیره و انتشار تغییرات</div>
       <div class="last-updated" id="lastUpdatedLabel">آخرین استعلام: لحظاتی پیش</div>
     </div>
     <button class="save-btn" onclick="saveAndCommitToGitHub()">
@@ -2347,28 +2501,28 @@
     }
 
     if (selectedType === 'warning') {
-      pModal.style.borderColor = 'rgba(245, 158, 11, 0.7)';
-      pModal.style.boxShadow = '0 0 35px rgba(245, 158, 11, 0.3)';
-      pIcon.style.borderColor = '#F59E0B';
-      pIcon.style.color = '#F59E0B';
+      pModal.style.borderColor = 'rgba(var(--warning-rgb), 0.7)';
+      pModal.style.boxShadow = '0 0 35px rgba(var(--warning-rgb), 0.3)';
+      pIcon.style.borderColor = 'var(--warning)';
+      pIcon.style.color = 'var(--warning)';
       pIcon.innerText = '⚠️';
-      document.getElementById('prevBtn').style.background = '#F59E0B';
+      document.getElementById('prevBtn').style.background = 'var(--warning)';
       document.getElementById('prevBtn').style.color = '#000';
     } else if (selectedType === 'info') {
-      pModal.style.borderColor = 'rgba(0, 245, 255, 0.7)';
-      pModal.style.boxShadow = '0 0 35px rgba(0, 245, 255, 0.3)';
-      pIcon.style.borderColor = '#00F5FF';
-      pIcon.style.color = '#00F5FF';
+      pModal.style.borderColor = 'rgba(var(--accent-rgb), 0.7)';
+      pModal.style.boxShadow = '0 0 35px rgba(var(--accent-rgb), 0.3)';
+      pIcon.style.borderColor = 'var(--accent)';
+      pIcon.style.color = 'var(--accent)';
       pIcon.innerText = 'ℹ️';
-      document.getElementById('prevBtn').style.background = '#00F5FF';
+      document.getElementById('prevBtn').style.background = 'var(--accent)';
       document.getElementById('prevBtn').style.color = '#000';
     } else {
-      pModal.style.borderColor = 'rgba(168, 85, 247, 0.7)';
-      pModal.style.boxShadow = '0 0 35px rgba(168, 85, 247, 0.3)';
-      pIcon.style.borderColor = '#A855F7';
-      pIcon.style.color = '#A855F7';
+      pModal.style.borderColor = 'rgba(var(--accent-rgb), 0.7)';
+      pModal.style.boxShadow = '0 0 35px rgba(var(--accent-rgb), 0.3)';
+      pIcon.style.borderColor = 'var(--accent)';
+      pIcon.style.color = 'var(--accent)';
       pIcon.innerText = '🚀';
-      document.getElementById('prevBtn').style.background = '#A855F7';
+      document.getElementById('prevBtn').style.background = 'var(--accent)';
       document.getElementById('prevBtn').style.color = '#FFF';
     }
   }
@@ -2397,7 +2551,7 @@
 
   function populateForm(cfg) {
     const annBadge = document.getElementById('badge-announcement');
-    if (annBadge) { if (cfg.announcement && cfg.announcement.active) { annBadge.style.display = ''; annBadge.innerText = 'فعال'; annBadge.style.background = '#10B981'; } else { annBadge.style.display = 'none'; } }
+    if (annBadge) { if (cfg.announcement && cfg.announcement.active) { annBadge.style.display = ''; annBadge.innerText = 'فعال'; annBadge.style.background = 'var(--success)'; } else { annBadge.style.display = 'none'; } }
     if (cfg.announcement) {
       document.getElementById('annActive').checked = !!cfg.announcement.active;
       document.getElementById('annTitle').value = cfg.announcement.title || '';
@@ -2452,9 +2606,9 @@
         const badge = document.getElementById(`server-badge-${s.id}`);
         if (badge) {
           if (s.host && s.port) {
-            badge.innerHTML = `<span style="color: #10B981; font-weight: 700;">🟢 آنلاین (${s.host}:${s.port})</span>`;
+            badge.innerHTML = `<span style="color: var(--success); font-weight: 600;">🟢 آنلاین (${s.host}:${s.port})</span>`;
           } else {
-            badge.innerHTML = `<span style="color: #F87171; font-weight: 700;">🔴 فرمت نامعتبر</span>`;
+            badge.innerHTML = `<span style="color: var(--danger); font-weight: 600;">🔴 فرمت نامعتبر</span>`;
           }
         }
       }
@@ -2474,7 +2628,7 @@ async function fetchFreeConfigsFromWorker() {
       });
       const data = await res.json();
       if (!data.success || !Array.isArray(data.configs)) {
-        listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در دریافت سرورهای رایگان</div>';
+        listEl.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 10px;">خطا در دریافت سرورهای رایگان</div>';
         return;
       }
       const badge = document.getElementById('badge-servers');
@@ -2497,8 +2651,8 @@ async function fetchFreeConfigsFromWorker() {
         item.innerHTML = `
           <div style="flex: 1; min-width: 0;">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-              <span style="font-weight: 700; font-size: 13.5px; color: #FFF;">${cfg.name || 'بدون نام'}</span>
-              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; ${isAct ? 'background: rgba(16,185,129,0.15); color: #10B981;' : 'background: rgba(239,68,68,0.15); color: #F87171;'}">
+              <span style="font-weight: 600; font-size: 13.5px; color: var(--text);">${cfg.name || 'بدون نام'}</span>
+              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; ${isAct ? 'background: rgba(16,185,129,0.15); color: var(--success);' : 'background: rgba(239,68,68,0.15); color: var(--danger);'}">
                 ${isAct ? 'فعال' : 'غیرفعال'}
               </span>
             </div>
@@ -2507,10 +2661,10 @@ async function fetchFreeConfigsFromWorker() {
             </div>
           </div>
           <div style="display: flex; gap: 6px;">
-            <button type="button" onclick="toggleFreeConfig(${cfg.id})" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">
+            <button type="button" onclick="toggleFreeConfig(${cfg.id})" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">
               ${isAct ? 'غیرفعال کردن' : 'فعال‌سازی'}
             </button>
-            <button type="button" onclick="deleteFreeConfig(${cfg.id})" style="background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">
+            <button type="button" onclick="deleteFreeConfig(${cfg.id})" style="background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;">
               حذف
             </button>
           </div>
@@ -2519,7 +2673,7 @@ async function fetchFreeConfigsFromWorker() {
       });
     } catch (e) {
       console.error(e);
-      listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در ارتباط با ورکر کلودفلر</div>';
+      listEl.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 10px;">خطا در ارتباط با ورکر کلودفلر</div>';
     }
   }
 
@@ -2602,7 +2756,7 @@ async function fetchFreeConfigsFromWorker() {
       });
       const data = await res.json();
       if (!data.success || !Array.isArray(data.configs)) {
-        listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در دریافت سرورهای مشترک</div>';
+        listEl.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 10px;">خطا در دریافت سرورهای مشترک</div>';
         return;
       }
       const badge = document.getElementById('sharedCountBadge');
@@ -2620,24 +2774,24 @@ async function fetchFreeConfigsFromWorker() {
       listEl.innerHTML = '';
       data.configs.forEach(cfg => {
         const item = document.createElement('div');
-        item.style = 'display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; transition: all 0.2s;';
+        item.style = 'display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; transition: background-color .14s var(--ease), border-color .14s var(--ease), color .14s var(--ease), transform .14s var(--ease);';
         
         const isAct = cfg.active === 1;
         const tierLabel = cfg.tier === 'vip' ? '💎 VIP' : '🌐 عمومی';
         const tierBadgeStyle = cfg.tier === 'vip' 
-          ? 'background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.3);' 
-          : 'background: rgba(14,165,233,0.15); color: #38BDF8; border: 1px solid rgba(14,165,233,0.3);';
+          ? 'background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3);' 
+          : 'background: rgba(14,165,233,0.15); color: var(--accent); border: 1px solid rgba(14,165,233,0.3);';
         
         const shortUri = cfg.uri.length > 55 ? cfg.uri.slice(0, 52) + '...' : cfg.uri;
 
         item.innerHTML = `
           <div style="flex: 1; min-width: 0;">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-              <span style="font-weight: 700; font-size: 14px; color: #FFF;">${cfg.name || 'بدون نام'}</span>
-              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; ${tierBadgeStyle}">
+              <span style="font-weight: 600; font-size: 14px; color: var(--text);">${cfg.name || 'بدون نام'}</span>
+              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; ${tierBadgeStyle}">
                 ${tierLabel}
               </span>
-              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700; ${isAct ? 'background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3);' : 'background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3);'}">
+              <span style="font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; ${isAct ? 'background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3);' : 'background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3);'}">
                 ${isAct ? '● فعال' : '○ غیرفعال'}
               </span>
             </div>
@@ -2646,10 +2800,10 @@ async function fetchFreeConfigsFromWorker() {
             </div>
           </div>
           <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
-            <button type="button" onclick="toggleSharedConfig(${cfg.id})" style="background: rgba(255,255,255,0.06); color: #E2E8F0; border: 1px solid rgba(255,255,255,0.12); padding: 6px 12px; border-radius: 8px; font-size: 11.5px; cursor: pointer; font-family: inherit; font-weight: 600;">
+            <button type="button" onclick="toggleSharedConfig(${cfg.id})" style="background: rgba(255,255,255,0.06); color: #E2E8F0; border: 1px solid rgba(255,255,255,0.12); padding: 6px 12px; border-radius: 8px; font-size: 11.5px; cursor: pointer; font-family: inherit; font-weight: 500;">
               ${isAct ? 'غیرفعال‌سازی' : 'فعال‌سازی'}
             </button>
-            <button type="button" onclick="deleteSharedConfig(${cfg.id})" style="background: rgba(239,68,68,0.12); color: #F87171; border: 1px solid rgba(239,68,68,0.25); padding: 6px 12px; border-radius: 8px; font-size: 11.5px; cursor: pointer; font-family: inherit; font-weight: 600;">
+            <button type="button" onclick="deleteSharedConfig(${cfg.id})" style="background: rgba(239,68,68,0.12); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); padding: 6px 12px; border-radius: 8px; font-size: 11.5px; cursor: pointer; font-family: inherit; font-weight: 500;">
               حذف
             </button>
           </div>
@@ -2658,7 +2812,7 @@ async function fetchFreeConfigsFromWorker() {
       });
     } catch (e) {
       console.error(e);
-      listEl.innerHTML = '<div style="color: #F87171; text-align: center; padding: 10px;">خطا در دریافت سرورهای مشترک از ورکر</div>';
+      listEl.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 10px;">خطا در دریافت سرورهای مشترک از ورکر</div>';
     }
   }
 
@@ -2768,13 +2922,13 @@ async function fetchFreeConfigsFromWorker() {
       });
       const data = await res.json();
       if (!data.success || !Array.isArray(data.errors)) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #F87171; padding: 12px;">خطا در دریافت لاگ خطاها</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--danger); padding: 12px;">خطا در دریافت لاگ خطاها</td></tr>';
         return;
       }
       const logBadge = document.getElementById('badge-logs');
       if (logBadge) { if (data.errors.length > 0) { logBadge.style.display = ''; logBadge.innerText = data.errors.length; } else { logBadge.style.display = 'none'; } }
       if (data.errors.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #10B981; padding: 14px;">✅ هیچ خطایی از سمت کاربران گزارش نشده است.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--success); padding: 14px;">✅ هیچ خطایی از سمت کاربران گزارش نشده است.</td></tr>';
         return;
       }
       tbody.innerHTML = '';
@@ -2785,14 +2939,14 @@ async function fetchFreeConfigsFromWorker() {
         const timeStr = d.toLocaleDateString('fa-IR') + ' ' + d.toLocaleTimeString('fa-IR');
         tr.innerHTML = `
           <td style="padding: 8px 10px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">${timeStr}</td>
-          <td style="padding: 8px 10px; font-weight: 700; color: #38bdf8;">${err.stage}</td>
-          <td style="padding: 8px 10px; font-family: monospace; direction: ltr; color: #CBD5E1;">${err.phone || '-'}</td>
+          <td style="padding: 8px 10px; font-weight: 600; color: var(--accent);">${err.stage}</td>
+          <td style="padding: 8px 10px; font-family: monospace; direction: ltr; color: var(--text-2);">${err.phone || '-'}</td>
           <td style="padding: 8px 10px; color: #FCA5A5; line-height: 1.4;">${err.message}</td>
         `;
         tbody.appendChild(tr);
       });
     } catch (_) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #F87171; padding: 12px;">خطا در ارتباط با سرور</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--danger); padding: 12px;">خطا در ارتباط با سرور</td></tr>';
     }
   }
 
@@ -3257,11 +3411,11 @@ async function fetchFreeConfigsFromWorker() {
       });
       const data = await res.json();
       if (!data.success || !Array.isArray(data.devices)) {
-        if (list) list.innerHTML = '<div style="color: #F87171; text-align: center; padding: 16px;">خطا در دریافت دستگاه‌ها</div>';
+        if (list) list.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 16px;">خطا در دریافت دستگاه‌ها</div>';
         return;
       }
       if (data.devices.length === 0) {
-        if (list) list.innerHTML = '<div style="color: #10B981; text-align: center; padding: 16px;">📭 هیچ دستگاه فعالی برای این کاربر متصل به اپ نیست.</div>';
+        if (list) list.innerHTML = '<div style="color: var(--success); text-align: center; padding: 16px;">📭 هیچ دستگاه فعالی برای این کاربر متصل به اپ نیست.</div>';
         return;
       }
       if (list) {
@@ -3273,11 +3427,11 @@ async function fetchFreeConfigsFromWorker() {
           const whenStr = isNaN(when.getTime()) ? '-' : when.toLocaleString('fa-IR');
           row.innerHTML = `
             <div style="flex: 1; min-width: 0;">
-              <div style="font-weight: 700; font-size: 13px; color: #FFF;">${d.device_name || d.platform || 'دستگاه ناشناس'}</div>
+              <div style="font-weight: 600; font-size: 13px; color: var(--text);">${d.device_name || d.platform || 'دستگاه ناشناس'}</div>
               <div style="font-size: 11.5px; color: var(--text-muted); font-family: monospace; direction: ltr;">${d.device_id || '-'}</div>
-              <div style="font-size: 11px; color: #64748B; margin-top: 2px;">آخرین فعالیت: ${whenStr}</div>
+              <div style="font-size: 11px; color: var(--text-4); margin-top: 2px;">آخرین فعالیت: ${whenStr}</div>
             </div>
-            <button type="button" onclick="kickDevice('${phone}', '${d.device_id}')" style="background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); padding: 6px 12px; border-radius: 10px; font-size: 11.5px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit;">
+            <button type="button" onclick="kickDevice('${phone}', '${d.device_id}')" style="background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); padding: 6px 12px; border-radius: 10px; font-size: 11.5px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: inherit;">
               🚪 خارج کردن
             </button>
           `;
@@ -3285,7 +3439,7 @@ async function fetchFreeConfigsFromWorker() {
         });
       }
     } catch (_) {
-      if (list) list.innerHTML = '<div style="color: #F87171; text-align: center; padding: 14px;">خطا در ارتباط با سرور</div>';
+      if (list) list.innerHTML = '<div style="color: var(--danger); text-align: center; padding: 14px;">خطا در ارتباط با سرور</div>';
     }
   }
 
@@ -3406,8 +3560,8 @@ async function fetchFreeConfigsFromWorker() {
 
       if (!data.success || !Array.isArray(data.users)) {
         const msg = data.message || 'خطا در دریافت کاربران از پنل 3x-ui';
-        if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 16px;">❌ ${_xuiEsc(msg)}</td></tr>`;
-        if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #F87171; padding: 16px;">❌ ${_xuiEsc(msg)}</div>`;
+        if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 16px;">❌ ${_xuiEsc(msg)}</td></tr>`;
+        if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">❌ ${_xuiEsc(msg)}</div>`;
         return;
       }
 
@@ -3420,8 +3574,14 @@ async function fetchFreeConfigsFromWorker() {
       _xuiSetBadge('badge-users', total);
 
       if (users.length === 0) {
-        if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">هیچ کاربری با این مشخصات یافت نشد.</td></tr>';
-        if (cardsContainer) cardsContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--text-muted);">هیچ کاربری با این مشخصات یافت نشد.</div>';
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><strong>کاربری با این مشخصات یافت نشد.</strong>'
+          + ((document.getElementById('xuiSearchInput')?.value || '').trim()
+             ? '<br><button type="button" class="empty-action" onclick="document.getElementById(\'xuiSearchInput\').value=\'\'; fetchXuiUsers()">پاک کردن جستجو</button>'
+             : '') + '</div></td></tr>';
+        if (cardsContainer) cardsContainer.innerHTML = '<div class="empty-state"><strong>کاربری با این مشخصات یافت نشد.</strong>'
+          + ((document.getElementById('xuiSearchInput')?.value || '').trim()
+             ? '<br><button type="button" class="empty-action" onclick="document.getElementById(\'xuiSearchInput\').value=\'\'; fetchXuiUsers()">پاک کردن جستجو</button>'
+             : '') + '</div>';
         return;
       }
 
@@ -3441,9 +3601,9 @@ async function fetchFreeConfigsFromWorker() {
         }
         const emailL = (u.email || '').toLowerCase().trim();
         const appLimit = cachedAppLimits[emailL] || 1;
-        let bar = '#10B981';
-        if (pct >= 85) bar = '#EF4444';
-        else if (pct >= 60) bar = '#F59E0B';
+        let bar = 'var(--success)';
+        if (pct >= 85) bar = 'var(--danger)';
+        else if (pct >= 60) bar = 'var(--warning)';
         return { used, usedGb, totalGb, pct, expStr, expired, appLimit, bar, emailL };
       };
 
@@ -3454,23 +3614,23 @@ async function fetchFreeConfigsFromWorker() {
           const email = _xuiEsc(u.email);
           return `
             <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <td style="padding: 10px; font-weight: 700; color: #FFF; font-family: monospace; direction: ltr; white-space: nowrap;">
-                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'}; margin-left: 6px;"></span>${email}
+              <td style="padding: 10px; font-weight: 600; color: var(--text); font-family: monospace; direction: ltr; white-space: nowrap;">
+                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${u.enable ? 'var(--success)' : 'var(--danger)'}; margin-left: 6px;"></span>${email}
               </td>
-              <td style="padding: 10px; color: #CBD5E1;">
+              <td style="padding: 10px; color: var(--text-2);">
                 <div style="font-size: 12px; margin-bottom: 4px;">
-                  <strong style="color: #FFF;">${f.usedGb}</strong> / <span>${f.totalGb ? f.totalGb + ' GB' : '∞'}</span>
-                  <span style="color: ${f.bar}; font-weight: 700; margin-right: 4px;">(${f.pct}%)</span>
+                  <strong style="color: var(--text);">${f.usedGb}</strong> / <span>${f.totalGb ? f.totalGb + ' GB' : '∞'}</span>
+                  <span style="color: ${f.bar}; font-weight: 600; margin-right: 4px;">(${f.pct}%)</span>
                 </div>
                 <div style="background: rgba(255,255,255,0.08); border-radius: 4px; height: 5px; width: 130px; overflow: hidden;">
                   <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
                 </div>
               </td>
               <td style="padding: 10px; font-size: 11.5px; color: var(--text-muted);">
-                <span style="color: ${f.expired ? '#EF4444' : '#CBD5E1'}; font-weight: 600;">${f.expStr}${f.expired ? ' <span style="font-size:10px;background:rgba(239,68,68,0.2);color:#EF4444;padding:2px 5px;border-radius:4px;">منقضی</span>' : ''}</span>
+                <span style="color: ${f.expired ? 'var(--danger)' : 'var(--text-2)'}; font-weight: 500;">${f.expStr}${f.expired ? ' <span style="font-size:10px;background:rgba(239,68,68,0.2);color:var(--danger);padding:2px 5px;border-radius:4px;">منقضی</span>' : ''}</span>
               </td>
               <td style="padding: 10px;">
-                <select onchange="updateUserAppLimit('${email}', this.value)" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #38bdf8; font-size: 11.5px; padding: 4px 6px; font-family: inherit;">
+                <select onchange="updateUserAppLimit('${email}', this.value)" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--accent); font-size: 11.5px; padding: 4px 6px; font-family: inherit;">
                   <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
                   <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
                   <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
@@ -3480,12 +3640,12 @@ async function fetchFreeConfigsFromWorker() {
               </td>
               <td style="padding: 10px; text-align: center;">
                 <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
-                  <button type="button" onclick="openXuiEditModal('${email}')" title="ویرایش حجم، انقضا، سقف دستگاه و رمز ورود به اپ" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); border: 1px solid var(--primary); color: #FFF; border-radius: 8px; padding: 4px 10px; font-size: 11.5px; font-weight: 700; cursor: pointer; font-family: inherit;">✏️ ویرایش</button>
-                  <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" title="کیوآرکد و لینک ساب" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
-                  <button type="button" onclick="openDevicesModal('${email}')" title="دستگاه‌های متصل" style="background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">📱 دستگاه‌ها</button>
-                  <button type="button" onclick="promptRenewUser('${email}')" title="تمدید حجم و زمان" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🔄 تمدید</button>
+                  <button type="button" onclick="openXuiEditModal('${email}')" title="ویرایش حجم، انقضا، سقف دستگاه و رمز ورود به اپ" style="background: rgba(var(--accent-rgb), 0.14); border: 1px solid var(--primary); color: var(--text); border-radius: 8px; padding: 4px 10px; font-size: 11.5px; font-weight: 600; cursor: pointer; font-family: inherit;">✏️ ویرایش</button>
+                  <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" title="کیوآرکد و لینک ساب" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
+                  <button type="button" onclick="openDevicesModal('${email}')" title="دستگاه‌های متصل" style="background: rgba(var(--accent-rgb), 0.12); color: var(--accent); border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">📱 دستگاه‌ها</button>
+                  <button type="button" onclick="promptRenewUser('${email}')" title="تمدید حجم و زمان" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🔄 تمدید</button>
                   <button type="button" onclick="resetUserTraffic('${email}')" title="صفر کردن مصرف" style="background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🧹 ریست</button>
-                  <button type="button" onclick="toggleUserEnable('${email}')" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? '#F87171' : '#10B981'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
+                  <button type="button" onclick="toggleUserEnable('${email}')" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? 'var(--danger)' : 'var(--success)'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
                 </div>
               </td>
             </tr>`;
@@ -3500,17 +3660,17 @@ async function fetchFreeConfigsFromWorker() {
           return `
             <div class="mobile-user-card">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px;">
-                <div style="font-weight: 800; color: #FFF; font-family: monospace; font-size: 14px; direction: ltr; display: flex; align-items: center; gap: 6px; min-width: 0; word-break: break-all;">
-                  <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'}; flex: none;"></span>
+                <div style="font-weight: 700; color: var(--text); font-family: monospace; font-size: 14px; direction: ltr; display: flex; align-items: center; gap: 6px; min-width: 0; word-break: break-all;">
+                  <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${u.enable ? 'var(--success)' : 'var(--danger)'}; flex: none;"></span>
                   <span>${email}</span>
                 </div>
-                <span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 8px; flex: none; ${u.enable ? 'background: rgba(16,185,129,0.18); color: #10B981;' : 'background: rgba(239,68,68,0.18); color: #F87171;'}">${u.enable ? 'فعال' : 'قطع'}</span>
+                <span style="font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 8px; flex: none; ${u.enable ? 'background: rgba(16,185,129,0.18); color: var(--success);' : 'background: rgba(239,68,68,0.18); color: var(--danger);'}">${u.enable ? 'فعال' : 'قطع'}</span>
               </div>
 
               <div style="margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #CBD5E1; margin-bottom: 4px;">
-                  <span>مصرف: <strong style="color: #FFF;">${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
-                  <span style="color: ${f.bar}; font-weight: 700;">${f.pct}%</span>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-bottom: 4px;">
+                  <span>مصرف: <strong style="color: var(--text);">${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
+                  <span style="color: ${f.bar}; font-weight: 600;">${f.pct}%</span>
                 </div>
                 <div style="background: rgba(255,255,255,0.08); border-radius: 6px; height: 6px; width: 100%; overflow: hidden;">
                   <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
@@ -3518,24 +3678,24 @@ async function fetchFreeConfigsFromWorker() {
               </div>
 
               <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px; gap: 8px;">
-                <div>⏳ انقضا: <strong style="color: ${f.expired ? '#F87171' : '#E2E8F0'};">${f.expStr}${f.expired ? ' (منقضی)' : ''}</strong></div>
-                <div style="background: rgba(56,189,248,0.12); color: #38BDF8; padding: 2px 7px; border-radius: 6px; font-weight: 700; flex: none;">📱 ${f.appLimit == 10 ? 'نامحدود' : f.appLimit + ' دستگاه'}</div>
+                <div>⏳ انقضا: <strong style="color: ${f.expired ? 'var(--danger)' : '#E2E8F0'};">${f.expStr}${f.expired ? ' (منقضی)' : ''}</strong></div>
+                <div style="background: rgba(var(--accent-rgb), 0.12); color: var(--accent); padding: 2px 7px; border-radius: 6px; font-weight: 600; flex: none;">📱 ${f.appLimit == 10 ? 'نامحدود' : f.appLimit + ' دستگاه'}</div>
               </div>
 
               <div style="display: flex; gap: 8px;">
-                <button type="button" onclick="openXuiEditModal('${email}')" style="flex: 2; background: linear-gradient(135deg, rgba(168,85,247,0.35), rgba(0,210,255,0.35)); color: #FFF; border: 1.5px solid var(--primary); border-radius: 12px; padding: 10px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit;">
+                <button type="button" onclick="openXuiEditModal('${email}')" style="flex: 2; background: rgba(var(--accent-rgb), 0.14); border: 1px solid rgba(var(--accent-rgb), 0.45); color: var(--accent); border: 1.5px solid var(--primary); border-radius: 12px; padding: 10px 12px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit;">
                   <span>✏️</span><span>ویرایش و رمز ورود</span>
                 </button>
-                <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="background: rgba(255,255,255,0.08); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
-                <button type="button" onclick="toggleUserEnable('${email}')" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? '#F87171' : '#34D399'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
+                <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="background: rgba(255,255,255,0.08); color: var(--accent); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
+                <button type="button" onclick="toggleUserEnable('${email}')" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? 'var(--danger)' : 'var(--success)'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
               </div>
             </div>`;
         }).join('');
       }
 
     } catch (err) {
-      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</td></tr>`;
-      if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #F87171; padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</div>`;
+      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</td></tr>`;
+      if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</div>`;
     }
   }
 
@@ -3557,7 +3717,7 @@ async function fetchFreeConfigsFromWorker() {
     document.getElementById('xuiEditExpiryCurrent').innerText = '-';
     document.getElementById('xuiEditUsedTrafficInfo').innerText = 'در حال دریافت اطلاعات...';
     const sb = document.getElementById('xuiEditStatusBadge');
-    if (sb) { sb.innerText = '...'; sb.style.background = 'rgba(255,255,255,0.1)'; sb.style.color = '#CBD5E1'; }
+    if (sb) { sb.innerText = '...'; sb.style.background = 'rgba(255,255,255,0.1)'; sb.style.color = 'var(--text-2)'; }
 
     modal.style.display = 'flex';
     modal.classList.add('active');
@@ -3580,8 +3740,8 @@ async function fetchFreeConfigsFromWorker() {
       document.getElementById('xuiEditEnable').checked = u.enable !== false;
 
       if (sb) {
-        if (u.enable !== false) { sb.innerText = 'فعال'; sb.style.background = 'rgba(16,185,129,0.2)'; sb.style.color = '#10B981'; }
-        else { sb.innerText = 'غیرفعال'; sb.style.background = 'rgba(239,68,68,0.2)'; sb.style.color = '#EF4444'; }
+        if (u.enable !== false) { sb.innerText = 'فعال'; sb.style.background = 'rgba(16,185,129,0.2)'; sb.style.color = 'var(--success)'; }
+        else { sb.innerText = 'غیرفعال'; sb.style.background = 'rgba(239,68,68,0.2)'; sb.style.color = 'var(--danger)'; }
       }
 
       // مصرف واقعی از لیست بارگذاری‌شده (ترافیک پنل ۳X-UI)
@@ -3854,29 +4014,18 @@ async function updateUserAppLimit(phone, maxDevices) {
 
     const btnInt = document.getElementById('subtab-btn-internal');
     const btnXui = document.getElementById('subtab-btn-xui');
+    const setSubBtn = (el, on) => {
+      if (!el) return;
+      el.classList.toggle('active', on);
+      el.style.background = '';
+      el.style.borderColor = '';
+      el.style.color = '';
+    };
+    setSubBtn(btnInt, isInternal);
+    setSubBtn(btnXui, !isInternal);
     if (isInternal) {
-      if (btnInt) {
-        btnInt.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
-        btnInt.style.borderColor = 'var(--primary)';
-        btnInt.style.color = '#FFF';
-      }
-      if (btnXui) {
-        btnXui.style.background = 'rgba(255,255,255,0.04)';
-        btnXui.style.borderColor = 'var(--card-border)';
-        btnXui.style.color = 'var(--text-muted)';
-      }
       fetchInternalUsers();
     } else {
-      if (btnXui) {
-        btnXui.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
-        btnXui.style.borderColor = 'var(--primary)';
-        btnXui.style.color = '#FFF';
-      }
-      if (btnInt) {
-        btnInt.style.background = 'rgba(255,255,255,0.04)';
-        btnInt.style.borderColor = 'var(--card-border)';
-        btnInt.style.color = 'var(--text-muted)';
-      }
       fetchXuiUsers();
     }
   }
@@ -3902,7 +4051,7 @@ async function updateUserAppLimit(phone, maxDevices) {
       });
       const data = await res.json();
       if (!data.success || !Array.isArray(data.users)) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #F87171; padding: 16px;">خطا در دریافت کاربران: ' + (data.message || 'پاسخ نامعتبر') + '</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--danger); padding: 16px;">خطا در دریافت کاربران: ' + (data.message || 'پاسخ نامعتبر') + '</td></tr>';
         return;
       }
 
@@ -3930,7 +4079,7 @@ async function updateUserAppLimit(phone, maxDevices) {
 
       renderInternalUsers(allInternalUsers);
     } catch (err) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #F87171; padding: 16px;">خطای ارتباط با سرور: ' + err.message + '</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط با سرور: ' + err.message + '</td></tr>';
     }
   }
 
@@ -3959,7 +4108,11 @@ async function updateUserAppLimit(phone, maxDevices) {
     if (!tbody) return;
 
     if (users.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">هیچ کاربر اختصاصی یافت نشد. می‌توانید با فرم بالا کاربر جدید ایجاد کنید.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><strong>هیچ کاربر اختصاصی ثبت نشده است.</strong><br>'
+          + ((document.getElementById('intSearchInput')?.value || '').trim()
+             ? '<button type="button" class="empty-action" onclick="document.getElementById(\'intSearchInput\').value=\'\'; filterInternalUsers()">پاک کردن جستجو</button>'
+             : '<button type="button" class="empty-action" onclick="const f=document.getElementById(\'intNewUsername\'); if(f){ f.scrollIntoView({block: \'center\'}); f.focus(); }">ساخت اولین کاربر</button>')
+          + '</div></td></tr>';
       return;
     }
 
@@ -3970,14 +4123,14 @@ async function updateUserAppLimit(phone, maxDevices) {
       const pct = u.total_bytes > 0 ? Math.min(100, Math.round(((u.used_bytes || 0) / u.total_bytes) * 100)) : 0;
 
       // Color and gradient for usage bar
-      let barGrad = 'linear-gradient(90deg, #10B981, #00D2FF)';
-      let pctColor = '#34D399';
+      let barGrad = 'var(--success)';
+      let pctColor = 'var(--success)';
       if (pct >= 85) {
-        barGrad = 'linear-gradient(90deg, #F59E0B, #EF4444)';
-        pctColor = '#F87171';
+        barGrad = 'var(--danger)';
+        pctColor = 'var(--danger)';
       } else if (pct >= 60) {
-        barGrad = 'linear-gradient(90deg, #10B981, #F59E0B)';
-        pctColor = '#FBBF24';
+        barGrad = 'var(--warning)';
+        pctColor = 'var(--warning)';
       }
 
       // Expiry Timer Badge
@@ -3986,7 +4139,7 @@ async function updateUserAppLimit(phone, maxDevices) {
         const diffMs = u.expiry_time - nowMs;
         if (diffMs <= 0) {
           timerPill = `
-            <div class="timer-pill" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.3); color: #F87171;">
+            <div class="timer-pill" style="background: rgba(var(--danger-rgb), 0.12); border-color: rgba(var(--danger-rgb), 0.3); color: var(--danger);">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
               <span>منقضی شده</span>
             </div>`;
@@ -3994,14 +4147,14 @@ async function updateUserAppLimit(phone, maxDevices) {
           const totalHours = Math.ceil(diffMs / (1000 * 3600));
           if (totalHours < 24) {
             timerPill = `
-              <div class="timer-pill" style="background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.3); color: #FBBF24;">
+              <div class="timer-pill" style="background: rgba(var(--warning-rgb), 0.12); border-color: rgba(var(--warning-rgb), 0.3); color: var(--warning);">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 <span>${totalHours} ساعت مانده</span>
               </div>`;
           } else {
             const days = Math.ceil(diffMs / (1000 * 86400));
             timerPill = `
-              <div class="timer-pill" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.25); color: #38BDF8;">
+              <div class="timer-pill" style="background: rgba(var(--accent-rgb), 0.12); border-color: rgba(var(--accent-rgb), 0.25); color: var(--accent);">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 <span>${days} روز مانده</span>
               </div>`;
@@ -4009,7 +4162,7 @@ async function updateUserAppLimit(phone, maxDevices) {
         }
       } else {
         timerPill = `
-          <div class="timer-pill" style="color: #94A3B8;">
+          <div class="timer-pill" style="color: var(--text-3);">
             <span>نامحدود</span>
           </div>`;
       }
@@ -4018,25 +4171,25 @@ async function updateUserAppLimit(phone, maxDevices) {
       let statusPill = '';
       if (!u.active) {
         statusPill = `
-          <div class="status-pill" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25); color: #F87171;">
+          <div class="status-pill" style="background: rgba(var(--danger-rgb), 0.12); border: 1px solid rgba(var(--danger-rgb), 0.25); color: var(--danger);">
             <div class="status-dot expired"></div>
             <span>غیرفعال</span>
           </div>`;
       } else if (u.expired_reason === 'volume') {
         statusPill = `
-          <div class="status-pill" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25); color: #F87171;">
+          <div class="status-pill" style="background: rgba(var(--danger-rgb), 0.12); border: 1px solid rgba(var(--danger-rgb), 0.25); color: var(--danger);">
             <div class="status-dot expired"></div>
             <span>اتمام حجم</span>
           </div>`;
       } else if (u.expired_reason === 'time') {
         statusPill = `
-          <div class="status-pill" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.25); color: #FBBF24;">
+          <div class="status-pill" style="background: rgba(var(--warning-rgb), 0.12); border: 1px solid rgba(var(--warning-rgb), 0.25); color: var(--warning);">
             <div class="status-dot warning"></div>
             <span>پایان زمان</span>
           </div>`;
       } else {
         statusPill = `
-          <div class="status-pill" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25); color: #34D399;">
+          <div class="status-pill" style="background: rgba(var(--success-rgb), 0.12); border: 1px solid rgba(var(--success-rgb), 0.25); color: var(--success);">
             <div class="status-dot active"></div>
             <span>فعال</span>
           </div>`;
@@ -4048,11 +4201,11 @@ async function updateUserAppLimit(phone, maxDevices) {
       // Tier & Device Badge
       let tierBadge = '';
       if (u.tier === 'vip') {
-        tierBadge = '<span style="background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 800;">💎 VIP</span>';
+        tierBadge = '<span style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 700;">💎 VIP</span>';
       } else if (u.tier === 'all') {
-        tierBadge = '<span style="background: rgba(0, 245, 255, 0.12); color: #00F5FF; border: 1px solid rgba(0, 245, 255, 0.25); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 800;">🌐 همه</span>';
+        tierBadge = '<span style="background: rgba(var(--accent-rgb), 0.12); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.25); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 700;">🌐 همه</span>';
       } else {
-        tierBadge = '<span style="background: rgba(255, 255, 255, 0.06); color: #CBD5E1; border: 1px solid rgba(255, 255, 255, 0.1); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 700;">⚡ سرور عادی</span>';
+        tierBadge = '<span style="background: rgba(255, 255, 255, 0.06); color: var(--text-2); border: 1px solid rgba(255, 255, 255, 0.1); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 600;">⚡ سرور عادی</span>';
       }
 
       return `
@@ -4076,10 +4229,10 @@ async function updateUserAppLimit(phone, maxDevices) {
             <div class="usage-container">
               <div class="usage-metrics">
                 <div>
-                  <strong style="color: #FFF; font-size: 12.5px;">${usedGb}</strong>
-                  <span style="color: #64748B;"> / ${totalGb === 'نامحدود' ? '∞' : totalGb + ' GB'}</span>
+                  <strong style="color: var(--text); font-size: 12.5px;">${usedGb}</strong>
+                  <span style="color: var(--text-4);"> / ${totalGb === 'نامحدود' ? '∞' : totalGb + ' GB'}</span>
                 </div>
-                <div style="color: ${pctColor}; font-weight: 800; font-size: 11px;">${pct}%</div>
+                <div style="color: ${pctColor}; font-weight: 700; font-size: 11px;">${pct}%</div>
               </div>
               <div class="usage-track">
                 <div class="usage-bar" style="width: ${pct}%; background: ${barGrad};"></div>
@@ -4092,7 +4245,7 @@ async function updateUserAppLimit(phone, maxDevices) {
           <td>
             <div style="display: flex; flex-direction: column; gap: 4px;">
               <div>${tierBadge}</div>
-              <div style="color: #94A3B8; font-size: 11px;">📱 ${u.max_devices || 1} دستگاه هم‌زمان</div>
+              <div style="color: var(--text-3); font-size: 11px;">📱 ${u.max_devices || 1} دستگاه هم‌زمان</div>
             </div>
           </td>
           <td>
@@ -4115,8 +4268,8 @@ async function updateUserAppLimit(phone, maxDevices) {
 
               <button type="button" class="btn-action-icon" onclick="toggleInternalUserActive(${u.id}, ${u.active ? 0 : 1})" title="${u.active ? 'غیرفعال‌سازی کاربر' : 'فعال‌سازی کاربر'}">
                 ${u.active 
-                  ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' 
-                  : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>'
+                  ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' 
+                  : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>'
                 }
               </button>
 
@@ -4133,7 +4286,11 @@ async function updateUserAppLimit(phone, maxDevices) {
     const mobileContainer = document.getElementById('internalUsersMobileCards');
     if (mobileContainer) {
       if (users.length === 0) {
-        mobileContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">هیچ کاربر اختصاصی یافت نشد.</div>';
+        mobileContainer.innerHTML = '<div class="empty-state"><strong>هیچ کاربر اختصاصی ثبت نشده است.</strong><br>'
+          + ((document.getElementById('intSearchInput')?.value || '').trim()
+             ? '<button type="button" class="empty-action" onclick="document.getElementById(\'intSearchInput\').value=\'\'; filterInternalUsers()">پاک کردن جستجو</button>'
+             : '<button type="button" class="empty-action" onclick="const f=document.getElementById(\'intNewUsername\'); if(f){ f.scrollIntoView({block: \'center\'}); f.focus(); }">ساخت اولین کاربر</button>')
+          + '</div>';
       } else {
         mobileContainer.innerHTML = users.map(u => {
           const usedGb = ((u.used_bytes || 0) / (1024 ** 3)).toFixed(2);
@@ -4151,33 +4308,33 @@ async function updateUserAppLimit(phone, maxDevices) {
             else { remText = ` (${remDays} روز)`; }
           }
 
-          let barColor = '#10B981';
-          if (pct >= 85) barColor = '#EF4444';
-          else if (pct >= 60) barColor = '#F59E0B';
+          let barColor = 'var(--success)';
+          if (pct >= 85) barColor = 'var(--danger)';
+          else if (pct >= 60) barColor = 'var(--warning)';
 
           return `
             <div class="mobile-user-card">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <div style="font-weight: 800; color: #FFF; font-family: monospace; font-size: 14.5px; direction: ltr;">
+                <div style="font-weight: 700; color: var(--text); font-family: monospace; font-size: 14.5px; direction: ltr;">
                   ${u.username}
                 </div>
                 <div style="display: flex; gap: 6px;">
-                  <span style="font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: rgba(56,189,248,0.15); color: #38bdf8;">
+                  <span style="font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 8px; background: rgba(var(--accent-rgb), 0.15); color: var(--accent);">
                     📱 ${u.max_devices || 1} دستگاه
                   </span>
-                  <span style="font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 8px; ${u.active ? 'background: rgba(16,185,129,0.2); color: #10B981;' : 'background: rgba(239,68,68,0.2); color: #F87171;'}">
+                  <span style="font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 8px; ${u.active ? 'background: rgba(16,185,129,0.2); color: var(--success);' : 'background: rgba(239,68,68,0.2); color: var(--danger);'}">
                     ${u.active ? 'فعال' : 'غیرفعال'}
                   </span>
                 </div>
               </div>
 
-              ${u.password ? `<div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px; font-family: monospace;">🔑 رمز: <strong style="color: #38bdf8;">${u.password}</strong></div>` : ''}
+              ${u.password ? `<div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px; font-family: monospace;">🔑 رمز: <strong style="color: var(--accent);">${u.password}</strong></div>` : ''}
 
               <!-- Progress Bar -->
               <div style="margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #CBD5E1; margin-bottom: 4px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-2); margin-bottom: 4px;">
                   <span>مصرف: <strong>${usedGb}</strong> از <strong>${totalGb} GB</strong></span>
-                  <span style="color: ${barColor}; font-weight: 700;">${pct}%</span>
+                  <span style="color: ${barColor}; font-weight: 600;">${pct}%</span>
                 </div>
                 <div style="background: rgba(255,255,255,0.08); border-radius: 6px; height: 6px; width: 100%; overflow: hidden;">
                   <div style="background: ${barColor}; height: 100%; width: ${pct}%;"></div>
@@ -4185,17 +4342,17 @@ async function updateUserAppLimit(phone, maxDevices) {
               </div>
 
               <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
-                ⏳ انقضا: <strong style="color: ${isExpired ? '#F87171' : '#CBD5E1'};">${expStr}${remText}</strong>
+                ⏳ انقضا: <strong style="color: ${isExpired ? 'var(--danger)' : 'var(--text-2)'};">${expStr}${remText}</strong>
               </div>
 
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button type="button" onclick="showIntEditModal(${u.id})" style="flex: 2; background: linear-gradient(135deg, rgba(168,85,247,0.35), rgba(0,210,255,0.35)); color: #FFF; border: 1.5px solid var(--primary); border-radius: 12px; padding: 8px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer;">
+                <button type="button" onclick="showIntEditModal(${u.id})" style="flex: 2; background: rgba(var(--accent-rgb), 0.14); border: 1px solid rgba(var(--accent-rgb), 0.45); color: var(--accent); border: 1.5px solid var(--primary); border-radius: 12px; padding: 8px 12px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
                   ✏️ ویرایش و رمز
                 </button>
-                <button type="button" onclick="showIntAddQuotaModal(${u.id}, '${u.username}')" style="flex: 1; background: rgba(16,185,129,0.12); color: #10B981; border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 8px; font-size: 12px; cursor: pointer;">
+                <button type="button" onclick="showIntAddQuotaModal(${u.id}, '${u.username}')" style="flex: 1; background: rgba(16,185,129,0.12); color: var(--success); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 8px; font-size: 12px; cursor: pointer;">
                   ⚡ تمدید
                 </button>
-                <button type="button" onclick="toggleInternalUserActive(${u.id}, ${u.active ? 0 : 1})" style="background: rgba(239,68,68,0.1); color: ${u.active ? '#F87171' : '#10B981'}; border: 1px solid ${u.active ? 'rgba(239,68,68,0.25)' : 'rgba(16,185,129,0.25)'}; border-radius: 12px; padding: 8px 12px; font-size: 12px; cursor: pointer;">
+                <button type="button" onclick="toggleInternalUserActive(${u.id}, ${u.active ? 0 : 1})" style="background: rgba(239,68,68,0.1); color: ${u.active ? 'var(--danger)' : 'var(--success)'}; border: 1px solid ${u.active ? 'rgba(239,68,68,0.25)' : 'rgba(16,185,129,0.25)'}; border-radius: 12px; padding: 8px 12px; font-size: 12px; cursor: pointer;">
                   ${u.active ? '⏸️' : '▶️'}
                 </button>
               </div>
@@ -4634,11 +4791,11 @@ async function updateUserAppLimit(phone, maxDevices) {
 <div class="app-modal-overlay" id="qrModalOverlay" onclick="if(event.target===this) closeQrModal()">
   <div class="app-modal" style="text-align: center;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;" id="qrModalTitle">کیوآرکد اشتراک</h3>
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text);" id="qrModalTitle">کیوآرکد اشتراک</h3>
       <button type="button" onclick="closeQrModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
     </div>
     
-    <div style="background: #FFF; padding: 14px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+    <div style="background: var(--text); padding: 14px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
       <img id="qrModalImage" src="" alt="QR" style="width: 200px; height: 200px; display: block;">
     </div>
 
@@ -4648,7 +4805,7 @@ async function updateUserAppLimit(phone, maxDevices) {
 
     <div style="display: flex; flex-direction: column; gap: 8px;">
 
-      <button type="button" id="qrCopyUrlBtn" onclick="copyModalSubUrl()" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); padding: 10px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; font-family: inherit;">
+      <button type="button" id="qrCopyUrlBtn" onclick="copyModalSubUrl()" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); padding: 10px; border-radius: 12px; font-weight: 500; cursor: pointer; font-size: 13px; font-family: inherit;">
         📋 کپی آدرس سابسکریپشن
       </button>
     </div>
@@ -4659,8 +4816,8 @@ async function updateUserAppLimit(phone, maxDevices) {
 <div class="app-modal-overlay" id="devicesModalOverlay" onclick="if(event.target===this) closeDevicesModal()">
   <div class="app-modal" style="max-width: 520px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;">
-        📱 دستگاه‌های متصل به اپ: <span id="devModalUser" style="color: #38bdf8;"></span>
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text);">
+        📱 دستگاه‌های متصل به اپ: <span id="devModalUser" style="color: var(--accent);"></span>
       </h3>
       <button type="button" onclick="closeDevicesModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
     </div>
@@ -4676,8 +4833,8 @@ async function updateUserAppLimit(phone, maxDevices) {
 <div class="app-modal-overlay" id="intQuotaModalOverlay" onclick="if(event.target===this) closeIntQuotaModal()">
   <div class="app-modal" style="max-width: 440px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;">
-        ➕ افزایش حجم و زمان: <span id="intQuotaModalUsername" style="color: #38bdf8;"></span>
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text);">
+        ➕ افزایش حجم و زمان: <span id="intQuotaModalUsername" style="color: var(--accent);"></span>
       </h3>
       <button type="button" onclick="closeIntQuotaModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
     </div>
@@ -4704,7 +4861,7 @@ async function updateUserAppLimit(phone, maxDevices) {
       </div>
 
       <div class="form-group full" style="margin-top: 10px;">
-        <button type="button" onclick="submitIntAddQuota()" style="background: linear-gradient(90deg, #10B981, #00D2FF); color: #FFF; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit;">
+        <button type="button" onclick="submitIntAddQuota()" style="background: var(--success); color: #04231A; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit;">
           💾 ثبت و افزایش آنی اعتبار
         </button>
       </div>
@@ -4716,7 +4873,7 @@ async function updateUserAppLimit(phone, maxDevices) {
 <div class="app-modal-overlay" id="intEditModalOverlay" onclick="if(event.target===this) closeIntEditModal()">
   <div class="app-modal" style="max-width: 520px; max-height: 90vh; overflow-y: auto;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 16px; font-weight: 800; color: #FFF; display: flex; align-items: center; gap: 8px;">
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px;">
         <span>✏️</span>
         <span>ویرایش مشخصات، حجم و اعتبار کاربر</span>
       </h3>
@@ -4751,12 +4908,12 @@ async function updateUserAppLimit(phone, maxDevices) {
 
       <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <label style="margin: 0; font-size: 12.5px; color: #FFF; font-weight: 700;">📊 حجم مصرف‌شده کاربر (گیگابایت):</label>
-          <span id="intEditUsedInfo" style="font-size: 11.5px; color: #38bdf8;"></span>
+          <label style="margin: 0; font-size: 12.5px; color: var(--text); font-weight: 600;">📊 حجم مصرف‌شده کاربر (گیگابایت):</label>
+          <span id="intEditUsedInfo" style="font-size: 11.5px; color: var(--accent);"></span>
         </div>
         <div style="display: flex; gap: 8px; align-items: center;">
           <input type="number" id="intEditUsedGb" dir="ltr" step="0.1" min="0" style="flex: 1;">
-          <button type="button" onclick="document.getElementById('intEditUsedGb').value='0'; showToast('🔄 حجم مصرفی روی ۰ تنظیم شد');" style="background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 10px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit;">
+          <button type="button" onclick="document.getElementById('intEditUsedGb').value='0'; showToast('🔄 حجم مصرفی روی ۰ تنظیم شد');" style="background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 10px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: inherit;">
             🔄 صفر کردن مصرف
           </button>
         </div>
@@ -4765,7 +4922,7 @@ async function updateUserAppLimit(phone, maxDevices) {
 
       <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">
         <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 8px;" id="intEditExpiryInfo"></div>
-        <label style="font-size: 12.5px; margin-bottom: 6px; font-weight: 700;">⏳ مدیریت تاریخ انقضا و تمدید:</label>
+        <label style="font-size: 12.5px; margin-bottom: 6px; font-weight: 600;">⏳ مدیریت تاریخ انقضا و تمدید:</label>
         <select id="intEditValidityType" onchange="onIntEditValidityChange(this)" style="margin-bottom: 8px;">
           <option value="keep">حفظ تاریخ انقضای فعلی (بدون تغییر)</option>
           <option value="extend">➕ افزودن روز به تاریخ انقضا (+روز)</option>
@@ -4815,7 +4972,7 @@ async function updateUserAppLimit(phone, maxDevices) {
       </div>
 
       <div class="form-group full" style="margin-top: 10px;">
-        <button type="button" onclick="submitIntEditUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 13px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit; font-size: 15px; box-shadow: 0 4px 15px rgba(168,85,247,0.35);">
+        <button type="button" onclick="submitIntEditUser()" style="background: var(--accent); color: var(--accent-ink); border: none; padding: 13px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; font-size: 15px; box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.35);">
           💾 ذخیره تغییرات مشخصات و حجم
         </button>
       </div>
@@ -4828,7 +4985,7 @@ async function updateUserAppLimit(phone, maxDevices) {
 <div class="app-modal-overlay" id="xuiEditModalOverlay" onclick="if(event.target===this) closeXuiEditModal()">
   <div class="app-modal" style="max-width: 520px; max-height: 90vh; overflow-y: auto;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
-      <h3 style="font-size: 16px; font-weight: 800; color: #FFF; display: flex; align-items: center; gap: 8px;">
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px;">
         <span style="color: var(--primary);">✏️</span>
         <span>ویرایش کاربر ۳X-UI و تنظیمات اپلیکیشن</span>
       </h3>
@@ -4836,24 +4993,24 @@ async function updateUserAppLimit(phone, maxDevices) {
     </div>
 
     <!-- Hidden / Readonly User Info -->
-    <div style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <div style="background: rgba(var(--accent-rgb), 0.08); border: 1px solid rgba(var(--accent-rgb), 0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
       <div>
         <div style="font-size: 11px; color: var(--text-muted);">شماره یا شناسه کاربر:</div>
-        <div id="xuiEditDisplayEmail" style="font-weight: 800; color: #38bdf8; font-family: monospace; font-size: 15px; direction: ltr;">-</div>
+        <div id="xuiEditDisplayEmail" style="font-weight: 700; color: var(--accent); font-family: monospace; font-size: 15px; direction: ltr;">-</div>
       </div>
-      <div id="xuiEditStatusBadge" style="font-size: 11px; padding: 3px 10px; border-radius: 8px; font-weight: 700; background: rgba(16,185,129,0.2); color: #10B981;">فعال</div>
+      <div id="xuiEditStatusBadge" style="font-size: 11px; padding: 3px 10px; border-radius: 8px; font-weight: 600; background: rgba(16,185,129,0.2); color: var(--success);">فعال</div>
     </div>
     <input type="hidden" id="xuiEditEmail">
 
     <div class="form-grid">
       <!-- 1. Password Field for App Login -->
-      <div class="form-group full" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(56,189,248,0.25); border-radius: 14px; padding: 14px;">
+      <div class="form-group full" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(var(--accent-rgb), 0.25); border-radius: 14px; padding: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <label style="margin: 0; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+          <label style="margin: 0; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 6px;">
             <span>🔑</span> <span>رمز عبور ورود به اپلیکیشن:</span>
           </label>
           <div style="display: flex; gap: 6px;">
-            <button type="button" class="btn-xs-pill" onclick="generateXuiRandomPass()" style="background: rgba(56,189,248,0.15); color: #38bdf8; border-color: rgba(56,189,248,0.3);">🎲 رمز تصادفی</button>
+            <button type="button" class="btn-xs-pill" onclick="generateXuiRandomPass()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border-color: rgba(var(--accent-rgb), 0.3);">🎲 رمز تصادفی</button>
             <button type="button" class="btn-xs-pill" onclick="copyXuiPass()">📋 کپی</button>
           </div>
         </div>
@@ -4869,7 +5026,7 @@ async function updateUserAppLimit(phone, maxDevices) {
       <!-- 2. Device Limit in App -->
       <div class="form-group full">
         <label>📱 سقف اتصال همزمان در اپلیکیشن (Device Limit):</label>
-        <select id="xuiEditMaxDevices" style="background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 12px; color: #FFF; padding: 10px 12px; width: 100%;">
+        <select id="xuiEditMaxDevices" style="background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 12px; color: var(--text); padding: 10px 12px; width: 100%;">
           <option value="1">۱ دستگاه (تک‌کاربره - استاندارد)</option>
           <option value="2">۲ دستگاه (دو کاربره)</option>
           <option value="3">۳ دستگاه</option>
@@ -4899,7 +5056,7 @@ async function updateUserAppLimit(phone, maxDevices) {
           <label style="margin: 0; font-size: 13px;">⏳ مدت اعتبار و انقضا:</label>
           <span id="xuiEditExpiryCurrent" style="font-size: 12px; color: var(--text-muted); font-family: monospace;">-</span>
         </div>
-        <select id="xuiEditRenewalMode" onchange="updateXuiExpiryPreview()" style="background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 10px; color: #FFF; padding: 8px 10px; width: 100%;">
+        <select id="xuiEditRenewalMode" onchange="updateXuiExpiryPreview()" style="background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 10px; color: var(--text); padding: 8px 10px; width: 100%;">
           <option value="keep" selected>حفظ تاریخ انقضای فعلی (بدون تغییر)</option>
           <option value="30">تمدید ۳۰ روزه (+۳۰ روز از امروز)</option>
           <option value="60">تمدید ۶۰ روزه (+۶۰ روز از امروز)</option>
@@ -4907,13 +5064,13 @@ async function updateUserAppLimit(phone, maxDevices) {
           <option value="365">تمدید ۱ ساله (+۳۶۵ روز از امروز)</option>
           <option value="unlimited">نامحدود (بدون تاریخ انقضا)</option>
         </select>
-        <div id="xuiEditExpiryPreview" style="font-size: 11.5px; color: #c084fc; margin-top: 6px;"></div>
+        <div id="xuiEditExpiryPreview" style="font-size: 11.5px; color: var(--accent); margin-top: 6px;"></div>
       </div>
 
       <!-- 5. Reset Traffic Option -->
       <div class="form-group full" style="display: flex; align-items: center; justify-content: space-between; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 12px 14px;">
         <div>
-          <div style="font-size: 13px; font-weight: 700; color: #fbbf24;">🧹 صفر کردن حجم مصرفی (ریست مصرف)</div>
+          <div style="font-size: 13px; font-weight: 600; color: #fbbf24;">🧹 صفر کردن حجم مصرفی (ریست مصرف)</div>
           <div id="xuiEditUsedTrafficInfo" style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">مصرف فعلی: ۰ GB</div>
         </div>
         <label class="switch">
@@ -4925,7 +5082,7 @@ async function updateUserAppLimit(phone, maxDevices) {
       <!-- 6. Account Status (Enable/Disable) -->
       <div class="form-group full" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px;">
         <div>
-          <div style="font-size: 13px; font-weight: 700; color: #FFF;">وضعیت اشتراک کاربر</div>
+          <div style="font-size: 13px; font-weight: 600; color: var(--text);">وضعیت اشتراک کاربر</div>
           <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">قطع یا وصل دسترسی به سرورها و اپلیکیشن</div>
         </div>
         <label class="switch">
@@ -4937,10 +5094,10 @@ async function updateUserAppLimit(phone, maxDevices) {
 
     <!-- Modal Footer Actions -->
     <div style="display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
-      <button type="button" id="btnSaveXuiEdit" onclick="saveXuiUserEdit()" style="flex: 2; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; border-radius: 12px; padding: 12px; font-weight: 800; cursor: pointer; font-size: 14px; box-shadow: 0 4px 14px rgba(16,185,129,0.35);">
+      <button type="button" id="btnSaveXuiEdit" onclick="saveXuiUserEdit()" style="flex: 2; background: var(--success); color: #04231A; border: none; border-radius: 12px; padding: 12px; font-weight: 700; cursor: pointer; font-size: 14px; box-shadow: 0 4px 14px rgba(16,185,129,0.35);">
         💾 ذخیره تغییرات و اعمال در اپلیکیشن
       </button>
-      <button type="button" onclick="closeXuiEditModal()" style="flex: 1; background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; font-weight: 700; cursor: pointer; font-size: 13px;">
+      <button type="button" onclick="closeXuiEditModal()" style="flex: 1; background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; font-weight: 600; cursor: pointer; font-size: 13px;">
         انصراف
       </button>
     </div>
