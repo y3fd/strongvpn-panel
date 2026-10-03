@@ -642,6 +642,25 @@
       justify-content: center;
       padding: 16px;
     }
+    .app-modal-overlay.active {
+      display: flex !important;
+    }
+    .btn-xs-pill {
+      background: rgba(255, 255, 255, 0.06);
+      color: #94A3B8;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-xs-pill:hover {
+      background: rgba(168, 85, 247, 0.2);
+      color: #FFF;
+      border-color: #A855F7;
+    }
     .app-modal {
       background: #0E1626;
       border: 1px solid rgba(168, 85, 247, 0.4);
@@ -3597,11 +3616,19 @@ async function fetchFreeConfigsFromWorker() {
     document.getElementById('intQuotaModalUsername').innerText = username;
     document.getElementById('intQuotaAddGb').value = '10';
     document.getElementById('intQuotaAddTimeValue').value = '30';
-    document.getElementById('intQuotaModalOverlay').classList.add('active');
+    const modal = document.getElementById('intQuotaModalOverlay');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+    }
   }
 
   function closeIntQuotaModal() {
-    document.getElementById('intQuotaModalOverlay').classList.remove('active');
+    const modal = document.getElementById('intQuotaModalOverlay');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
+    }
   }
 
   async function submitIntAddQuota() {
@@ -3619,7 +3646,8 @@ async function fetchFreeConfigsFromWorker() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Secret': CF_ADMIN_SECRET
+          'X-Admin-Secret': CF_ADMIN_SECRET,
+          'User-Agent': 'StrongVPN-Client'
         },
         body: JSON.stringify(payload)
       });
@@ -3636,19 +3664,27 @@ async function fetchFreeConfigsFromWorker() {
     }
   }
 
+  function onIntEditValidityChange(sel) {
+    const box = document.getElementById('intEditCustomDaysBox');
+    if (box) box.style.display = sel.value === 'extend' ? 'flex' : 'none';
+  }
+
   function showIntEditModal(id) {
-    const user = allInternalUsers.find(u => u.id === id);
-    if (!user) return;
+    const user = allInternalUsers.find(u => String(u.id) === String(id));
+    if (!user) {
+      showToast('کاربر با شناسه ' + id + ' در لیست یافت نشد', true);
+      return;
+    }
     document.getElementById('intEditModalUserId').value = id;
     document.getElementById('intEditUsername').value = user.username || '';
     document.getElementById('intEditPassword').value = user.password || '';
 
-    const totalGb = (user.total_bytes / (1024 * 1024 * 1024)).toFixed(1).replace('.0', '');
+    const totalGb = user.total_bytes > 0 ? (user.total_bytes / (1024 ** 3)).toFixed(1).replace('.0', '') : '0';
     document.getElementById('intEditTotalGb').value = totalGb;
 
-    const usedGb = (user.used_bytes / (1024 * 1024 * 1024)).toFixed(2);
-    document.getElementById('intEditUsedInfo').innerText = `مصرف فعلی: ${usedGb} GB از ${totalGb} GB`;
-    document.getElementById('intEditResetTraffic').checked = false;
+    const usedGb = ((user.used_bytes || 0) / (1024 ** 3)).toFixed(2);
+    document.getElementById('intEditUsedGb').value = usedGb;
+    document.getElementById('intEditUsedInfo').innerText = `مصرف فعلی: ${usedGb} GB از ${totalGb === '0' ? 'نامحدود' : totalGb + ' GB'}`;
 
     let expiryStr = 'نامحدود';
     if (user.expiry_time > 0) {
@@ -3657,17 +3693,32 @@ async function fetchFreeConfigsFromWorker() {
       if (user.is_expired) expiryStr += ' (منقضی شده)';
     }
     document.getElementById('intEditExpiryInfo').innerText = `انقضای فعلی: ${expiryStr}`;
-    document.getElementById('intEditAddDays').value = '0';
+
+    const valSel = document.getElementById('intEditValidityType');
+    if (valSel) {
+      valSel.value = 'keep';
+      onIntEditValidityChange(valSel);
+    }
+    document.getElementById('intEditAddDays').value = '30';
 
     document.getElementById('intEditMaxDevices').value = user.max_devices || 1;
     document.getElementById('intEditServerTier').value = user.tier || 'free';
     document.getElementById('intEditActive').value = user.active ? '1' : '0';
     document.getElementById('intEditNote').value = user.note || '';
-    document.getElementById('intEditModalOverlay').classList.add('active');
+
+    const modal = document.getElementById('intEditModalOverlay');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+    }
   }
 
   function closeIntEditModal() {
-    document.getElementById('intEditModalOverlay').classList.remove('active');
+    const modal = document.getElementById('intEditModalOverlay');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
+    }
   }
 
   async function submitIntEditUser() {
@@ -3675,7 +3726,8 @@ async function fetchFreeConfigsFromWorker() {
     const username = document.getElementById('intEditUsername').value.trim();
     const password = document.getElementById('intEditPassword').value.trim();
     const totalGb = parseFloat(document.getElementById('intEditTotalGb').value || 0);
-    const resetTraffic = document.getElementById('intEditResetTraffic').checked;
+    const usedGb = parseFloat(document.getElementById('intEditUsedGb').value || 0);
+    const validityType = document.getElementById('intEditValidityType').value;
     const addDays = parseFloat(document.getElementById('intEditAddDays').value || 0);
     const maxDevices = parseInt(document.getElementById('intEditMaxDevices').value, 10);
     const tier = document.getElementById('intEditServerTier').value;
@@ -3692,23 +3744,37 @@ async function fetchFreeConfigsFromWorker() {
       username,
       password,
       total_gb: totalGb,
-      reset_traffic: resetTraffic,
+      used_gb: usedGb,
       max_devices: maxDevices,
       tier,
       active,
       note
     };
 
-    if (addDays > 0) {
+    if (validityType === 'unlimited') {
+      payload.validity_type = 'unlimited';
+    } else if (validityType === 'today_30') {
+      payload.validity_type = 'from_today';
+      payload.days_from_today = 30;
+    } else if (validityType === 'today_60') {
+      payload.validity_type = 'from_today';
+      payload.days_from_today = 60;
+    } else if (validityType === 'today_90') {
+      payload.validity_type = 'from_today';
+      payload.days_from_today = 90;
+    } else if (validityType === 'extend') {
+      payload.validity_type = 'extend';
       payload.add_days = addDays;
     }
 
+    showToast('در حال ذخیره تغییرات...');
     try {
       const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Secret': CF_ADMIN_SECRET
+          'X-Admin-Secret': CF_ADMIN_SECRET,
+          'User-Agent': 'StrongVPN-Client'
         },
         body: JSON.stringify(payload)
       });
@@ -3878,34 +3944,75 @@ async function fetchFreeConfigsFromWorker() {
 
 <!-- Modal: Edit Internal User -->
 <div class="app-modal-overlay" id="intEditModalOverlay" onclick="if(event.target===this) closeIntEditModal()">
-  <div class="app-modal" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
+  <div class="app-modal" style="max-width: 520px; max-height: 90vh; overflow-y: auto;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 16px; font-weight: 800; color: #FFF;">
-        ✏️ ویرایش مشخصات، حجم و اعتبار کاربر
+      <h3 style="font-size: 16px; font-weight: 800; color: #FFF; display: flex; align-items: center; gap: 8px;">
+        <span>✏️</span>
+        <span>ویرایش مشخصات، حجم و اعتبار کاربر</span>
       </h3>
-      <button type="button" onclick="closeIntEditModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+      <button type="button" onclick="closeIntEditModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; padding: 4px 8px;">✕</button>
     </div>
 
     <input type="hidden" id="intEditModalUserId">
 
     <div class="form-grid">
       <div class="form-group full">
-        <label>📱 شماره موبایل / نام کاربری:</label>
-        <input type="text" id="intEditUsername" dir="ltr" placeholder="09123456789">
+        <label>📱 شماره موبایل / شناسه کاربری:</label>
+        <input type="text" id="intEditUsername" dir="ltr" placeholder="مثلاً: 09123456789">
       </div>
 
       <div class="form-group full">
         <label>🔑 رمز عبور ورود به اپلیکیشن:</label>
-        <input type="text" id="intEditPassword" dir="ltr" placeholder="رمز عبور">
+        <input type="text" id="intEditPassword" dir="ltr" placeholder="رمز عبور کاربر">
       </div>
 
-      <div class="form-group">
-        <label>📦 حجم کل مجاز (گیگابایت):</label>
+      <div class="form-group full">
+        <label>📦 سقف کل حجم مجاز (گیگابایت - ۰ یعنی نامحدود):</label>
         <input type="number" id="intEditTotalGb" dir="ltr" step="0.5" min="0">
+        <div style="display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;">
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('intEditTotalGb').value='0'">نامحدود (۰)</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('intEditTotalGb').value='10'">۱۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('intEditTotalGb').value='25'">۲۵ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('intEditTotalGb').value='50'">۵۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('intEditTotalGb').value='100'">۱۰۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('intEditTotalGb').value='200'">۲۰۰ گیگ</button>
+        </div>
+      </div>
+
+      <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label style="margin: 0; font-size: 12.5px; color: #FFF; font-weight: 700;">📊 حجم مصرف‌شده کاربر (گیگابایت):</label>
+          <span id="intEditUsedInfo" style="font-size: 11.5px; color: #38bdf8;"></span>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="number" id="intEditUsedGb" dir="ltr" step="0.1" min="0" style="flex: 1;">
+          <button type="button" onclick="document.getElementById('intEditUsedGb').value='0'; showToast('🔄 حجم مصرفی روی ۰ تنظیم شد');" style="background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 10px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit;">
+            🔄 صفر کردن مصرف
+          </button>
+        </div>
+        <div class="hint" style="margin-top: 4px;">می‌توانید حجم مصرفی را دستی تغییر دهید یا با دکمه سبز صفر کنید.</div>
+      </div>
+
+      <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 8px;" id="intEditExpiryInfo"></div>
+        <label style="font-size: 12.5px; margin-bottom: 6px; font-weight: 700;">⏳ مدیریت تاریخ انقضا و تمدید:</label>
+        <select id="intEditValidityType" onchange="onIntEditValidityChange(this)" style="margin-bottom: 8px;">
+          <option value="keep">حفظ تاریخ انقضای فعلی (بدون تغییر)</option>
+          <option value="extend">➕ افزودن روز به تاریخ انقضا (+روز)</option>
+          <option value="today_30">تمدید ۳۰ روز از امروز</option>
+          <option value="today_60">تمدید ۶۰ روز از امروز</option>
+          <option value="today_90">تمدید ۹۰ روز از امروز</option>
+          <option value="unlimited">بی‌نهایت و نامحدود (حذف تاریخ انقضا)</option>
+        </select>
+        <div id="intEditCustomDaysBox" style="display: none; align-items: center; gap: 8px;">
+          <label style="font-size: 12px; margin: 0;">تعداد روز اضافه:</label>
+          <input type="number" id="intEditAddDays" dir="ltr" value="30" min="1" style="width: 100px;">
+          <span style="font-size: 12px; color: #94a3b8;">روز به اعتبار اضافه شود</span>
+        </div>
       </div>
 
       <div class="form-group">
-        <label>🔒 سقف دستگاه‌ها:</label>
+        <label>🔒 سقف دستگاه‌های مجاز:</label>
         <select id="intEditMaxDevices">
           <option value="1">۱ دستگاه</option>
           <option value="2">۲ دستگاه</option>
@@ -3913,25 +4020,6 @@ async function fetchFreeConfigsFromWorker() {
           <option value="5">۵ دستگاه</option>
           <option value="10">۱۰ دستگاه</option>
         </select>
-      </div>
-
-      <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span id="intEditUsedInfo" style="font-size: 12px; color: #cbd5e1;"></span>
-          <label style="display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; color: #38bdf8; font-size: 12px; font-weight: 700;">
-            <input type="checkbox" id="intEditResetTraffic" style="cursor: pointer; width: 16px; height: 16px;">
-            <span>🔄 صفر کردن ترافیک مصرفی</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px;">
-        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 8px;" id="intEditExpiryInfo"></div>
-        <label style="font-size: 12px; margin-bottom: 4px;">➕ تمدید / افزودن روز به تاریخ انقضا (۰ = بدون تغییر):</label>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <input type="number" id="intEditAddDays" dir="ltr" value="0" min="0" style="width: 100px;">
-          <span style="font-size: 12px; color: #94a3b8;">روز از تاریخ فعلی (اگر منقضی باشد از اکنون محاسبه می‌شود)</span>
-        </div>
       </div>
 
       <div class="form-group">
@@ -3951,14 +4039,14 @@ async function fetchFreeConfigsFromWorker() {
         </select>
       </div>
 
-      <div class="form-group full">
-        <label>📝 یادداشت / توضیحات:</label>
+      <div class="form-group">
+        <label>📝 نام صاحب حساب / یادداشت:</label>
         <input type="text" id="intEditNote" placeholder="اختیاری">
       </div>
 
       <div class="form-group full" style="margin-top: 10px;">
-        <button type="button" onclick="submitIntEditUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit; font-size: 15px; box-shadow: 0 4px 15px rgba(168,85,247,0.35);">
-          💾 ذخیره تغییرات
+        <button type="button" onclick="submitIntEditUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 13px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit; font-size: 15px; box-shadow: 0 4px 15px rgba(168,85,247,0.35);">
+          💾 ذخیره تغییرات مشخصات و حجم
         </button>
       </div>
     </div>
