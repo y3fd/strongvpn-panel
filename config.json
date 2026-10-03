@@ -1,7 +1,7 @@
 {
-  "version": 1791032407728,
+  "version": 1791032436887,
   "announcement": {
-    "id": 1791032407,
+    "id": 1791032436,
     "active": false,
     "type": "info",
     "title": "اطلاعیه",
@@ -29,9 +29,9 @@
     "ad_body": "با دیدن این تبلیغ ۵ ساعت اتصال رایگان بگیرید",
     "ad_image_url": "https://auth.djanah99.ir/ad/plan100.jpg",
     "ad_link": "",
-    "free_ad_sec": 18000,
+    "free_ad_sec": 3600,
     "free_ad_watch_sec": 15,
-    "free_ad_max_per_day": 3,
+    "free_ad_max_per_day": 4,
     "free_ad_min_gap": 30
   }
 }
