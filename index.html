@@ -4127,7 +4127,8 @@ async function updateUserAppLimit(phone, maxDevices) {
           </td>
         </tr>
       `;
-    
+    }).join('');
+
     // Render Mobile Cards for Internal Users
     const mobileContainer = document.getElementById('internalUsersMobileCards');
     if (mobileContainer) {
@@ -4203,7 +4204,6 @@ async function updateUserAppLimit(phone, maxDevices) {
         }).join('');
       }
     }
-}).join('');
   }
 
     async function createInternalUser() {
