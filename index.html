@@ -3640,10 +3640,28 @@ async function fetchFreeConfigsFromWorker() {
     const user = allInternalUsers.find(u => u.id === id);
     if (!user) return;
     document.getElementById('intEditModalUserId').value = id;
-    document.getElementById('intEditModalUsername').innerText = user.username;
+    document.getElementById('intEditUsername').value = user.username || '';
     document.getElementById('intEditPassword').value = user.password || '';
+
+    const totalGb = (user.total_bytes / (1024 * 1024 * 1024)).toFixed(1).replace('.0', '');
+    document.getElementById('intEditTotalGb').value = totalGb;
+
+    const usedGb = (user.used_bytes / (1024 * 1024 * 1024)).toFixed(2);
+    document.getElementById('intEditUsedInfo').innerText = `مصرف فعلی: ${usedGb} GB از ${totalGb} GB`;
+    document.getElementById('intEditResetTraffic').checked = false;
+
+    let expiryStr = 'نامحدود';
+    if (user.expiry_time > 0) {
+      const d = new Date(user.expiry_time);
+      expiryStr = d.toLocaleDateString('fa-IR') + ' ' + d.toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'});
+      if (user.is_expired) expiryStr += ' (منقضی شده)';
+    }
+    document.getElementById('intEditExpiryInfo').innerText = `انقضای فعلی: ${expiryStr}`;
+    document.getElementById('intEditAddDays').value = '0';
+
     document.getElementById('intEditMaxDevices').value = user.max_devices || 1;
     document.getElementById('intEditServerTier').value = user.tier || 'free';
+    document.getElementById('intEditActive').value = user.active ? '1' : '0';
     document.getElementById('intEditNote').value = user.note || '';
     document.getElementById('intEditModalOverlay').classList.add('active');
   }
@@ -3654,10 +3672,36 @@ async function fetchFreeConfigsFromWorker() {
 
   async function submitIntEditUser() {
     const id = parseInt(document.getElementById('intEditModalUserId').value, 10);
+    const username = document.getElementById('intEditUsername').value.trim();
     const password = document.getElementById('intEditPassword').value.trim();
+    const totalGb = parseFloat(document.getElementById('intEditTotalGb').value || 0);
+    const resetTraffic = document.getElementById('intEditResetTraffic').checked;
+    const addDays = parseFloat(document.getElementById('intEditAddDays').value || 0);
     const maxDevices = parseInt(document.getElementById('intEditMaxDevices').value, 10);
     const tier = document.getElementById('intEditServerTier').value;
+    const active = document.getElementById('intEditActive').value === '1';
     const note = document.getElementById('intEditNote').value.trim();
+
+    if (!username || !password) {
+      showToast('نام کاربری و رمز عبور الزامی است', true);
+      return;
+    }
+
+    const payload = {
+      id,
+      username,
+      password,
+      total_gb: totalGb,
+      reset_traffic: resetTraffic,
+      max_devices: maxDevices,
+      tier,
+      active,
+      note
+    };
+
+    if (addDays > 0) {
+      payload.add_days = addDays;
+    }
 
     try {
       const res = await fetch(`${CF_WORKER_API}/api/admin/internal-users/update`, {
@@ -3666,11 +3710,11 @@ async function fetchFreeConfigsFromWorker() {
           'Content-Type': 'application/json',
           'X-Admin-Secret': CF_ADMIN_SECRET
         },
-        body: JSON.stringify({ id, password, max_devices: maxDevices, tier, note })
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       if (data.success) {
-        showToast('✅ مشخصات کاربر به‌روزرسانی شد');
+        showToast('✅ مشخصات کاربر با موفقیت ذخیره شد');
         closeIntEditModal();
         fetchInternalUsers();
       } else {
@@ -3834,10 +3878,10 @@ async function fetchFreeConfigsFromWorker() {
 
 <!-- Modal: Edit Internal User -->
 <div class="app-modal-overlay" id="intEditModalOverlay" onclick="if(event.target===this) closeIntEditModal()">
-  <div class="app-modal" style="max-width: 460px;">
+  <div class="app-modal" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
       <h3 style="font-size: 16px; font-weight: 800; color: #FFF;">
-        ✏️ ویرایش مشخصات کاربر: <span id="intEditModalUsername" style="color: #c084fc;"></span>
+        ✏️ ویرایش مشخصات، حجم و اعتبار کاربر
       </h3>
       <button type="button" onclick="closeIntEditModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
     </div>
@@ -3846,36 +3890,74 @@ async function fetchFreeConfigsFromWorker() {
 
     <div class="form-grid">
       <div class="form-group full">
-        <label>رمز عبور ورود به اپ:</label>
-        <input type="text" id="intEditPassword" dir="ltr">
+        <label>📱 شماره موبایل / نام کاربری:</label>
+        <input type="text" id="intEditUsername" dir="ltr" placeholder="09123456789">
       </div>
 
       <div class="form-group full">
-        <label>🔒 سقف دستگاه‌های هم‌زمان:</label>
+        <label>🔑 رمز عبور ورود به اپلیکیشن:</label>
+        <input type="text" id="intEditPassword" dir="ltr" placeholder="رمز عبور">
+      </div>
+
+      <div class="form-group">
+        <label>📦 حجم کل مجاز (گیگابایت):</label>
+        <input type="number" id="intEditTotalGb" dir="ltr" step="0.5" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>🔒 سقف دستگاه‌ها:</label>
         <select id="intEditMaxDevices">
           <option value="1">۱ دستگاه</option>
           <option value="2">۲ دستگاه</option>
           <option value="3">۳ دستگاه</option>
           <option value="5">۵ دستگاه</option>
+          <option value="10">۱۰ دستگاه</option>
         </select>
       </div>
 
-      <div class="form-group full">
+      <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span id="intEditUsedInfo" style="font-size: 12px; color: #cbd5e1;"></span>
+          <label style="display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; color: #38bdf8; font-size: 12px; font-weight: 700;">
+            <input type="checkbox" id="intEditResetTraffic" style="cursor: pointer; width: 16px; height: 16px;">
+            <span>🔄 صفر کردن ترافیک مصرفی</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px;">
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 8px;" id="intEditExpiryInfo"></div>
+        <label style="font-size: 12px; margin-bottom: 4px;">➕ تمدید / افزودن روز به تاریخ انقضا (۰ = بدون تغییر):</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="number" id="intEditAddDays" dir="ltr" value="0" min="0" style="width: 100px;">
+          <span style="font-size: 12px; color: #94a3b8;">روز از تاریخ فعلی (اگر منقضی باشد از اکنون محاسبه می‌شود)</span>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label>🌐 دسته سرورها:</label>
         <select id="intEditServerTier">
-          <option value="free">سرورهای رایگان پنل</option>
           <option value="vip">سرورهای ویژه VIP</option>
+          <option value="free">سرورهای عمومی</option>
           <option value="all">تمام سرورها</option>
         </select>
       </div>
 
+      <div class="form-group">
+        <label>⚡ وضعیت حساب:</label>
+        <select id="intEditActive">
+          <option value="1">✅ فعال</option>
+          <option value="0">⛔ غیرفعال و مسدود</option>
+        </select>
+      </div>
+
       <div class="form-group full">
-        <label>یادداشت / توضیحات:</label>
-        <input type="text" id="intEditNote">
+        <label>📝 یادداشت / توضیحات:</label>
+        <input type="text" id="intEditNote" placeholder="اختیاری">
       </div>
 
       <div class="form-group full" style="margin-top: 10px;">
-        <button type="button" onclick="submitIntEditUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit;">
+        <button type="button" onclick="submitIntEditUser()" style="background: linear-gradient(90deg, #A855F7, #00D2FF); color: #FFF; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; width: 100%; font-family: inherit; font-size: 15px; box-shadow: 0 4px 15px rgba(168,85,247,0.35);">
           💾 ذخیره تغییرات
         </button>
       </div>
