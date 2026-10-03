@@ -1,9 +1,9 @@
 {
-  "version": 1791032401607,
+  "version": 1791032407728,
   "announcement": {
-    "id": 1791032401,
-    "active": true,
-    "type": "update",
+    "id": 1791032407,
+    "active": false,
+    "type": "info",
     "title": "اطلاعیه",
     "message": "نسخه جدید اپلیکیشن",
     "action_text": "دانلود نسخه جدید",
