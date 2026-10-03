@@ -3375,183 +3375,167 @@ async function fetchFreeConfigsFromWorker() {
   
   let cachedXuiUsers = [];
 
+  function _xuiSetBadge(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.innerText = val;
+  }
+
+  function _xuiEsc(s) {
+    return String(s === undefined || s === null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   async function fetchXuiUsers() {
     const tbody = document.getElementById('xuiUsersTableBody');
     const cardsContainer = document.getElementById('xuiUsersMobileCards');
-    const searchVal = (document.getElementById('xuiSearchInput')?.value || '').trim().toLowerCase();
     const countSpan = document.getElementById('xuiUsersCount');
+    const q = (document.getElementById('xuiSearchInput')?.value || '').trim();
 
-    if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران 3x-ui...</td></tr>';
-    if (cardsContainer) cardsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران...</div>';
+    const loading = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران ۳X-UI...</td></tr>';
+    const loadingCard = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران...</div>';
+    if (tbody) tbody.innerHTML = loading;
+    if (cardsContainer) cardsContainer.innerHTML = loadingCard;
 
     try {
-      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users?page=1&limit=200`, {
-        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
-      });
+      await fetchAppLimits();
+
+      const url = `${CF_WORKER_API}/api/admin/xui-users` + (q ? `?q=${encodeURIComponent(q)}` : '');
+      const res = await fetch(url, { headers: { 'X-Admin-Secret': CF_ADMIN_SECRET } });
       const data = await res.json();
-      if (!data.success) {
-        if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 16px;">خطا: ${data.message}</td></tr>`;
-        if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 16px;">خطا: ${data.message}</div>`;
+
+      if (!data.success || !Array.isArray(data.users)) {
+        const msg = data.message || 'خطا در دریافت کاربران از پنل 3x-ui';
+        if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 16px;">❌ ${_xuiEsc(msg)}</td></tr>`;
+        if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #F87171; padding: 16px;">❌ ${_xuiEsc(msg)}</div>`;
         return;
       }
 
-      cachedXuiUsers = data.clients || [];
-      const totalCount = data.total || cachedXuiUsers.length;
-      if (countSpan) countSpan.innerText = `(مجموع: ${totalCount} کاربر)`;
+      const users = data.users;
+      cachedXuiUsers = users;
+      const total = (data.total !== undefined && data.total !== null) ? data.total : users.length;
+      if (countSpan) countSpan.innerText = `(مجموع: ${total} کاربر)`;
+      _xuiSetBadge('cat-badge-users', total);
+      _xuiSetBadge('mobile-badge-users', total);
+      _xuiSetBadge('badge-users', total);
 
-      // Update Badges
-      const bDesktop = document.getElementById('cat-badge-users');
-      const bMobile = document.getElementById('mobile-badge-users');
-      const bLegacy = document.getElementById('badge-users');
-      if (bDesktop) bDesktop.innerText = totalCount;
-      if (bMobile) bMobile.innerText = totalCount;
-      if (bLegacy) bLegacy.innerText = totalCount;
-
-      let filtered = cachedXuiUsers;
-      if (searchVal) {
-        filtered = cachedXuiUsers.filter(u => (u.email || '').toLowerCase().includes(searchVal));
-      }
-
-      if (filtered.length === 0) {
-        if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">کاربری با این مشخصات یافت نشد.</td></tr>';
-        if (cardsContainer) cardsContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--text-muted);">کاربری با این مشخصات یافت نشد.</div>';
+      if (users.length === 0) {
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">هیچ کاربری با این مشخصات یافت نشد.</td></tr>';
+        if (cardsContainer) cardsContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--text-muted);">هیچ کاربری با این مشخصات یافت نشد.</div>';
         return;
       }
 
-      // 1. Render Desktop Table
+      // ---------- shared per-user formatting ----------
+      const fmt = (u) => {
+        const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
+        const totalBytes = u.totalGB || 0;
+        const usedGb = (used / (1073741824)).toFixed(2);
+        const totalGb = totalBytes > 0 ? (totalBytes / (1073741824)).toFixed(1) : 0;
+        const pct = totalBytes > 0 ? Math.min(100, Math.round((used / totalBytes) * 100)) : 0;
+        let expStr = 'نامحدود';
+        let expired = false;
+        if (u.expiryTime > 0) {
+          const d = new Date(u.expiryTime);
+          expStr = d.toLocaleDateString('fa-IR');
+          expired = u.expiryTime < Date.now();
+        }
+        const emailL = (u.email || '').toLowerCase().trim();
+        const appLimit = cachedAppLimits[emailL] || 1;
+        let bar = '#10B981';
+        if (pct >= 85) bar = '#EF4444';
+        else if (pct >= 60) bar = '#F59E0B';
+        return { used, usedGb, totalGb, pct, expStr, expired, appLimit, bar, emailL };
+      };
+
+      // ---------- desktop table ----------
       if (tbody) {
-        tbody.innerHTML = filtered.map(u => {
-          const usedGb = (u.usedTraffic / (1024 ** 3)).toFixed(2);
-          const totalGb = u.totalGB > 0 ? u.totalGB + ' GB' : 'نامحدود';
-          const pct = u.totalGB > 0 ? Math.min(100, Math.round((u.usedTraffic / (u.totalGB * 1024 ** 3)) * 100)) : 0;
-          let expDate = 'نامحدود';
-          let isExpired = false;
-          if (u.expiryTime > 0) {
-            const d = new Date(u.expiryTime);
-            expDate = d.toLocaleDateString('fa-IR');
-            if (u.expiryTime < Date.now()) isExpired = true;
-          }
-
-          let barColor = '#10B981';
-          if (pct >= 85) barColor = '#EF4444';
-          else if (pct >= 60) barColor = '#F59E0B';
-
+        tbody.innerHTML = users.map(u => {
+          const f = fmt(u);
+          const email = _xuiEsc(u.email);
           return `
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
-              <td style="padding: 12px 10px; font-family: monospace; font-weight: 700; color: #FFF; direction: ltr;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'};"></span>
-                  <span>${u.email}</span>
-                </div>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 10px; font-weight: 700; color: #FFF; font-family: monospace; direction: ltr; white-space: nowrap;">
+                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'}; margin-left: 6px;"></span>${email}
               </td>
-              <td style="padding: 12px 10px;">
+              <td style="padding: 10px; color: #CBD5E1;">
                 <div style="font-size: 12px; margin-bottom: 4px;">
-                  <strong style="color: #FFF;">${usedGb}</strong> / <span style="color: var(--text-muted);">${totalGb}</span>
-                  <span style="color: ${barColor}; font-weight: 700; margin-right: 4px;">(${pct}%)</span>
+                  <strong style="color: #FFF;">${f.usedGb}</strong> / <span>${f.totalGb ? f.totalGb + ' GB' : '∞'}</span>
+                  <span style="color: ${f.bar}; font-weight: 700; margin-right: 4px;">(${f.pct}%)</span>
                 </div>
-                <div style="background: rgba(255,255,255,0.08); border-radius: 4px; height: 4px; width: 120px; overflow: hidden;">
-                  <div style="background: ${barColor}; height: 100%; width: ${pct}%;"></div>
-                </div>
-              </td>
-              <td style="padding: 12px 10px;">
-                <span style="color: ${isExpired ? '#EF4444' : '#CBD5E1'}; font-weight: 600;">${expDate}</span>
-                ${isExpired ? '<span style="font-size: 10px; background: rgba(239,68,68,0.2); color: #EF4444; padding: 2px 6px; border-radius: 4px; margin-right: 4px;">منقضی</span>' : ''}
-              </td>
-              <td style="padding: 12px 10px;">
-                <span style="background: rgba(56,189,248,0.12); color: #38BDF8; border: 1px solid rgba(56,189,248,0.25); padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 700;">
-                  📱 ${u.limitIp ? u.limitIp + ' دستگاه' : '۱ دستگاه (پیش‌فرض)'}
-                </span>
-              </td>
-              <td style="padding: 12px 10px; text-align: center;">
-                <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
-                  <button type="button" onclick="openXuiEditModal('${u.email}')" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); color: #FFF; border: 1px solid var(--primary); border-radius: 8px; padding: 5px 12px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="ویرایش حجم، تاریخ انقضا و پسورد اپلیکیشن">
-                    <span>✏️</span> <span>ویرایش و رمز</span>
-                  </button>
-                  <button type="button" onclick="showQrModal('${u.email}')" style="background: rgba(255,255,255,0.06); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 8px; padding: 5px 8px; font-size: 11.5px; cursor: pointer;" title="کیوآرکد و لینک ساب">
-                    📱 QR
-                  </button>
-                  <button type="button" onclick="showDevicesModal('${u.email}')" style="background: rgba(255,255,255,0.06); color: #CBD5E1; border: 1px solid var(--card-border); border-radius: 8px; padding: 5px 8px; font-size: 11.5px; cursor: pointer;" title="دستگاه‌های متصل">
-                    👥
-                  </button>
-                  <button type="button" onclick="toggleXuiUserStatus('${u.email}', ${u.enable})" style="background: ${u.enable ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)'}; color: ${u.enable ? '#F87171' : '#34D399'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.25)' : 'rgba(16,185,129,0.25)'}; border-radius: 8px; padding: 5px 9px; font-size: 11.5px; cursor: pointer;" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}">
-                    ${u.enable ? '⏸️' : '▶️'}
-                  </button>
+                <div style="background: rgba(255,255,255,0.08); border-radius: 4px; height: 5px; width: 130px; overflow: hidden;">
+                  <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
                 </div>
               </td>
-            </tr>
-          `;
+              <td style="padding: 10px; font-size: 11.5px; color: var(--text-muted);">
+                <span style="color: ${f.expired ? '#EF4444' : '#CBD5E1'}; font-weight: 600;">${f.expStr}${f.expired ? ' <span style="font-size:10px;background:rgba(239,68,68,0.2);color:#EF4444;padding:2px 5px;border-radius:4px;">منقضی</span>' : ''}</span>
+              </td>
+              <td style="padding: 10px;">
+                <select onchange="updateUserAppLimit('${email}', this.value)" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #38bdf8; font-size: 11.5px; padding: 4px 6px; font-family: inherit;">
+                  <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
+                  <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
+                  <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
+                  <option value="5" ${f.appLimit == 5 ? 'selected' : ''}>۵ دستگاه</option>
+                  <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>نامحدود</option>
+                </select>
+              </td>
+              <td style="padding: 10px; text-align: center;">
+                <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                  <button type="button" onclick="openXuiEditModal('${email}')" title="ویرایش حجم، انقضا، سقف دستگاه و رمز ورود به اپ" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); border: 1px solid var(--primary); color: #FFF; border-radius: 8px; padding: 4px 10px; font-size: 11.5px; font-weight: 700; cursor: pointer; font-family: inherit;">✏️ ویرایش</button>
+                  <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" title="کیوآرکد و لینک ساب" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
+                  <button type="button" onclick="openDevicesModal('${email}')" title="دستگاه‌های متصل" style="background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">📱 دستگاه‌ها</button>
+                  <button type="button" onclick="promptRenewUser('${email}')" title="تمدید حجم و زمان" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🔄 تمدید</button>
+                  <button type="button" onclick="resetUserTraffic('${email}')" title="صفر کردن مصرف" style="background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🧹 ریست</button>
+                  <button type="button" onclick="toggleUserEnable('${email}')" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? '#F87171' : '#10B981'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
+                </div>
+              </td>
+            </tr>`;
         }).join('');
       }
 
-      // 2. Render Mobile Cards
+      // ---------- mobile cards ----------
       if (cardsContainer) {
-        cardsContainer.innerHTML = filtered.map(u => {
-          const usedGb = (u.usedTraffic / (1024 ** 3)).toFixed(2);
-          const totalGb = u.totalGB > 0 ? u.totalGB + ' GB' : 'نامحدود';
-          const pct = u.totalGB > 0 ? Math.min(100, Math.round((u.usedTraffic / (u.totalGB * 1024 ** 3)) * 100)) : 0;
-          let expDate = 'نامحدود';
-          let isExpired = false;
-          if (u.expiryTime > 0) {
-            const d = new Date(u.expiryTime);
-            expDate = d.toLocaleDateString('fa-IR');
-            if (u.expiryTime < Date.now()) isExpired = true;
-          }
-
-          let barColor = '#10B981';
-          if (pct >= 85) barColor = '#EF4444';
-          else if (pct >= 60) barColor = '#F59E0B';
-
+        cardsContainer.innerHTML = users.map(u => {
+          const f = fmt(u);
+          const email = _xuiEsc(u.email);
           return `
             <div class="mobile-user-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <div style="font-weight: 800; color: #FFF; font-family: monospace; font-size: 14.5px; direction: ltr; display: flex; align-items: center; gap: 6px;">
-                  <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'};"></span>
-                  <span>${u.email}</span>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px;">
+                <div style="font-weight: 800; color: #FFF; font-family: monospace; font-size: 14px; direction: ltr; display: flex; align-items: center; gap: 6px; min-width: 0; word-break: break-all;">
+                  <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'}; flex: none;"></span>
+                  <span>${email}</span>
                 </div>
-                <span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 8px; ${u.enable ? 'background: rgba(16,185,129,0.18); color: #10B981;' : 'background: rgba(239,68,68,0.18); color: #F87171;'}">
-                  ${u.enable ? 'فعال' : 'قطع'}
-                </span>
+                <span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 8px; flex: none; ${u.enable ? 'background: rgba(16,185,129,0.18); color: #10B981;' : 'background: rgba(239,68,68,0.18); color: #F87171;'}">${u.enable ? 'فعال' : 'قطع'}</span>
               </div>
 
-              <!-- Usage Progress Bar -->
               <div style="margin-bottom: 10px;">
                 <div style="display: flex; justify-content: space-between; font-size: 12px; color: #CBD5E1; margin-bottom: 4px;">
-                  <span>مصرف: <strong style="color: #FFF;">${usedGb}</strong> از <strong>${totalGb}</strong></span>
-                  <span style="color: ${barColor}; font-weight: 700;">${pct}%</span>
+                  <span>مصرف: <strong style="color: #FFF;">${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
+                  <span style="color: ${f.bar}; font-weight: 700;">${f.pct}%</span>
                 </div>
                 <div style="background: rgba(255,255,255,0.08); border-radius: 6px; height: 6px; width: 100%; overflow: hidden;">
-                  <div style="background: ${barColor}; height: 100%; width: ${pct}%;"></div>
+                  <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
                 </div>
               </div>
 
-              <!-- Meta info row -->
-              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
-                <div>⏳ انقضا: <strong style="color: ${isExpired ? '#F87171' : '#E2E8F0'};">${expDate}${isExpired ? ' (منقضی)' : ''}</strong></div>
-                <div style="background: rgba(56,189,248,0.12); color: #38BDF8; padding: 2px 7px; border-radius: 6px; font-weight: 700;">
-                  📱 ${u.limitIp ? u.limitIp + ' دستگاه' : '۱ دستگاه'}
-                </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px; gap: 8px;">
+                <div>⏳ انقضا: <strong style="color: ${f.expired ? '#F87171' : '#E2E8F0'};">${f.expStr}${f.expired ? ' (منقضی)' : ''}</strong></div>
+                <div style="background: rgba(56,189,248,0.12); color: #38BDF8; padding: 2px 7px; border-radius: 6px; font-weight: 700; flex: none;">📱 ${f.appLimit == 10 ? 'نامحدود' : f.appLimit + ' دستگاه'}</div>
               </div>
 
-              <!-- Action buttons -->
               <div style="display: flex; gap: 8px;">
-                <button type="button" onclick="openXuiEditModal('${u.email}')" style="flex: 2; background: linear-gradient(135deg, rgba(168,85,247,0.35), rgba(0,210,255,0.35)); color: #FFF; border: 1.5px solid var(--primary); border-radius: 12px; padding: 9px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                  <span>✏️</span> <span>ویرایش و رمز ورود</span>
+                <button type="button" onclick="openXuiEditModal('${email}')" style="flex: 2; background: linear-gradient(135deg, rgba(168,85,247,0.35), rgba(0,210,255,0.35)); color: #FFF; border: 1.5px solid var(--primary); border-radius: 12px; padding: 10px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit;">
+                  <span>✏️</span><span>ویرایش و رمز ورود</span>
                 </button>
-                <button type="button" onclick="showQrModal('${u.email}')" style="background: rgba(255,255,255,0.08); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 12px; padding: 9px 12px; font-size: 12px; cursor: pointer;">
-                  📱 QR
-                </button>
-                <button type="button" onclick="toggleXuiUserStatus('${u.email}', ${u.enable})" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? '#F87171' : '#34D399'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 12px; padding: 9px 12px; font-size: 12px; cursor: pointer;">
-                  ${u.enable ? '⏸️' : '▶️'}
-                </button>
+                <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="background: rgba(255,255,255,0.08); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
+                <button type="button" onclick="toggleUserEnable('${email}')" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? '#F87171' : '#34D399'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
               </div>
-            </div>
-          `;
+            </div>`;
         }).join('');
       }
 
     } catch (err) {
-      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 16px;">خطای ارتباط: ${err.message}</td></tr>`;
-      if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 16px;">خطای ارتباط: ${err.message}</div>`;
+      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</td></tr>`;
+      if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #F87171; padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</div>`;
     }
   }
 
@@ -3562,67 +3546,60 @@ async function fetchFreeConfigsFromWorker() {
     const modal = document.getElementById('xuiEditModalOverlay');
     if (!modal) return;
 
-    // Reset fields
     document.getElementById('xuiEditEmail').value = email;
     document.getElementById('xuiEditDisplayEmail').innerText = email;
     document.getElementById('xuiEditPassword').value = '';
+    document.getElementById('xuiEditPassword').type = 'password';
     document.getElementById('xuiEditTotalGb').value = '';
     document.getElementById('xuiEditRenewalMode').value = 'keep';
     document.getElementById('xuiEditResetTraffic').checked = false;
     document.getElementById('xuiEditExpiryPreview').innerText = '';
+    document.getElementById('xuiEditExpiryCurrent').innerText = '-';
     document.getElementById('xuiEditUsedTrafficInfo').innerText = 'در حال دریافت اطلاعات...';
+    const sb = document.getElementById('xuiEditStatusBadge');
+    if (sb) { sb.innerText = '...'; sb.style.background = 'rgba(255,255,255,0.1)'; sb.style.color = '#CBD5E1'; }
 
-    // Show modal immediately
     modal.style.display = 'flex';
     modal.classList.add('active');
 
     try {
-      showToast('در حال دریافت جزئیات کاربر از سرور...');
       const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users/detail?email=${encodeURIComponent(email)}`, {
         headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
       });
       const data = await res.json();
       if (!data.success) {
-        showToast('خطا در دریافت اطلاعات: ' + data.message, true);
+        showToast('خطا در دریافت اطلاعات: ' + (data.message || 'نامشخص'), true);
         return;
       }
 
-      currentXuiEditingUser = data;
-      const client = data.client || {};
+      const u = data.user || {};
+      document.getElementById('xuiEditPassword').value = u.password || '';
+      document.getElementById('xuiEditMaxDevices').value = String(u.maxDevices || 1);
+      const gbVal = u.totalGB > 0 ? Number((u.totalGB / 1073741824).toFixed(2)) : 0;
+      document.getElementById('xuiEditTotalGb').value = gbVal;
+      document.getElementById('xuiEditEnable').checked = u.enable !== false;
 
-      // Fill values
-      document.getElementById('xuiEditPassword').value = data.password || '';
-      document.getElementById('xuiEditMaxDevices').value = String(client.limitIp || 1);
-      document.getElementById('xuiEditTotalGb').value = client.totalGB > 0 ? client.totalGB : 0;
-      document.getElementById('xuiEditEnable').checked = client.enable !== false;
-
-      // Status badge
-      const statusBadge = document.getElementById('xuiEditStatusBadge');
-      if (statusBadge) {
-        if (client.enable !== false) {
-          statusBadge.innerText = 'فعال';
-          statusBadge.style.background = 'rgba(16,185,129,0.2)';
-          statusBadge.style.color = '#10B981';
-        } else {
-          statusBadge.innerText = 'غیرفعال';
-          statusBadge.style.background = 'rgba(239,68,68,0.2)';
-          statusBadge.style.color = '#EF4444';
-        }
+      if (sb) {
+        if (u.enable !== false) { sb.innerText = 'فعال'; sb.style.background = 'rgba(16,185,129,0.2)'; sb.style.color = '#10B981'; }
+        else { sb.innerText = 'غیرفعال'; sb.style.background = 'rgba(239,68,68,0.2)'; sb.style.color = '#EF4444'; }
       }
 
-      // Used traffic info
-      const usedGb = ((client.usedTraffic || 0) / (1024 ** 3)).toFixed(2);
-      const totalGb = client.totalGB > 0 ? client.totalGB + ' GB' : 'نامحدود';
-      document.getElementById('xuiEditUsedTrafficInfo').innerText = `مصرف فعلی: ${usedGb} GB از ${totalGb}`;
+      // مصرف واقعی از لیست بارگذاری‌شده (ترافیک پنل ۳X-UI)
+      const row = (cachedXuiUsers || []).find(x => (x.email || '').toLowerCase() === (email || '').toLowerCase());
+      if (row) {
+        const used = ((row.traffic && row.traffic.up) || 0) + ((row.traffic && row.traffic.down) || 0);
+        const usedGb = (used / (1073741824)).toFixed(2);
+        document.getElementById('xuiEditUsedTrafficInfo').innerText =
+          `مصرف واقعی سرور: ${usedGb} GB${gbVal > 0 ? ' از ' + gbVal + ' GB' : ' (سقف نامحدود)'}`;
+      } else {
+        document.getElementById('xuiEditUsedTrafficInfo').innerText = 'اطلاعات مصرف در لیست کاربران یافت نشد';
+      }
 
-      // Expiry info
       let expStr = 'نامحدود';
-      if (client.expiryTime > 0) {
-        const d = new Date(client.expiryTime);
-        expStr = d.toLocaleDateString('fa-IR');
-        const remDays = Math.ceil((client.expiryTime - Date.now()) / (86400 * 1000));
-        if (remDays <= 0) expStr += ' (منقضی شده)';
-        else expStr += ` (${remDays} روز باقی‌مانده)`;
+      if (u.expiryTime > 0) {
+        const dd = new Date(u.expiryTime);
+        const rem = Math.ceil((u.expiryTime - Date.now()) / 86400000);
+        expStr = dd.toLocaleDateString('fa-IR') + (rem <= 0 ? ' (منقضی شده)' : ` (${rem} روز باقی‌مانده)`);
       }
       document.getElementById('xuiEditExpiryCurrent').innerText = expStr;
       updateXuiExpiryPreview();
@@ -3690,8 +3667,8 @@ async function fetchFreeConfigsFromWorker() {
   async function saveXuiUserEdit() {
     const email = document.getElementById('xuiEditEmail').value;
     const password = document.getElementById('xuiEditPassword').value.trim();
-    const limitIp = parseInt(document.getElementById('xuiEditMaxDevices').value || 1, 10);
-    const totalGB = parseFloat(document.getElementById('xuiEditTotalGb').value || 0);
+    const maxDevices = parseInt(document.getElementById('xuiEditMaxDevices').value || 1, 10);
+    const gbRaw = (document.getElementById('xuiEditTotalGb').value || '').toString().trim();
     const renewalMode = document.getElementById('xuiEditRenewalMode').value;
     const resetTraffic = document.getElementById('xuiEditResetTraffic').checked;
     const enable = document.getElementById('xuiEditEnable').checked;
@@ -3702,24 +3679,17 @@ async function fetchFreeConfigsFromWorker() {
       return;
     }
 
-    let expiryDays = null;
+    // قرارداد ورکر: volume_gb (گیگابایت) / days یا expiry_time / max_devices / enable / reset_traffic
+    const payload = { email, password, max_devices: maxDevices, enable };
+    if (gbRaw !== '' && !isNaN(parseFloat(gbRaw))) {
+      payload.volume_gb = Math.max(0, parseFloat(gbRaw)); // 0 یعنی بدون محدودیت حجم
+    }
     if (renewalMode === 'unlimited') {
-      expiryDays = 0;
+      payload.expiry_time = 0; // بدون تاریخ انقضا
     } else if (renewalMode !== 'keep') {
-      expiryDays = parseInt(renewalMode, 10);
+      payload.days = parseInt(renewalMode, 10); // انقضای جدید از امروز
     }
-
-    const payload = {
-      email,
-      password,
-      limitIp,
-      totalGB,
-      enable,
-      resetTraffic
-    };
-    if (expiryDays !== null) {
-      payload.expiryDays = expiryDays;
-    }
+    if (resetTraffic) payload.reset_traffic = true;
 
     try {
       saveBtn.disabled = true;
@@ -3735,13 +3705,13 @@ async function fetchFreeConfigsFromWorker() {
       });
       const data = await res.json();
       if (!data.success) {
-        showToast('خطا در ذخیره تغییرات: ' + data.message, true);
+        showToast('خطا در ذخیره تغییرات: ' + (data.message || 'نامشخص'), true);
         saveBtn.disabled = false;
         saveBtn.innerText = '💾 ذخیره تغییرات و اعمال در اپلیکیشن';
         return;
       }
 
-      showToast('✅ ' + data.message);
+      showToast('✅ ' + (data.message || 'تغییرات ذخیره شد'));
       closeXuiEditModal();
       fetchXuiUsers();
 
@@ -3754,6 +3724,8 @@ async function fetchFreeConfigsFromWorker() {
       }
     }
   }
+
+  
 
 async function updateUserAppLimit(phone, maxDevices) {
     try {
