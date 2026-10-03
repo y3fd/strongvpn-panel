@@ -1,13 +1,13 @@
 {
-  "version": 1791032366944,
+  "version": 1791032401607,
   "announcement": {
-    "id": 1791032366,
+    "id": 1791032401,
     "active": true,
     "type": "update",
     "title": "اطلاعیه",
     "message": "نسخه جدید اپلیکیشن",
     "action_text": "دانلود نسخه جدید",
-    "action_url": "https://auth.djanah99.ir/download/universal"
+    "action_url": "https://github.com/y3fd/strongvpn-releases/releases/latest/download/StrongVPN-Universal.apk"
   },
   "endpoints": {
     "website_url": "https://shop.strongdev.space",
