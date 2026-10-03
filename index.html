@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>کنترل پنل مدیریت Strong VPN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -919,6 +919,313 @@
       transform: translateY(-1px);
     }
 
+
+    /* ====================================================
+       CATEGORIZED NAVIGATION & MOBILE PHONE OPTIMIZATIONS
+       ==================================================== */
+    
+    /* 4-Category Segmented Nav on Desktop/Tablet */
+    .nav-categories-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      background: rgba(14, 22, 38, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 6px;
+      border-radius: 18px;
+      border: 1px solid var(--card-border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .nav-categories-bar::-webkit-scrollbar { display: none; }
+    
+    .cat-nav-btn {
+      flex: 1;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      border-radius: 13px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+    .cat-nav-btn:hover {
+      color: #FFF;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .cat-nav-btn.active {
+      color: #FFF;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.28), rgba(0, 210, 255, 0.28));
+      border-color: rgba(168, 85, 247, 0.5);
+      box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
+    }
+    .cat-nav-btn .cat-badge {
+      background: rgba(255, 255, 255, 0.12);
+      color: #FFF;
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+    .cat-nav-btn.active .cat-badge {
+      background: var(--primary);
+    }
+
+    /* Sub-tabs inside Category */
+    .subtabs-pill-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      width: fit-content;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .subtab-pill-btn {
+      padding: 8px 18px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .subtab-pill-btn:hover {
+      color: #FFF;
+    }
+    .subtab-pill-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Mobile Bottom Navigation (Hidden on Desktop) */
+    .mobile-bottom-nav {
+      display: none;
+    }
+
+    /* Table vs Card View helpers */
+    .table-desktop-view {
+      display: block;
+    }
+    .cards-mobile-view {
+      display: none;
+    }
+
+    /* User Mobile Card Styling */
+    .mobile-user-card {
+      background: rgba(14, 22, 38, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px 14px 12px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      transition: border-color 0.2s;
+    }
+    .mobile-user-card:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+    }
+
+    /* Responsive Mobile Breakpoint (iPhone & Smartphones) */
+    @media (max-width: 768px) {
+      /* Safe area padding for notch & home bar */
+      body {
+        padding-bottom: calc(75px + env(safe-area-inset-bottom, 20px)) !important;
+      }
+      .container {
+        padding: 8px 10px !important;
+      }
+      .header {
+        margin-bottom: 14px !important;
+        padding-bottom: 12px !important;
+        gap: 8px !important;
+      }
+      .logo-icon {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 10px !important;
+      }
+      .logo-area h1 {
+        font-size: 16px !important;
+      }
+      .badge-admin {
+        font-size: 9.5px !important;
+        padding: 2px 7px !important;
+      }
+      .btn-logout {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+      }
+
+      /* Stats Grid: 2 columns on phone */
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 14px !important;
+      }
+      .stat-card {
+        padding: 10px 12px !important;
+        border-radius: 14px !important;
+      }
+      .stat-card .stat-val {
+        font-size: 19px !important;
+      }
+      .stat-card .stat-label {
+        font-size: 10.5px !important;
+      }
+
+      /* Card styles on mobile */
+      .card {
+        padding: 14px 12px !important;
+        border-radius: 16px !important;
+        margin-bottom: 14px !important;
+      }
+      .card-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        margin-bottom: 12px !important;
+        padding-bottom: 10px !important;
+      }
+      .card-title {
+        font-size: 14px !important;
+      }
+
+      /* Forms on mobile */
+      .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+      input, select, textarea {
+        font-size: 16px !important; /* Prevents iOS auto-zoom on focus! */
+        padding: 10px 12px !important;
+        border-radius: 12px !important;
+      }
+
+      /* Navigation: Hide Desktop Category Bar on small phones and show Mobile Bottom Bar */
+      .nav-categories-bar {
+        display: none !important;
+      }
+      .subtabs-pill-bar {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: stretch !important;
+      }
+      .subtab-pill-btn {
+        flex: 1 !important;
+        justify-content: center !important;
+        padding: 8px 6px !important;
+        font-size: 11.5px !important;
+      }
+
+      /* Mobile Bottom Navigation Bar */
+      .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        background: rgba(14, 22, 38, 0.95) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        border-top: 1px solid rgba(168, 85, 247, 0.25) !important;
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 12px)) 6px !important;
+        justify-content: space-around !important;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6) !important;
+      }
+      .mobile-nav-item {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 3px !important;
+        background: transparent !important;
+        border: none !important;
+        color: #94a3b8 !important;
+        font-family: inherit !important;
+        font-size: 10.5px !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        padding: 3px 0 !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+      }
+      .mobile-nav-item svg {
+        transition: transform 0.2s ease;
+      }
+      .mobile-nav-item.active {
+        color: #00F5FF !important;
+      }
+      .mobile-nav-item.active svg {
+        transform: translateY(-2px);
+        stroke: #00F5FF !important;
+      }
+      .mobile-nav-item .mobile-nav-badge {
+        position: absolute;
+        top: 0;
+        right: calc(50% - 16px);
+        background: var(--primary);
+        color: #FFF;
+        font-size: 9px;
+        padding: 1px 5px;
+        border-radius: 8px;
+        font-weight: 800;
+      }
+
+      /* Switch from Desktop Table to Mobile Cards */
+      .table-desktop-view {
+        display: none !important;
+      }
+      .cards-mobile-view {
+        display: block !important;
+      }
+
+      /* Modal Bottom-Sheet for Mobile */
+      .app-modal {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 88vh !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 15px)) 16px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8) !important;
+        animation: slideUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+      @keyframes slideUpModal {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+    }
 </style>
 </head>
 <body>
@@ -1057,18 +1364,45 @@
     </div>
 
 
-    <!-- Tab Navigation -->
-    <div class="tabs" id="mainTabs">
-      <button class="tab-btn active" data-tab="announcement" onclick="switchTab('announcement')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg> <span>اعلان بازشو</span> <span class="tab-badge" id="badge-announcement" style="display:none;"></span></button>
-      <button class="tab-btn" data-tab="users" onclick="switchTab('users')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> <span>کاربران</span> <span class="tab-badge" id="badge-users">0</span></button>
-      <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> <span>تنظیمات</span></button>
-      <button class="tab-btn" data-tab="servers" onclick="switchTab('servers')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg> <span>سرورها</span> <span class="tab-badge" id="badge-servers">0</span></button>
-      <button class="tab-btn" data-tab="ads" onclick="switchTab('ads')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg> <span>تبلیغات</span></button>
-      <button class="tab-btn" data-tab="logs" onclick="switchTab('logs')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg> <span>مانیتورینگ</span> <span class="tab-badge" id="badge-logs" style="display:none;"></span></button>
+    <!-- Categorized Navigation Bar (Desktop / Tablet) -->
+    <div class="nav-categories-bar" id="mainCategoryNav">
+      <button class="cat-nav-btn active" data-category="users" onclick="switchCategory('users')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>مدیریت کاربران</span>
+        <span class="cat-badge" id="cat-badge-users">0</span>
+      </button>
+
+      <button class="cat-nav-btn" data-category="servers" onclick="switchCategory('servers')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg>
+        <span>سرورها و شبکه</span>
+        <span class="cat-badge" id="cat-badge-servers">0</span>
+      </button>
+
+      <button class="cat-nav-btn" data-category="messages" onclick="switchCategory('messages')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+        <span>اطلاعیه و تبلیغات</span>
+      </button>
+
+      <button class="cat-nav-btn" data-category="system" onclick="switchCategory('system')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>تنظیمات و سیستم</span>
+      </button>
+    </div>
+
+    <!-- Hidden dummy container for legacy scripts that look for #mainTabs or badges -->
+    <div class="tabs" id="mainTabs" style="display: none;">
+      <span class="tab-badge" id="badge-announcement"></span>
+      <span class="tab-badge" id="badge-users">0</span>
+      <span class="tab-badge" id="badge-servers">0</span>
+      <span class="tab-badge" id="badge-logs"></span>
     </div>
 
     <!-- Tab: Announcement -->
-    <div class="tab-panel active" id="tab-announcement">
+    <div class="tab-panel" id="tab-announcement">
+    <div class="subtabs-pill-bar">
+      <button type="button" class="subtab-pill-btn active" onclick="switchTab('announcement')">⚡ اعلان بازشو اپلیکیشن</button>
+      <button type="button" class="subtab-pill-btn" onclick="switchTab('ads')">🎬 تبلیغات درون‌برنامه</button>
+    </div>
     <div class="card">
       <div class="card-header">
         <div class="card-title">
@@ -1133,24 +1467,23 @@
     </div><!-- /tab-announcement -->
 
     <!-- Tab: Users Management (Dual System: Internal DB + 3X-UI) -->
-    <div class="tab-panel" id="tab-users">
+    <div class="tab-panel active" id="tab-users">
 
       <!-- Sub-tabs Switcher -->
       <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 14px; flex-wrap: wrap;">
-        <button type="button" id="subtab-btn-internal" onclick="switchUsersSubTab('internal')" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); color: #FFF; border: 1.5px solid var(--primary); padding: 10px 22px; border-radius: 14px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
-          <span>⚡ کاربران اختصاصی پنل (مستقل از ۳X-UI با محاسبه حجم)</span>
-          <span id="badge-internal-users" style="background: var(--primary); color: #FFF; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700;">0</span>
+        <button type="button" id="subtab-btn-xui" onclick="switchUsersSubTab('xui')" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); color: #FFF; border: 1.5px solid var(--primary); padding: 10px 22px; border-radius: 14px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
+          <span>👥 کاربران ۳X-UI (اتصال مستقیم و اپلیکیشن)</span>
+          <span id="badge-xui-users" style="background: var(--primary); color: #FFF; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700;">0</span>
         </button>
-        <button type="button" id="subtab-btn-xui" onclick="switchUsersSubTab('xui')" style="background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--card-border); padding: 10px 22px; border-radius: 14px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
-          <span>👥 کاربران اشتراکی ۳X-UI</span>
-          <span id="badge-xui-users" style="background: rgba(255,255,255,0.1); color: #CBD5E1; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700;">0</span>
-        </button>
-      </div>
+        <button type="button" id="subtab-btn-internal" onclick="switchUsersSubTab('internal')" style="background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--card-border); padding: 10px 22px; border-radius: 14px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 13.5px; display: flex; align-items: center; gap: 8px;">
+          <span>⚡ کاربران سرورهای اختصاصی پنل</span>
+          <span id="badge-internal-users" style="background: rgba(255,255,255,0.1); color: #CBD5E1; font-size: 11px; padding: 2px 8px; border-radius: 10px;">0</span>
+        </button></div>
 
       <!-- ========================================== -->
       <!-- SUB-TAB 1: INTERNAL PANEL USERS (NEW)     -->
       <!-- ========================================== -->
-      <div id="subtab-content-internal">
+      <div id="subtab-content-internal" style="display: none;">
 
         <!-- Stats Overview Cards -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
@@ -1305,7 +1638,7 @@
           </div>
 
           <!-- Table Container -->
-          <div style="overflow-x: auto; max-height: 560px; overflow-y: auto;">
+          <div class="table-desktop-view" style="overflow-x: auto; max-height: 560px; overflow-y: auto;">
             <table class="int-users-table">
               <thead>
                 <tr>
@@ -1322,8 +1655,10 @@
                 <tr>
                   <td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران از دیتابیس پنل...</td>
                 </tr>
-              </tbody>
-            </table>
+       </table>
+          </div>
+          <!-- Mobile Cards View for Internal Users -->
+          <div class="cards-mobile-view" id="internalUsersMobileCards"></div>   </table>
           </div>
         </div>
 
@@ -1332,7 +1667,7 @@
       <!-- ========================================== -->
       <!-- SUB-TAB 2: 3X-UI USERS (EXISTING)          -->
       <!-- ========================================== -->
-      <div id="subtab-content-xui" style="display: none;">
+      <div id="subtab-content-xui" style="display: block;">
         <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -1427,7 +1762,7 @@
           </button>
         </div>
 
-        <div style="overflow-x: auto; max-height: 480px; overflow-y: auto;">
+        <div class="table-desktop-view" style="overflow-x: auto; max-height: 480px; overflow-y: auto;">
           <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
             <thead>
               <tr style="border-bottom: 1px solid var(--input-border); color: var(--text-muted); background: rgba(0,0,0,0.2);">
@@ -1442,8 +1777,10 @@
               <tr>
                 <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران از 3x-ui...</td>
               </tr>
-            </tbody>
-          </table>
+    </table>
+        </div>
+        <!-- Mobile Cards View for 3X-UI Users -->
+        <div class="cards-mobile-view" id="xuiUsersMobileCards"></div>    </table>
         </div>
       </div>
       </div><!-- /subtab-content-xui -->
@@ -1454,6 +1791,10 @@
 
     <!-- Tab: Settings (Contact + Endpoints + Versions) -->
     <div class="tab-panel" id="tab-settings">
+    <div class="subtabs-pill-bar">
+      <button type="button" class="subtab-pill-btn active" onclick="switchTab('settings')">⚙️ تنظیمات عمومی اپلیکیشن</button>
+      <button type="button" class="subtab-pill-btn" onclick="switchTab('logs')">📊 مانیتورینگ سیستم و خطاها</button>
+    </div>
     <div class="card">
       <div class="card-header">
         <div class="card-title">
@@ -2138,6 +2479,10 @@ async function fetchFreeConfigsFromWorker() {
       }
       const badge = document.getElementById('badge-servers');
       if (badge) badge.innerText = data.configs.length;
+      const bCatSrv = document.getElementById('cat-badge-servers');
+      if (bCatSrv) bCatSrv.innerText = data.configs.length;
+      const bMobSrv = document.getElementById('mobile-badge-servers');
+      if (bMobSrv) bMobSrv.innerText = data.configs.length;
       if (data.configs.length === 0) {
         listEl.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 10px;">هیچ سرور رایگانی ثبت نشده است.</div>';
         return;
@@ -3027,102 +3372,390 @@ async function fetchFreeConfigsFromWorker() {
     } catch (_) {}
   }
 
+  
+  let cachedXuiUsers = [];
+
   async function fetchXuiUsers() {
     const tbody = document.getElementById('xuiUsersTableBody');
-    const badge = document.getElementById('badge-users');
-    if (!tbody) return;
-    const q = (document.getElementById('xuiSearchInput')?.value || '').trim();
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 16px; color: var(--text-muted);">در حال بارگذاری کاربران از سرور...</td></tr>';
-    
-    await fetchAppLimits();
+    const cardsContainer = document.getElementById('xuiUsersMobileCards');
+    const searchVal = (document.getElementById('xuiSearchInput')?.value || '').trim().toLowerCase();
+    const countSpan = document.getElementById('xuiUsersCount');
+
+    if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران 3x-ui...</td></tr>';
+    if (cardsContainer) cardsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران...</div>';
 
     try {
-      const url = `${CF_WORKER_API}/api/admin/xui-users` + (q ? `?q=${encodeURIComponent(q)}` : '');
-      const res = await fetch(url, {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users?page=1&limit=200`, {
         headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
       });
       const data = await res.json();
-      if (!data.success || !Array.isArray(data.users)) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 14px;">خطا در دریافت کاربران از پنل 3x-ui</td></tr>';
-        return;
-      }
-      if (badge && data.total !== undefined) badge.innerText = data.total;
-
-      if (data.users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 16px;">هیچ کاربری با این مشخصات یافت نشد.</td></tr>';
+      if (!data.success) {
+        if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 16px;">خطا: ${data.message}</td></tr>`;
+        if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 16px;">خطا: ${data.message}</div>`;
         return;
       }
 
-      tbody.innerHTML = '';
-      data.users.forEach(u => {
-        const tr = document.createElement('tr');
-        tr.style = 'border-bottom: 1px solid rgba(255,255,255,0.05);';
-        
-        const emailClean = (u.email || '').toLowerCase().trim();
-        const appLimit = cachedAppLimits[emailClean] || 1; // Default 1 device in app
+      cachedXuiUsers = data.clients || [];
+      const totalCount = data.total || cachedXuiUsers.length;
+      if (countSpan) countSpan.innerText = `(مجموع: ${totalCount} کاربر)`;
 
-        // Traffic format
-        const totalGBNum = (u.totalGB / (1024 ** 3)).toFixed(1);
-        const up = u.traffic?.up || 0;
-        const down = u.traffic?.down || 0;
-        const usedGBNum = ((up + down) / (1024 ** 3)).toFixed(1);
+      // Update Badges
+      const bDesktop = document.getElementById('cat-badge-users');
+      const bMobile = document.getElementById('mobile-badge-users');
+      const bLegacy = document.getElementById('badge-users');
+      if (bDesktop) bDesktop.innerText = totalCount;
+      if (bMobile) bMobile.innerText = totalCount;
+      if (bLegacy) bLegacy.innerText = totalCount;
 
-        // Expiry format
-        let expStr = 'نامحدود';
-        if (u.expiryTime > 0) {
-          const d = new Date(u.expiryTime);
-          expStr = d.toLocaleDateString('fa-IR');
-        }
+      let filtered = cachedXuiUsers;
+      if (searchVal) {
+        filtered = cachedXuiUsers.filter(u => (u.email || '').toLowerCase().includes(searchVal));
+      }
 
-        const subUrl = `https://sb1.dev-stong.ir:2053/sub/${u.subId}`;
+      if (filtered.length === 0) {
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">کاربری با این مشخصات یافت نشد.</td></tr>';
+        if (cardsContainer) cardsContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--text-muted);">کاربری با این مشخصات یافت نشد.</div>';
+        return;
+      }
 
-        tr.innerHTML = `
-          <td style="padding: 10px; font-weight: 700; color: #FFF; font-family: monospace; direction: ltr;">
-            ${u.email}
-          </td>
-          <td style="padding: 10px; color: #CBD5E1;">
-            ${usedGBNum} / ${totalGBNum} GB
-          </td>
-          <td style="padding: 10px; color: var(--text-muted); font-size: 11.5px;">
-            ${expStr}
-          </td>
-          <td style="padding: 10px;">
-            <select onchange="updateUserAppLimit('${u.email}', this.value)" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #38bdf8; font-size: 11.5px; padding: 4px 6px;">
-              <option value="1" ${appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
-              <option value="2" ${appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
-              <option value="3" ${appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
-              <option value="5" ${appLimit == 5 ? 'selected' : ''}>۵ دستگاه</option>
-              <option value="10" ${appLimit == 10 ? 'selected' : ''}>نامحدود</option>
-            </select>
-          </td>
-          <td style="padding: 10px; text-align: center;">
-            <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
-              <button type="button" onclick="openQrModal('${u.email}', '${u.subId}')" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
-                🎯 کیوآر
-              </button>
-              <button type="button" onclick="openDevicesModal('${u.email}')" style="background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
-                📱 دستگاه‌ها
-              </button>
-              <button type="button" onclick="promptRenewUser('${u.email}')" style="background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
-                🔄 تمدید
-              </button>
-              <button type="button" onclick="resetUserTraffic('${u.email}')" style="background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
-                🧹 ریست حجم
-              </button>
-              <button type="button" onclick="toggleUserEnable('${u.email}')" style="background: rgba(239,68,68,0.12); color: ${u.enable ? '#F87171' : '#10B981'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 8px; padding: 4px 8px; font-size: 11px; cursor: pointer;">
-                ${u.enable ? '⏸️ غیرفعال' : '▶️ فعال‌سازی'}
-              </button>
+      // 1. Render Desktop Table
+      if (tbody) {
+        tbody.innerHTML = filtered.map(u => {
+          const usedGb = (u.usedTraffic / (1024 ** 3)).toFixed(2);
+          const totalGb = u.totalGB > 0 ? u.totalGB + ' GB' : 'نامحدود';
+          const pct = u.totalGB > 0 ? Math.min(100, Math.round((u.usedTraffic / (u.totalGB * 1024 ** 3)) * 100)) : 0;
+          let expDate = 'نامحدود';
+          let isExpired = false;
+          if (u.expiryTime > 0) {
+            const d = new Date(u.expiryTime);
+            expDate = d.toLocaleDateString('fa-IR');
+            if (u.expiryTime < Date.now()) isExpired = true;
+          }
+
+          let barColor = '#10B981';
+          if (pct >= 85) barColor = '#EF4444';
+          else if (pct >= 60) barColor = '#F59E0B';
+
+          return `
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+              <td style="padding: 12px 10px; font-family: monospace; font-weight: 700; color: #FFF; direction: ltr;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'};"></span>
+                  <span>${u.email}</span>
+                </div>
+              </td>
+              <td style="padding: 12px 10px;">
+                <div style="font-size: 12px; margin-bottom: 4px;">
+                  <strong style="color: #FFF;">${usedGb}</strong> / <span style="color: var(--text-muted);">${totalGb}</span>
+                  <span style="color: ${barColor}; font-weight: 700; margin-right: 4px;">(${pct}%)</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.08); border-radius: 4px; height: 4px; width: 120px; overflow: hidden;">
+                  <div style="background: ${barColor}; height: 100%; width: ${pct}%;"></div>
+                </div>
+              </td>
+              <td style="padding: 12px 10px;">
+                <span style="color: ${isExpired ? '#EF4444' : '#CBD5E1'}; font-weight: 600;">${expDate}</span>
+                ${isExpired ? '<span style="font-size: 10px; background: rgba(239,68,68,0.2); color: #EF4444; padding: 2px 6px; border-radius: 4px; margin-right: 4px;">منقضی</span>' : ''}
+              </td>
+              <td style="padding: 12px 10px;">
+                <span style="background: rgba(56,189,248,0.12); color: #38BDF8; border: 1px solid rgba(56,189,248,0.25); padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 700;">
+                  📱 ${u.limitIp ? u.limitIp + ' دستگاه' : '۱ دستگاه (پیش‌فرض)'}
+                </span>
+              </td>
+              <td style="padding: 12px 10px; text-align: center;">
+                <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
+                  <button type="button" onclick="openXuiEditModal('${u.email}')" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3)); color: #FFF; border: 1px solid var(--primary); border-radius: 8px; padding: 5px 12px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="ویرایش حجم، تاریخ انقضا و پسورد اپلیکیشن">
+                    <span>✏️</span> <span>ویرایش و رمز</span>
+                  </button>
+                  <button type="button" onclick="showQrModal('${u.email}')" style="background: rgba(255,255,255,0.06); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 8px; padding: 5px 8px; font-size: 11.5px; cursor: pointer;" title="کیوآرکد و لینک ساب">
+                    📱 QR
+                  </button>
+                  <button type="button" onclick="showDevicesModal('${u.email}')" style="background: rgba(255,255,255,0.06); color: #CBD5E1; border: 1px solid var(--card-border); border-radius: 8px; padding: 5px 8px; font-size: 11.5px; cursor: pointer;" title="دستگاه‌های متصل">
+                    👥
+                  </button>
+                  <button type="button" onclick="toggleXuiUserStatus('${u.email}', ${u.enable})" style="background: ${u.enable ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)'}; color: ${u.enable ? '#F87171' : '#34D399'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.25)' : 'rgba(16,185,129,0.25)'}; border-radius: 8px; padding: 5px 9px; font-size: 11.5px; cursor: pointer;" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}">
+                    ${u.enable ? '⏸️' : '▶️'}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 2. Render Mobile Cards
+      if (cardsContainer) {
+        cardsContainer.innerHTML = filtered.map(u => {
+          const usedGb = (u.usedTraffic / (1024 ** 3)).toFixed(2);
+          const totalGb = u.totalGB > 0 ? u.totalGB + ' GB' : 'نامحدود';
+          const pct = u.totalGB > 0 ? Math.min(100, Math.round((u.usedTraffic / (u.totalGB * 1024 ** 3)) * 100)) : 0;
+          let expDate = 'نامحدود';
+          let isExpired = false;
+          if (u.expiryTime > 0) {
+            const d = new Date(u.expiryTime);
+            expDate = d.toLocaleDateString('fa-IR');
+            if (u.expiryTime < Date.now()) isExpired = true;
+          }
+
+          let barColor = '#10B981';
+          if (pct >= 85) barColor = '#EF4444';
+          else if (pct >= 60) barColor = '#F59E0B';
+
+          return `
+            <div class="mobile-user-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-weight: 800; color: #FFF; font-family: monospace; font-size: 14.5px; direction: ltr; display: flex; align-items: center; gap: 6px;">
+                  <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${u.enable ? '#10B981' : '#EF4444'};"></span>
+                  <span>${u.email}</span>
+                </div>
+                <span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 8px; ${u.enable ? 'background: rgba(16,185,129,0.18); color: #10B981;' : 'background: rgba(239,68,68,0.18); color: #F87171;'}">
+                  ${u.enable ? 'فعال' : 'قطع'}
+                </span>
+              </div>
+
+              <!-- Usage Progress Bar -->
+              <div style="margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #CBD5E1; margin-bottom: 4px;">
+                  <span>مصرف: <strong style="color: #FFF;">${usedGb}</strong> از <strong>${totalGb}</strong></span>
+                  <span style="color: ${barColor}; font-weight: 700;">${pct}%</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.08); border-radius: 6px; height: 6px; width: 100%; overflow: hidden;">
+                  <div style="background: ${barColor}; height: 100%; width: ${pct}%;"></div>
+                </div>
+              </div>
+
+              <!-- Meta info row -->
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
+                <div>⏳ انقضا: <strong style="color: ${isExpired ? '#F87171' : '#E2E8F0'};">${expDate}${isExpired ? ' (منقضی)' : ''}</strong></div>
+                <div style="background: rgba(56,189,248,0.12); color: #38BDF8; padding: 2px 7px; border-radius: 6px; font-weight: 700;">
+                  📱 ${u.limitIp ? u.limitIp + ' دستگاه' : '۱ دستگاه'}
+                </div>
+              </div>
+
+              <!-- Action buttons -->
+              <div style="display: flex; gap: 8px;">
+                <button type="button" onclick="openXuiEditModal('${u.email}')" style="flex: 2; background: linear-gradient(135deg, rgba(168,85,247,0.35), rgba(0,210,255,0.35)); color: #FFF; border: 1.5px solid var(--primary); border-radius: 12px; padding: 9px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                  <span>✏️</span> <span>ویرایش و رمز ورود</span>
+                </button>
+                <button type="button" onclick="showQrModal('${u.email}')" style="background: rgba(255,255,255,0.08); color: #38bdf8; border: 1px solid var(--card-border); border-radius: 12px; padding: 9px 12px; font-size: 12px; cursor: pointer;">
+                  📱 QR
+                </button>
+                <button type="button" onclick="toggleXuiUserStatus('${u.email}', ${u.enable})" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? '#F87171' : '#34D399'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 12px; padding: 9px 12px; font-size: 12px; cursor: pointer;">
+                  ${u.enable ? '⏸️' : '▶️'}
+                </button>
+              </div>
             </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    } catch (e) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #F87171; padding: 14px;">خطا در واکشی کاربران</td></tr>';
+          `;
+        }).join('');
+      }
+
+    } catch (err) {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 16px;">خطای ارتباط: ${err.message}</td></tr>`;
+      if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 16px;">خطای ارتباط: ${err.message}</div>`;
     }
   }
 
-  async function updateUserAppLimit(phone, maxDevices) {
+  // ---------------- MODAL: EDIT 3X-UI USER & APP PASSWORD ----------------
+  let currentXuiEditingUser = null;
+
+  async function openXuiEditModal(email) {
+    const modal = document.getElementById('xuiEditModalOverlay');
+    if (!modal) return;
+
+    // Reset fields
+    document.getElementById('xuiEditEmail').value = email;
+    document.getElementById('xuiEditDisplayEmail').innerText = email;
+    document.getElementById('xuiEditPassword').value = '';
+    document.getElementById('xuiEditTotalGb').value = '';
+    document.getElementById('xuiEditRenewalMode').value = 'keep';
+    document.getElementById('xuiEditResetTraffic').checked = false;
+    document.getElementById('xuiEditExpiryPreview').innerText = '';
+    document.getElementById('xuiEditUsedTrafficInfo').innerText = 'در حال دریافت اطلاعات...';
+
+    // Show modal immediately
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+
+    try {
+      showToast('در حال دریافت جزئیات کاربر از سرور...');
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users/detail?email=${encodeURIComponent(email)}`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (!data.success) {
+        showToast('خطا در دریافت اطلاعات: ' + data.message, true);
+        return;
+      }
+
+      currentXuiEditingUser = data;
+      const client = data.client || {};
+
+      // Fill values
+      document.getElementById('xuiEditPassword').value = data.password || '';
+      document.getElementById('xuiEditMaxDevices').value = String(client.limitIp || 1);
+      document.getElementById('xuiEditTotalGb').value = client.totalGB > 0 ? client.totalGB : 0;
+      document.getElementById('xuiEditEnable').checked = client.enable !== false;
+
+      // Status badge
+      const statusBadge = document.getElementById('xuiEditStatusBadge');
+      if (statusBadge) {
+        if (client.enable !== false) {
+          statusBadge.innerText = 'فعال';
+          statusBadge.style.background = 'rgba(16,185,129,0.2)';
+          statusBadge.style.color = '#10B981';
+        } else {
+          statusBadge.innerText = 'غیرفعال';
+          statusBadge.style.background = 'rgba(239,68,68,0.2)';
+          statusBadge.style.color = '#EF4444';
+        }
+      }
+
+      // Used traffic info
+      const usedGb = ((client.usedTraffic || 0) / (1024 ** 3)).toFixed(2);
+      const totalGb = client.totalGB > 0 ? client.totalGB + ' GB' : 'نامحدود';
+      document.getElementById('xuiEditUsedTrafficInfo').innerText = `مصرف فعلی: ${usedGb} GB از ${totalGb}`;
+
+      // Expiry info
+      let expStr = 'نامحدود';
+      if (client.expiryTime > 0) {
+        const d = new Date(client.expiryTime);
+        expStr = d.toLocaleDateString('fa-IR');
+        const remDays = Math.ceil((client.expiryTime - Date.now()) / (86400 * 1000));
+        if (remDays <= 0) expStr += ' (منقضی شده)';
+        else expStr += ` (${remDays} روز باقی‌مانده)`;
+      }
+      document.getElementById('xuiEditExpiryCurrent').innerText = expStr;
+      updateXuiExpiryPreview();
+
+    } catch (err) {
+      showToast('خطای شبکه: ' + err.message, true);
+    }
+  }
+
+  function closeXuiEditModal() {
+    const modal = document.getElementById('xuiEditModalOverlay');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
+    }
+    currentXuiEditingUser = null;
+  }
+
+  function generateXuiRandomPass() {
+    const chars = '0123456789abcdefghjkmnpqrstuvwxyz';
+    let pass = '';
+    for (let i = 0; i < 6; i++) {
+      pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    document.getElementById('xuiEditPassword').value = pass;
+    document.getElementById('xuiEditPassword').type = 'text';
+    showToast('🎲 رمز عبور تصادفی ایجاد شد: ' + pass);
+  }
+
+  function copyXuiPass() {
+    const p = document.getElementById('xuiEditPassword').value;
+    if (!p) {
+      showToast('هنوز رمزی وارد نشده است', true);
+      return;
+    }
+    navigator.clipboard.writeText(p);
+    showToast('📋 رمز عبور کپی شد: ' + p);
+  }
+
+  function toggleXuiPassVisibility() {
+    const inp = document.getElementById('xuiEditPassword');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+    } else {
+      inp.type = 'password';
+    }
+  }
+
+  function updateXuiExpiryPreview() {
+    const mode = document.getElementById('xuiEditRenewalMode').value;
+    const previewEl = document.getElementById('xuiEditExpiryPreview');
+    if (!previewEl) return;
+
+    if (mode === 'keep') {
+      previewEl.innerText = '';
+    } else if (mode === 'unlimited') {
+      previewEl.innerText = '⚡ تاریخ انقضا برداشته می‌شود (اشتراک بدون انقضا)';
+    } else {
+      const days = parseInt(mode, 10);
+      const targetDate = new Date(Date.now() + days * 86400 * 1000);
+      previewEl.innerText = `📅 تاریخ انقضای جدید: ${targetDate.toLocaleDateString('fa-IR')} (${days} روز از امروز)`;
+    }
+  }
+
+  async function saveXuiUserEdit() {
+    const email = document.getElementById('xuiEditEmail').value;
+    const password = document.getElementById('xuiEditPassword').value.trim();
+    const limitIp = parseInt(document.getElementById('xuiEditMaxDevices').value || 1, 10);
+    const totalGB = parseFloat(document.getElementById('xuiEditTotalGb').value || 0);
+    const renewalMode = document.getElementById('xuiEditRenewalMode').value;
+    const resetTraffic = document.getElementById('xuiEditResetTraffic').checked;
+    const enable = document.getElementById('xuiEditEnable').checked;
+    const saveBtn = document.getElementById('btnSaveXuiEdit');
+
+    if (!email) {
+      showToast('خطای شناسه کاربر', true);
+      return;
+    }
+
+    let expiryDays = null;
+    if (renewalMode === 'unlimited') {
+      expiryDays = 0;
+    } else if (renewalMode !== 'keep') {
+      expiryDays = parseInt(renewalMode, 10);
+    }
+
+    const payload = {
+      email,
+      password,
+      limitIp,
+      totalGB,
+      enable,
+      resetTraffic
+    };
+    if (expiryDays !== null) {
+      payload.expiryDays = expiryDays;
+    }
+
+    try {
+      saveBtn.disabled = true;
+      saveBtn.innerText = '⏳ در حال ذخیره در ۳X-UI و دیتابیس اپ...';
+
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.success) {
+        showToast('خطا در ذخیره تغییرات: ' + data.message, true);
+        saveBtn.disabled = false;
+        saveBtn.innerText = '💾 ذخیره تغییرات و اعمال در اپلیکیشن';
+        return;
+      }
+
+      showToast('✅ ' + data.message);
+      closeXuiEditModal();
+      fetchXuiUsers();
+
+    } catch (err) {
+      showToast('خطای ارتباط: ' + err.message, true);
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.innerText = '💾 ذخیره تغییرات و اعمال در اپلیکیشن';
+      }
+    }
+  }
+
+async function updateUserAppLimit(phone, maxDevices) {
     try {
       showToast('در حال ثبت سقف دستگاه در اپ...');
       const res = await fetch(`${CF_WORKER_API}/api/admin/app-limits`, {
@@ -3240,27 +3873,38 @@ async function fetchFreeConfigsFromWorker() {
   let allInternalUsers = [];
 
   function switchUsersSubTab(subtab) {
+    activeSubtabs.users = subtab;
     const isInternal = subtab === 'internal';
-    document.getElementById('subtab-content-internal').style.display = isInternal ? 'block' : 'none';
-    document.getElementById('subtab-content-xui').style.display = isInternal ? 'none' : 'block';
+    const contInt = document.getElementById('subtab-content-internal');
+    const contXui = document.getElementById('subtab-content-xui');
+    if (contInt) contInt.style.display = isInternal ? 'block' : 'none';
+    if (contXui) contXui.style.display = isInternal ? 'none' : 'block';
 
     const btnInt = document.getElementById('subtab-btn-internal');
     const btnXui = document.getElementById('subtab-btn-xui');
     if (isInternal) {
-      btnInt.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
-      btnInt.style.borderColor = 'var(--primary)';
-      btnInt.style.color = '#FFF';
-      btnXui.style.background = 'rgba(255,255,255,0.04)';
-      btnXui.style.borderColor = 'var(--card-border)';
-      btnXui.style.color = 'var(--text-muted)';
+      if (btnInt) {
+        btnInt.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
+        btnInt.style.borderColor = 'var(--primary)';
+        btnInt.style.color = '#FFF';
+      }
+      if (btnXui) {
+        btnXui.style.background = 'rgba(255,255,255,0.04)';
+        btnXui.style.borderColor = 'var(--card-border)';
+        btnXui.style.color = 'var(--text-muted)';
+      }
       fetchInternalUsers();
     } else {
-      btnXui.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
-      btnXui.style.borderColor = 'var(--primary)';
-      btnXui.style.color = '#FFF';
-      btnInt.style.background = 'rgba(255,255,255,0.04)';
-      btnInt.style.borderColor = 'var(--card-border)';
-      btnInt.style.color = 'var(--text-muted)';
+      if (btnXui) {
+        btnXui.style.background = 'linear-gradient(135deg, rgba(168,85,247,0.3), rgba(0,210,255,0.3))';
+        btnXui.style.borderColor = 'var(--primary)';
+        btnXui.style.color = '#FFF';
+      }
+      if (btnInt) {
+        btnInt.style.background = 'rgba(255,255,255,0.04)';
+        btnInt.style.borderColor = 'var(--card-border)';
+        btnInt.style.color = 'var(--text-muted)';
+      }
       fetchXuiUsers();
     }
   }
@@ -3511,7 +4155,83 @@ async function fetchFreeConfigsFromWorker() {
           </td>
         </tr>
       `;
-    }).join('');
+    
+    // Render Mobile Cards for Internal Users
+    const mobileContainer = document.getElementById('internalUsersMobileCards');
+    if (mobileContainer) {
+      if (users.length === 0) {
+        mobileContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">هیچ کاربر اختصاصی یافت نشد.</div>';
+      } else {
+        mobileContainer.innerHTML = users.map(u => {
+          const usedGb = ((u.used_bytes || 0) / (1024 ** 3)).toFixed(2);
+          const totalGb = u.total_bytes > 0 ? ((u.total_bytes) / (1024 ** 3)).toFixed(1) : 'نامحدود';
+          const pct = u.total_bytes > 0 ? Math.min(100, Math.round(((u.used_bytes || 0) / u.total_bytes) * 100)) : 0;
+          
+          let expStr = 'نامحدود';
+          let isExpired = false;
+          let remText = '';
+          if (u.expiry_time > 0) {
+            const d = new Date(u.expiry_time);
+            expStr = d.toLocaleDateString('fa-IR');
+            const remDays = Math.ceil((u.expiry_time - nowMs) / (86400 * 1000));
+            if (remDays <= 0) { isExpired = true; remText = ' (منقضی)'; }
+            else { remText = ` (${remDays} روز)`; }
+          }
+
+          let barColor = '#10B981';
+          if (pct >= 85) barColor = '#EF4444';
+          else if (pct >= 60) barColor = '#F59E0B';
+
+          return `
+            <div class="mobile-user-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-weight: 800; color: #FFF; font-family: monospace; font-size: 14.5px; direction: ltr;">
+                  ${u.username}
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <span style="font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: rgba(56,189,248,0.15); color: #38bdf8;">
+                    📱 ${u.max_devices || 1} دستگاه
+                  </span>
+                  <span style="font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 8px; ${u.active ? 'background: rgba(16,185,129,0.2); color: #10B981;' : 'background: rgba(239,68,68,0.2); color: #F87171;'}">
+                    ${u.active ? 'فعال' : 'غیرفعال'}
+                  </span>
+                </div>
+              </div>
+
+              ${u.password ? `<div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px; font-family: monospace;">🔑 رمز: <strong style="color: #38bdf8;">${u.password}</strong></div>` : ''}
+
+              <!-- Progress Bar -->
+              <div style="margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #CBD5E1; margin-bottom: 4px;">
+                  <span>مصرف: <strong>${usedGb}</strong> از <strong>${totalGb} GB</strong></span>
+                  <span style="color: ${barColor}; font-weight: 700;">${pct}%</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.08); border-radius: 6px; height: 6px; width: 100%; overflow: hidden;">
+                  <div style="background: ${barColor}; height: 100%; width: ${pct}%;"></div>
+                </div>
+              </div>
+
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
+                ⏳ انقضا: <strong style="color: ${isExpired ? '#F87171' : '#CBD5E1'};">${expStr}${remText}</strong>
+              </div>
+
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" onclick="showIntEditModal(${u.id})" style="flex: 2; background: linear-gradient(135deg, rgba(168,85,247,0.35), rgba(0,210,255,0.35)); color: #FFF; border: 1.5px solid var(--primary); border-radius: 12px; padding: 8px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer;">
+                  ✏️ ویرایش و رمز
+                </button>
+                <button type="button" onclick="showIntAddQuotaModal(${u.id}, '${u.username}')" style="flex: 1; background: rgba(16,185,129,0.12); color: #10B981; border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 8px; font-size: 12px; cursor: pointer;">
+                  ⚡ تمدید
+                </button>
+                <button type="button" onclick="toggleInternalUserActive(${u.id}, ${u.active ? 0 : 1})" style="background: rgba(239,68,68,0.1); color: ${u.active ? '#F87171' : '#10B981'}; border: 1px solid ${u.active ? 'rgba(239,68,68,0.25)' : 'rgba(16,185,129,0.25)'}; border-radius: 12px; padding: 8px 12px; font-size: 12px; cursor: pointer;">
+                  ${u.active ? '⏸️' : '▶️'}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+}).join('');
   }
 
     async function createInternalUser() {
@@ -3836,24 +4556,102 @@ async function fetchFreeConfigsFromWorker() {
     }
   }
 
-  function switchTab(name) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
-    localStorage.setItem('svpn_active_tab', name);
-    // Lazy load when switching
-    if (name === 'users') { fetchInternalUsers(); }
-    if (name === 'servers') { fetchFreeConfigsFromWorker(); fetchSharedConfigsFromWorker(); }
-    if (name === 'logs') fetchClientErrorsFromWorker();
-    if (name === 'ads') updateAdPreview();
+  let activeCategory = 'users';
+  let activeSubtabs = {
+    users: 'xui',
+    servers: 'servers',
+    messages: 'announcement',
+    system: 'settings'
+  };
+
+  function switchCategory(cat) {
+    activeCategory = cat;
+    // Update desktop category buttons
+    document.querySelectorAll('.cat-nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.category === cat);
+    });
+    // Update mobile bottom nav items
+    document.querySelectorAll('.mobile-nav-item').forEach(m => {
+      m.classList.toggle('active', m.dataset.target === cat);
+    });
+
+    let tabToShow = 'users';
+    if (cat === 'users') {
+      tabToShow = 'users';
+      switchUsersSubTab(activeSubtabs.users || 'xui');
+    } else if (cat === 'servers') {
+      tabToShow = 'servers';
+      fetchFreeConfigsFromWorker();
+      fetchSharedConfigsFromWorker();
+    } else if (cat === 'messages') {
+      tabToShow = activeSubtabs.messages || 'announcement';
+      if (tabToShow === 'ads') updateAdPreview();
+    } else if (cat === 'system') {
+      tabToShow = activeSubtabs.system || 'settings';
+      if (tabToShow === 'logs') fetchClientErrorsFromWorker();
+    }
+
+    document.querySelectorAll('.tab-panel').forEach(p => {
+      p.classList.toggle('active', p.id === 'tab-' + tabToShow);
+    });
+
+    // Update active state in subtabs pill bars
+    document.querySelectorAll('.subtab-pill-btn').forEach(btn => {
+      const fn = btn.getAttribute('onclick') || '';
+      btn.classList.toggle('active', fn.includes("'" + tabToShow + "'"));
+    });
+
+    localStorage.setItem('svpn_active_category', cat);
+    localStorage.setItem('svpn_active_tab', tabToShow);
   }
 
-  // Restore last active tab on load
-  (function() {
-    const saved = localStorage.getItem('svpn_active_tab');
-    if (saved && document.getElementById('tab-' + saved)) {
-      // defer until DOM ready
-      setTimeout(() => switchTab(saved), 300);
+  function switchTab(name) {
+    if (name === 'users') {
+      switchCategory('users');
+    } else if (name === 'servers') {
+      switchCategory('servers');
+    } else if (name === 'announcement' || name === 'ads') {
+      activeSubtabs.messages = name;
+      activeCategory = 'messages';
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+      document.querySelectorAll('.cat-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.category === 'messages'));
+      document.querySelectorAll('.mobile-nav-item').forEach(m => m.classList.toggle('active', m.dataset.target === 'messages'));
+      document.querySelectorAll('.subtab-pill-btn').forEach(btn => {
+        const fn = btn.getAttribute('onclick') || '';
+        btn.classList.toggle('active', fn.includes("'" + name + "'"));
+      });
+      if (name === 'ads') updateAdPreview();
+      localStorage.setItem('svpn_active_category', 'messages');
+      localStorage.setItem('svpn_active_tab', name);
+    } else if (name === 'settings' || name === 'logs') {
+      activeSubtabs.system = name;
+      activeCategory = 'system';
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+      document.querySelectorAll('.cat-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.category === 'system'));
+      document.querySelectorAll('.mobile-nav-item').forEach(m => m.classList.toggle('active', m.dataset.target === 'system'));
+      document.querySelectorAll('.subtab-pill-btn').forEach(btn => {
+        const fn = btn.getAttribute('onclick') || '';
+        btn.classList.toggle('active', fn.includes("'" + name + "'"));
+      });
+      if (name === 'logs') fetchClientErrorsFromWorker();
+      localStorage.setItem('svpn_active_category', 'system');
+      localStorage.setItem('svpn_active_tab', name);
+    } else {
+      switchCategory('users');
     }
+  }
+
+  // Restore last active tab / category on load
+  (function() {
+    const savedCat = localStorage.getItem('svpn_active_category') || 'users';
+    const savedTab = localStorage.getItem('svpn_active_tab');
+    setTimeout(() => {
+      if (savedTab && ['announcement', 'ads', 'settings', 'logs', 'servers', 'users'].includes(savedTab)) {
+        switchTab(savedTab);
+      } else {
+        switchCategory(savedCat);
+      }
+    }, 250);
   })();
 
   window.onload = checkAuth;
@@ -4053,5 +4851,153 @@ async function fetchFreeConfigsFromWorker() {
   </div>
 </div>
 
+
+<!-- Modal: Edit 3X-UI User (Limits & App Password) -->
+<div class="app-modal-overlay" id="xuiEditModalOverlay" onclick="if(event.target===this) closeXuiEditModal()">
+  <div class="app-modal" style="max-width: 520px; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
+      <h3 style="font-size: 16px; font-weight: 800; color: #FFF; display: flex; align-items: center; gap: 8px;">
+        <span style="color: var(--primary);">✏️</span>
+        <span>ویرایش کاربر ۳X-UI و تنظیمات اپلیکیشن</span>
+      </h3>
+      <button type="button" onclick="closeXuiEditModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; padding: 4px 8px;">✕</button>
+    </div>
+
+    <!-- Hidden / Readonly User Info -->
+    <div style="background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <div>
+        <div style="font-size: 11px; color: var(--text-muted);">شماره یا شناسه کاربر:</div>
+        <div id="xuiEditDisplayEmail" style="font-weight: 800; color: #38bdf8; font-family: monospace; font-size: 15px; direction: ltr;">-</div>
+      </div>
+      <div id="xuiEditStatusBadge" style="font-size: 11px; padding: 3px 10px; border-radius: 8px; font-weight: 700; background: rgba(16,185,129,0.2); color: #10B981;">فعال</div>
+    </div>
+    <input type="hidden" id="xuiEditEmail">
+
+    <div class="form-grid">
+      <!-- 1. Password Field for App Login -->
+      <div class="form-group full" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(56,189,248,0.25); border-radius: 14px; padding: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label style="margin: 0; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+            <span>🔑</span> <span>رمز عبور ورود به اپلیکیشن:</span>
+          </label>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" class="btn-xs-pill" onclick="generateXuiRandomPass()" style="background: rgba(56,189,248,0.15); color: #38bdf8; border-color: rgba(56,189,248,0.3);">🎲 رمز تصادفی</button>
+            <button type="button" class="btn-xs-pill" onclick="copyXuiPass()">📋 کپی</button>
+          </div>
+        </div>
+        <div style="position: relative; display: flex; align-items: center;">
+          <input type="password" id="xuiEditPassword" dir="ltr" placeholder="رمز دلخواه کاربر (مثلاً: 123456)" style="padding-left: 40px; font-family: monospace; letter-spacing: 1px;">
+          <button type="button" onclick="toggleXuiPassVisibility()" style="position: absolute; left: 8px; background: transparent; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; padding: 4px;" title="نمایش/پنهان رمز">👁️</button>
+        </div>
+        <div class="hint" style="margin-top: 6px; font-size: 11px; color: #94a3b8;">
+          💡 کاربر می‌تواند با شماره موبایل خود و این رمز مستقیماً وارد برنامه StrongVPN شود.
+        </div>
+      </div>
+
+      <!-- 2. Device Limit in App -->
+      <div class="form-group full">
+        <label>📱 سقف اتصال همزمان در اپلیکیشن (Device Limit):</label>
+        <select id="xuiEditMaxDevices" style="background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 12px; color: #FFF; padding: 10px 12px; width: 100%;">
+          <option value="1">۱ دستگاه (تک‌کاربره - استاندارد)</option>
+          <option value="2">۲ دستگاه (دو کاربره)</option>
+          <option value="3">۳ دستگاه</option>
+          <option value="5">۵ دستگاه (خانوادگی)</option>
+          <option value="10">نامحدود (بدون سقف ورود)</option>
+        </select>
+        <div class="hint">در صورت رسیدن به این سقف، دستگاه جدید برای ورود با هشدار خطا مواجه می‌شود.</div>
+      </div>
+
+      <!-- 3. Traffic Quota (GB) -->
+      <div class="form-group full">
+        <label>📦 سقف حجم کل اشتراک (گیگابایت - ۰ یعنی نامحدود):</label>
+        <input type="number" id="xuiEditTotalGb" dir="ltr" step="1" min="0" placeholder="مثلاً: 30">
+        <div style="display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;">
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('xuiEditTotalGb').value='0'">نامحدود (۰)</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('xuiEditTotalGb').value='10'">۱۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('xuiEditTotalGb').value='20'">۲۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('xuiEditTotalGb').value='30'">۳۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('xuiEditTotalGb').value='50'">۵۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('xuiEditTotalGb').value='100'">۱۰۰ گیگ</button>
+        </div>
+      </div>
+
+      <!-- 4. Expiry / Renewal -->
+      <div class="form-group full" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label style="margin: 0; font-size: 13px;">⏳ مدت اعتبار و انقضا:</label>
+          <span id="xuiEditExpiryCurrent" style="font-size: 12px; color: var(--text-muted); font-family: monospace;">-</span>
+        </div>
+        <select id="xuiEditRenewalMode" onchange="updateXuiExpiryPreview()" style="background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 10px; color: #FFF; padding: 8px 10px; width: 100%;">
+          <option value="keep" selected>حفظ تاریخ انقضای فعلی (بدون تغییر)</option>
+          <option value="30">تمدید ۳۰ روزه (+۳۰ روز از امروز)</option>
+          <option value="60">تمدید ۶۰ روزه (+۶۰ روز از امروز)</option>
+          <option value="90">تمدید ۹۰ روزه (+۹۰ روز از امروز)</option>
+          <option value="365">تمدید ۱ ساله (+۳۶۵ روز از امروز)</option>
+          <option value="unlimited">نامحدود (بدون تاریخ انقضا)</option>
+        </select>
+        <div id="xuiEditExpiryPreview" style="font-size: 11.5px; color: #c084fc; margin-top: 6px;"></div>
+      </div>
+
+      <!-- 5. Reset Traffic Option -->
+      <div class="form-group full" style="display: flex; align-items: center; justify-content: space-between; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 12px 14px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: #fbbf24;">🧹 صفر کردن حجم مصرفی (ریست مصرف)</div>
+          <div id="xuiEditUsedTrafficInfo" style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">مصرف فعلی: ۰ GB</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="xuiEditResetTraffic">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- 6. Account Status (Enable/Disable) -->
+      <div class="form-group full" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: #FFF;">وضعیت اشتراک کاربر</div>
+          <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">قطع یا وصل دسترسی به سرورها و اپلیکیشن</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="xuiEditEnable" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div style="display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+      <button type="button" id="btnSaveXuiEdit" onclick="saveXuiUserEdit()" style="flex: 2; background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; border-radius: 12px; padding: 12px; font-weight: 800; cursor: pointer; font-size: 14px; box-shadow: 0 4px 14px rgba(16,185,129,0.35);">
+        💾 ذخیره تغییرات و اعمال در اپلیکیشن
+      </button>
+      <button type="button" onclick="closeXuiEditModal()" style="flex: 1; background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; font-weight: 700; cursor: pointer; font-size: 13px;">
+        انصراف
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Bottom Navigation Bar (Fixed for Smartphones) -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav">
+  <button class="mobile-nav-item active" data-target="users" onclick="switchCategory('users')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+    <span>کاربران</span>
+    <span class="mobile-nav-badge" id="mobile-badge-users">0</span>
+  </button>
+
+  <button class="mobile-nav-item" data-target="servers" onclick="switchCategory('servers')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg>
+    <span>سرورها</span>
+    <span class="mobile-nav-badge" id="mobile-badge-servers">0</span>
+  </button>
+
+  <button class="mobile-nav-item" data-target="messages" onclick="switchCategory('messages')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+    <span>پیام‌ها</span>
+  </button>
+
+  <button class="mobile-nav-item" data-target="system" onclick="switchCategory('system')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    <span>تنظیمات</span>
+  </button>
+</nav>
 </body>
 </html>
