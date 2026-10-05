@@ -1380,7 +1380,250 @@
     input::placeholder, textarea::placeholder { color: var(--text-4); opacity: 1; }
     input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
     input[type="radio"] { accent-color: var(--accent); }
-</style>
+
+    /* ================= 3X-UI THEME STYLING ================= */
+    .xui-stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .xui-stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--text-2);
+    }
+    .xui-stat-pill strong {
+      color: var(--text);
+      font-weight: 700;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .xui-stat-pill.total {
+      background: rgba(var(--accent-rgb), 0.08);
+      border-color: rgba(var(--accent-rgb), 0.3);
+      color: var(--accent);
+    }
+    .xui-stat-pill.total strong { color: var(--accent); }
+    .xui-stat-pill .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .xui-stat-pill .dot.online { background: #10b981; box-shadow: 0 0 6px #10b981; }
+    .xui-stat-pill .dot.ended { background: #ef4444; }
+    .xui-stat-pill .dot.warning { background: #f59e0b; }
+    .xui-stat-pill .dot.disabled { background: #64748b; }
+
+    .xui-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .xui-toolbar-left, .xui-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .xui-toolbar-right { flex: 1; justify-content: flex-end; min-width: 240px; }
+    .btn-xui-primary {
+      background: #10b981;
+      color: #04231a;
+      border: none;
+      padding: 9px 16px;
+      border-radius: var(--r-sm);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity var(--dur) var(--ease);
+    }
+    .btn-xui-primary:hover { opacity: 0.9; }
+    .btn-xui-icon {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--r-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+    }
+    .btn-xui-icon:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.4); }
+    .xui-search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 280px;
+    }
+    .xui-search-box svg {
+      position: absolute;
+      right: 10px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .xui-search-box input {
+      width: 100%;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--text);
+      padding: 7px 32px 7px 26px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .xui-search-box input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .xui-search-clear {
+      position: absolute;
+      left: 6px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 2px 4px;
+    }
+
+    .xui-table-wrap {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .xui-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: right;
+    }
+    .xui-table thead tr {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .xui-table th {
+      padding: 10px 12px;
+      white-space: nowrap;
+    }
+    .xui-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .xui-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .xui-switch {
+      position: relative;
+      display: inline-block;
+      width: 32px;
+      height: 18px;
+    }
+    .xui-switch input { opacity: 0; width: 0; height: 0; }
+    .xui-switch .slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background: #334155; border-radius: 20px; transition: .2s;
+    }
+    .xui-switch .slider:before {
+      position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px;
+      background: white; border-radius: 50%; transition: .2s;
+    }
+    .xui-switch input:checked + .slider { background: #10b981; }
+    .xui-switch input:checked + .slider:before { transform: translateX(14px); }
+
+    .xui-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .xui-status-badge.active { background: rgba(16,185,129,0.15); color: #10b981; }
+    .xui-status-badge.ended { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .xui-status-badge.disabled { background: rgba(100,116,139,0.2); color: #94a3b8; }
+    .xui-status-badge.depleting { background: rgba(245,158,11,0.18); color: #f59e0b; }
+
+    .xui-client-cell {
+      direction: ltr;
+      text-align: right;
+      font-family: monospace;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .xui-inbounds-chips {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      max-width: 140px;
+    }
+    .xui-inbound-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 10px;
+      color: var(--text-3);
+      font-family: monospace;
+    }
+    .xui-traffic-bar {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      height: 4px;
+      width: 120px;
+      overflow: hidden;
+      margin-top: 3px;
+    }
+    .xui-actions-cell {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      align-items: center;
+    }
+    .xui-action-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    }
+    .xui-action-btn:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.45); }
+    .xui-action-btn.danger:hover { color: var(--danger); border-color: rgba(239,68,68,0.45); }
+
+  </style>
 </head>
 <body>
 
@@ -1856,138 +2099,63 @@
       </div><!-- /subtab-content-internal -->
 
       <!-- ========================================== -->
-      <!-- SUB-TAB 2: 3X-UI USERS (EXISTING)          -->
+      <!-- SUB-TAB 2: 3X-UI USERS (3X-UI STYLE)       -->
       <!-- ========================================== -->
       <div id="subtab-content-xui" style="display: block;">
-        <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg></span>
-            <span>ساخت کاربر جدید در پنل 3x-ui</span>
-          </div>
+
+        <!-- 3X-UI Style Stat Counters -->
+        <div class="xui-stats-bar">
+          <div class="xui-stat-pill"><span class="dot online"></span><span>آنلاین:</span><strong id="xuiStatOnline">--</strong></div>
+          <div class="xui-stat-pill"><span class="dot ended"></span><span>منقضی:</span><strong id="xuiStatEnded">--</strong></div>
+          <div class="xui-stat-pill"><span class="dot warning"></span><span>رو به اتمام:</span><strong id="xuiStatDepleting">--</strong></div>
+          <div class="xui-stat-pill"><span class="dot disabled"></span><span>غیرفعال:</span><strong id="xuiStatDisabled">--</strong></div>
+          <div class="xui-stat-pill total"><span>کل کاربران:</span><strong id="xuiStatTotal">--</strong></div>
         </div>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label>شماره موبایل یا شناسه کاربر:</label>
-            <input type="text" id="newXuiEmail" placeholder="09170008899" dir="ltr">
-            <div class="hint">این شناسه به عنوان نام کاربر (Remark) در 3x-ui ثبت می‌شود.</div>
+        <!-- 3X-UI Toolbar (Add Client + Search + Refresh) -->
+        <div class="xui-toolbar">
+          <div class="xui-toolbar-left">
+            <button type="button" class="btn-xui-primary" onclick="openCreateXuiModal()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>افزودن کلاینت (کاربر جدید)</span>
+            </button>
           </div>
-
-          <div class="form-group">
-            <label>انتخاب حجم و مدت زمان اشتراک:</label>
-            <select id="newXuiPlan" onchange="onPlanSelectChange(this)">
-              <option value="10:30">۱۰ گیگابایت - ۳۰ روزه</option>
-              <option value="20:30">۲۰ گیگابایت - ۳۰ روزه</option>
-              <option value="30:30" selected>۳۰ گیگابایت - ۳۰ روزه</option>
-              <option value="40:30">۴۰ گیگابایت - ۳۰ روزه</option>
-              <option value="100:30">۱۰۰ گیگابایت - ۳۰ روزه (ویژه)</option>
-              <option value="custom">حجم و روز دلخواه...</option>
-            </select>
-          </div>
-
-          <div class="form-group" id="customPlanInputs" style="display: none;">
-            <label>حجم دلخواه (گیگ) و مدت (روز):</label>
-            <div style="display: flex; gap: 8px;">
-              <input type="number" id="customVolGB" value="50" min="1" max="500" placeholder="حجم GB" style="flex:1;">
-              <input type="number" id="customDays" value="30" min="1" max="365" placeholder="روز" style="flex:1;">
+          <div class="xui-toolbar-right">
+            <div class="xui-search-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="xuiSearchInput" placeholder="جستجو: شماره یا نام..." dir="ltr" onkeyup="if(event.key==='Enter') fetchXuiUsers()">
+              <button type="button" class="xui-search-clear" onclick="document.getElementById('xuiSearchInput').value=''; fetchXuiUsers()">✕</button>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label>🔒 محدودیت اتصال همزمان (فقط در اپلیکیشن):</label>
-            <select id="newXuiAppLimit">
-              <option value="1" selected>۱ دستگاه (تک کاربره)</option>
-              <option value="2">۲ دستگاه (دو کاربره)</option>
-              <option value="3">۳ دستگاه</option>
-              <option value="4">۴ دستگاه</option>
-              <option value="5">۵ دستگاه</option>
-              <option value="10">۱۰ دستگاه</option>
-              <option value="20">۲۰ دستگاه (حداکثر)</option>
-            </select>
-            <div class="hint" style="color: var(--text-2);">⚡ این محدودیت مستقلاً در سرور اپلیکیشن اعمال می‌شود و به 3x-ui کاری ندارد.</div>
-          </div>
-
-          <div class="form-group">
-            <label>🔑 رمز ورود به اپلیکیشن:</label>
-            <div style="display: flex; gap: 8px;">
-              <input type="text" id="newXuiPassword" placeholder="خالی = ساخت خودکار" dir="ltr" inputmode="numeric" maxlength="9" style="flex:1;">
-              <button type="button" onclick="genXuiPassword()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 10px; padding: 0 12px; font-size: 12px; cursor: pointer; font-family: inherit; white-space: nowrap;">🎲 تصادفی</button>
-            </div>
-            <div class="hint">عددی ۴ تا ۹ رقم. کاربر با «شماره + این رمز» وارد اپ می‌شود.</div>
-          </div>
-
-          <div class="form-group full" style="margin-top: 6px;">
-            <button type="button" onclick="createXuiUser()" style="background: var(--accent); color: var(--accent-ink); border: none; padding: 13px 24px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
-              <span>➕ ساخت اشتراک در 3x-ui و تنظیم محدودیت اپ</span>
+            <button type="button" class="btn-xui-icon" onclick="fetchXuiUsers()" title="بروزرسانی">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
             </button>
           </div>
         </div>
 
-        <!-- Generated Result Modal / Box -->
-        <div id="newCreatedUserBox" style="display: none; margin-top: 18px; background: rgba(16,185,129,0.08); border: 1.5px solid rgba(16,185,129,0.3); border-radius: 16px; padding: 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <strong style="color: var(--success); font-size: 14px;">✅ کاربر با موفقیت در 3x-ui ساخته شد!</strong>
-            <button type="button" onclick="document.getElementById('newCreatedUserBox').style.display='none'" style="background: transparent; border: none; color: #94a3b8; font-size: 16px; cursor: pointer;">✕</button>
-          </div>
-          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">پیام آمادهٔ ارسال برای مشتری:</div>
-          <textarea id="createdSaleMsg" readonly rows="7" style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: var(--text); padding: 10px 12px; font-family: inherit; font-size: 13px; line-height: 1.8; resize: vertical; margin-bottom: 8px;"></textarea>
-          <button type="button" onclick="copyCreatedSaleMsg()" style="background: var(--success); color: #04231A; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 12.5px; margin-bottom: 12px;">📋 کپی پیام مشتری</button>
-          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
-            لینک سابسکریپشن اختصاصی:
-          </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <input type="text" id="createdSubUrl" readonly dir="ltr" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: var(--accent); padding: 8px 12px; font-family: monospace; font-size: 12.5px; flex: 1;">
-            <button type="button" onclick="copyCreatedSubUrl()" style="background: var(--success); color: #04231A; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 12.5px; white-space: nowrap;">
-              📋 کپی لینک
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Users List Card -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></span>
-            <span>لیست زنده کاربران 3x-ui و سقف دستگاه در اپ</span>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" onclick="fetchXuiUsers()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">
-              🔄 بارگذاری مجدد
-            </button>
-          </div>
-        </div>
-
-        <!-- Search Bar -->
-        <div style="display: flex; gap: 8px; margin-bottom: 14px;">
-          <input type="text" id="xuiSearchInput" placeholder="جستجوی شماره یا ایمیل کاربر..." dir="ltr" style="flex: 1;" onkeyup="if(event.key==='Enter') fetchXuiUsers()">
-          <button type="button" onclick="fetchXuiUsers()" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 12px; font-weight: 600; cursor: pointer;">
-            🔍 جستجو
-          </button>
-        </div>
-
-        <div class="table-desktop-view" style="overflow-x: auto; max-height: 480px; overflow-y: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
+        <!-- Clients Table (Desktop / Tablet) -->
+        <div class="xui-table-wrap">
+          <table class="xui-table">
             <thead>
-              <tr style="border-bottom: 1px solid var(--input-border); color: var(--text-muted); background: rgba(0,0,0,0.2);">
-                <th style="padding: 10px;">شناسه / شماره</th>
-                <th style="padding: 10px;">حجم مصرفی / کل</th>
-                <th style="padding: 10px;">انقضا</th>
-                <th style="padding: 10px;">سقف دستگاه در اپ</th>
-                <th style="padding: 10px; text-align: center;">عملیات</th>
+              <tr>
+                <th style="width: 44px; text-align: center;">فعال</th>
+                <th style="width: 70px; text-align: center;">وضعیت</th>
+                <th>کلاینت (شناسه / شماره)</th>
+                <th>اینباندهای متصل</th>
+                <th>ترافیک مصرفی / سقف</th>
+                <th>زمان باقیمانده</th>
+                <th style="text-align: center;">سقف اپ</th>
+                <th style="text-align: center; width: 140px;">عملیات</th>
               </tr>
             </thead>
             <tbody id="xuiUsersTableBody">
-              <tr>
-                <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران از 3x-ui...</td>
-              </tr>
-    </table>
+              <tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران...</td></tr>
+            </tbody>
+          </table>
         </div>
+
         <!-- Mobile Cards View for 3X-UI Users -->
-        <div class="cards-mobile-view" id="xuiUsersMobileCards"></div>    </table>
-        </div>
-      </div>
+        <div class="cards-mobile-view" id="xuiUsersMobileCards"></div>
+
       </div><!-- /subtab-content-xui -->
 
     </div><!-- /tab-users -->
@@ -3575,10 +3743,9 @@ async function fetchFreeConfigsFromWorker() {
   async function fetchXuiUsers() {
     const tbody = document.getElementById('xuiUsersTableBody');
     const cardsContainer = document.getElementById('xuiUsersMobileCards');
-    const countSpan = document.getElementById('xuiUsersCount');
     const q = (document.getElementById('xuiSearchInput')?.value || '').trim();
 
-    const loading = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران ۳X-UI...</td></tr>';
+    const loading = '<tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران ۳X-UI...</td></tr>';
     const loadingCard = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران...</div>';
     if (tbody) tbody.innerHTML = loading;
     if (cardsContainer) cardsContainer.innerHTML = loadingCard;
@@ -3592,7 +3759,7 @@ async function fetchFreeConfigsFromWorker() {
 
       if (!data.success || !Array.isArray(data.users)) {
         const msg = data.message || 'خطا در دریافت کاربران از پنل 3x-ui';
-        if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 16px;">❌ ${_xuiEsc(msg)}</td></tr>`;
+        if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--danger); padding: 16px;">❌ ${_xuiEsc(msg)}</td></tr>`;
         if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">❌ ${_xuiEsc(msg)}</div>`;
         return;
       }
@@ -3600,69 +3767,123 @@ async function fetchFreeConfigsFromWorker() {
       const users = data.users;
       cachedXuiUsers = users;
       const total = (data.total !== undefined && data.total !== null) ? data.total : users.length;
-      if (countSpan) countSpan.innerText = `(مجموع: ${total} کاربر)`;
+      
       _xuiSetBadge('cat-badge-users', total);
       _xuiSetBadge('mobile-badge-users', total);
       _xuiSetBadge('badge-users', total);
 
+      // ---------- 3X-UI Stat Counters ----------
+      let onlineCount = 0;
+      let endedCount = 0;
+      let depletingCount = 0;
+      let disabledCount = 0;
+
+      users.forEach(u => {
+        const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
+        const totalBytes = u.totalGB || 0;
+        const pct = totalBytes > 0 ? (used / totalBytes) * 100 : 0;
+        const expired = u.expiryTime > 0 && u.expiryTime < Date.now();
+        if (!u.enable) disabledCount++;
+        else if (expired) endedCount++;
+        else {
+          onlineCount++;
+          if (pct >= 80) depletingCount++;
+        }
+      });
+
+      const setStat = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      setStat('xuiStatOnline', onlineCount);
+      setStat('xuiStatEnded', endedCount);
+      setStat('xuiStatDepleting', depletingCount);
+      setStat('xuiStatDisabled', disabledCount);
+      setStat('xuiStatTotal', total);
+
       if (users.length === 0) {
-        if (tbody) tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><strong>کاربری با این مشخصات یافت نشد.</strong>'
+        const emptyRow = '<tr><td colspan="8"><div class="empty-state"><strong>کاربری با این مشخصات یافت نشد.</strong>'
           + ((document.getElementById('xuiSearchInput')?.value || '').trim()
-             ? '<br><button type="button" class="empty-action" onclick="document.getElementById(\'xuiSearchInput\').value=\'\'; fetchXuiUsers()">پاک کردن جستجو</button>'
+             ? '<br><button type="button" class="btn-xs-pill" style="margin-top:8px;" onclick="document.getElementById(\'xuiSearchInput\').value=\'\'; fetchXuiUsers()">پاک کردن جستجو</button>'
              : '') + '</div></td></tr>';
-        if (cardsContainer) cardsContainer.innerHTML = '<div class="empty-state"><strong>کاربری با این مشخصات یافت نشد.</strong>'
-          + ((document.getElementById('xuiSearchInput')?.value || '').trim()
-             ? '<br><button type="button" class="empty-action" onclick="document.getElementById(\'xuiSearchInput\').value=\'\'; fetchXuiUsers()">پاک کردن جستجو</button>'
-             : '') + '</div>';
+        if (tbody) tbody.innerHTML = emptyRow;
+        if (cardsContainer) cardsContainer.innerHTML = '<div class="empty-state">کاربری یافت نشد.</div>';
         return;
       }
 
-      // ---------- shared per-user formatting ----------
+      // ---------- Shared per-user formatting ----------
       const fmt = (u) => {
         const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
         const totalBytes = u.totalGB || 0;
-        const usedGb = (used / (1073741824)).toFixed(2);
-        const totalGb = totalBytes > 0 ? (totalBytes / (1073741824)).toFixed(1) : 0;
+        const usedGb = (used / 1073741824).toFixed(2);
+        const totalGb = totalBytes > 0 ? (totalBytes / 1073741824).toFixed(1) : 0;
         const pct = totalBytes > 0 ? Math.min(100, Math.round((used / totalBytes) * 100)) : 0;
-        let expStr = 'نامحدود';
+        let expStr = '∞ نامحدود';
         let expired = false;
+        let daysRem = '';
         if (u.expiryTime > 0) {
           const d = new Date(u.expiryTime);
           expStr = d.toLocaleDateString('fa-IR');
           expired = u.expiryTime < Date.now();
+          const msRem = u.expiryTime - Date.now();
+          const dCount = Math.ceil(msRem / 86400000);
+          daysRem = expired ? 'منقضی' : (dCount + ' روز');
         }
         const emailL = (u.email || '').toLowerCase().trim();
         const appLimit = cachedAppLimits[emailL] || 1;
         let bar = 'var(--success)';
         if (pct >= 85) bar = 'var(--danger)';
         else if (pct >= 60) bar = 'var(--warning)';
-        return { used, usedGb, totalGb, pct, expStr, expired, appLimit, bar, emailL };
+
+        let badgeClass = 'active';
+        let statusLabel = 'فعال';
+        if (!u.enable) { badgeClass = 'disabled'; statusLabel = 'غیرفعال'; }
+        else if (expired) { badgeClass = 'ended'; statusLabel = 'منقضی'; }
+        else if (pct >= 85) { badgeClass = 'depleting'; statusLabel = 'اتمام حجم'; }
+
+        return { usedGb, totalGb, pct, expStr, daysRem, expired, appLimit, bar, emailL, badgeClass, statusLabel };
       };
 
-      // ---------- desktop table ----------
+      // ---------- 3X-UI Desktop Table ----------
       if (tbody) {
         tbody.innerHTML = users.map(u => {
           const f = fmt(u);
           const email = _xuiEsc(u.email);
           return `
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <td style="padding: 10px; font-weight: 600; color: var(--text); font-family: monospace; direction: ltr; white-space: nowrap;">
-                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${u.enable ? 'var(--success)' : 'var(--danger)'}; margin-left: 6px;"></span>${email}
+            <tr>
+              <td style="text-align: center;">
+                <label class="xui-switch">
+                  <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
+                  <span class="slider"></span>
+                </label>
               </td>
-              <td style="padding: 10px; color: var(--text-2);">
-                <div style="font-size: 12px; margin-bottom: 4px;">
-                  <strong style="color: var(--text);">${f.usedGb}</strong> / <span>${f.totalGb ? f.totalGb + ' GB' : '∞'}</span>
-                  <span style="color: ${f.bar}; font-weight: 600; margin-right: 4px;">(${f.pct}%)</span>
+              <td style="text-align: center;">
+                <span class="xui-status-badge ${f.badgeClass}">${f.statusLabel}</span>
+              </td>
+              <td>
+                <div class="xui-client-cell">
+                  <span>${email}</span>
                 </div>
-                <div style="background: rgba(255,255,255,0.08); border-radius: 4px; height: 5px; width: 130px; overflow: hidden;">
+              </td>
+              <td>
+                <div class="xui-inbounds-chips">
+                  <span class="xui-inbound-chip">🇫🇮 FIN</span>
+                  <span class="xui-inbound-chip">🇹🇷 TUR</span>
+                  <span class="xui-inbound-chip">🇩🇪 GER</span>
+                </div>
+              </td>
+              <td>
+                <div style="font-size: 11.5px; font-family: monospace; direction: ltr; text-align: right;">
+                  <strong>${f.usedGb}</strong> / ${f.totalGb ? f.totalGb + ' GB' : '∞'}
+                  <span style="color: ${f.bar}; font-weight: 600;">(${f.pct}%)</span>
+                </div>
+                <div class="xui-traffic-bar">
                   <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
                 </div>
               </td>
-              <td style="padding: 10px; font-size: 11.5px; color: var(--text-muted);">
-                <span style="color: ${f.expired ? 'var(--danger)' : 'var(--text-2)'}; font-weight: 500;">${f.expStr}${f.expired ? ' <span style="font-size:10px;background:rgba(239,68,68,0.2);color:var(--danger);padding:2px 5px;border-radius:4px;">منقضی</span>' : ''}</span>
+              <td style="font-size: 12px; color: ${f.expired ? 'var(--danger)' : 'var(--text-2)'};">
+                <div>${f.daysRem ? f.daysRem : f.expStr}</div>
+                <div style="font-size: 10.5px; color: var(--text-muted);">${f.expStr}</div>
               </td>
-              <td style="padding: 10px;">
-                <select onchange="updateUserAppLimit('${email}', this.value)" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--accent); font-size: 11.5px; padding: 4px 6px; font-family: inherit;">
+              <td style="text-align: center;">
+                <select onchange="updateUserAppLimit('${email}', this.value)" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; color: var(--accent); font-size: 11px; padding: 4px 6px; font-family: inherit;">
                   <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
                   <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
                   <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
@@ -3672,64 +3893,74 @@ async function fetchFreeConfigsFromWorker() {
                   <option value="20" ${f.appLimit == 20 ? 'selected' : ''}>۲۰ دستگاه</option>
                 </select>
               </td>
-              <td style="padding: 10px; text-align: center;">
-                <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
-                  <button type="button" onclick="openXuiEditModal('${email}')" title="ویرایش حجم، انقضا، سقف دستگاه و رمز ورود به اپ" style="background: rgba(var(--accent-rgb), 0.14); border: 1px solid var(--primary); color: var(--text); border-radius: 8px; padding: 4px 10px; font-size: 11.5px; font-weight: 600; cursor: pointer; font-family: inherit;">✏️ ویرایش</button>
-                  <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" title="کیوآرکد و لینک ساب" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
-                  <button type="button" onclick="openDevicesModal('${email}')" title="دستگاه‌های متصل" style="background: rgba(var(--accent-rgb), 0.12); color: var(--accent); border: 1px solid var(--card-border); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">📱 دستگاه‌ها</button>
-                  <button type="button" onclick="promptRenewUser('${email}')" title="تمدید حجم و زمان" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🔄 تمدید</button>
-                  <button type="button" onclick="resetUserTraffic('${email}')" title="صفر کردن مصرف" style="background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">🧹 ریست</button>
-                  <button type="button" onclick="toggleUserEnable('${email}')" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? 'var(--danger)' : 'var(--success)'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 8px; padding: 4px 8px; font-size: 11.5px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
+              <td>
+                <div class="xui-actions-cell">
+                  <button type="button" class="xui-action-btn" onclick="openXuiEditModal('${email}')" title="ویرایش و رمز ورود">✏️</button>
+                  <button type="button" class="xui-action-btn" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" title="لینک و کیوآر">🔗</button>
+                  <button type="button" class="xui-action-btn" onclick="openDevicesModal('${email}')" title="نشست‌ها و دستگاه‌های فعال">📱</button>
+                  <button type="button" class="xui-action-btn" onclick="promptRenewUser('${email}')" title="تمدید">🔄</button>
+                  <button type="button" class="xui-action-btn" onclick="resetUserTraffic('${email}')" title="صفر کردن مصرف">🧹</button>
                 </div>
               </td>
             </tr>`;
         }).join('');
       }
 
-      // ---------- mobile cards ----------
+      // ---------- Mobile Cards ----------
       if (cardsContainer) {
         cardsContainer.innerHTML = users.map(u => {
           const f = fmt(u);
           const email = _xuiEsc(u.email);
           return `
             <div class="mobile-user-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px;">
-                <div style="font-weight: 700; color: var(--text); font-family: monospace; font-size: 14px; direction: ltr; display: flex; align-items: center; gap: 6px; min-width: 0; word-break: break-all;">
-                  <span style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${u.enable ? 'var(--success)' : 'var(--danger)'}; flex: none;"></span>
-                  <span>${email}</span>
-                </div>
-                <span style="font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 8px; flex: none; ${u.enable ? 'background: rgba(16,185,129,0.18); color: var(--success);' : 'background: rgba(239,68,68,0.18); color: var(--danger);'}">${u.enable ? 'فعال' : 'قطع'}</span>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div class="xui-client-cell" style="font-size: 13.5px;">${email}</div>
+                <span class="xui-status-badge ${f.badgeClass}">${f.statusLabel}</span>
               </div>
-
-              <div style="margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-bottom: 4px;">
-                  <span>مصرف: <strong style="color: var(--text);">${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
+              <div style="margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 3px;">
+                  <span>مصرف: <strong>${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
                   <span style="color: ${f.bar}; font-weight: 600;">${f.pct}%</span>
                 </div>
-                <div style="background: rgba(255,255,255,0.08); border-radius: 6px; height: 6px; width: 100%; overflow: hidden;">
+                <div class="xui-traffic-bar" style="width: 100%; height: 5px;">
                   <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
                 </div>
               </div>
-
-              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px; gap: 8px;">
-                <div>⏳ انقضا: <strong style="color: ${f.expired ? 'var(--danger)' : '#E2E8F0'};">${f.expStr}${f.expired ? ' (منقضی)' : ''}</strong></div>
-                <div style="background: rgba(var(--accent-rgb), 0.12); color: var(--accent); padding: 2px 7px; border-radius: 6px; font-weight: 600; flex: none;">📱 ${f.appLimit == 10 ? 'نامحدود' : f.appLimit + ' دستگاه'}</div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+                <span>⏳ ${f.daysRem ? f.daysRem + ' (' + f.expStr + ')' : f.expStr}</span>
+                <span>📱 ${f.appLimit} دستگاه</span>
               </div>
-
-              <div style="display: flex; gap: 8px;">
-                <button type="button" onclick="openXuiEditModal('${email}')" style="flex: 2; background: rgba(var(--accent-rgb), 0.14); border: 1px solid rgba(var(--accent-rgb), 0.45); color: var(--accent); border: 1.5px solid var(--primary); border-radius: 12px; padding: 10px 12px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit;">
-                  <span>✏️</span><span>ویرایش و رمز ورود</span>
-                </button>
-                <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="background: rgba(255,255,255,0.08); color: var(--accent); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">🎯 کیوآر</button>
-                <button type="button" onclick="toggleUserEnable('${email}')" style="background: ${u.enable ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}; color: ${u.enable ? 'var(--danger)' : 'var(--success)'}; border: 1px solid ${u.enable ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}; border-radius: 12px; padding: 10px 12px; font-size: 12px; cursor: pointer; font-family: inherit;">${u.enable ? '⏸️' : '▶️'}</button>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn-xs-pill" onclick="openXuiEditModal('${email}')" style="flex: 2; padding: 7px; font-weight: 600;">✏️ ویرایش و رمز</button>
+                <button type="button" class="btn-xs-pill" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="flex: 1; padding: 7px;">🔗 ساب</button>
+                <button type="button" class="btn-xs-pill" onclick="toggleUserEnable('${email}')" style="padding: 7px; color: ${u.enable ? 'var(--danger)' : 'var(--success)'};">${u.enable ? '⏸️' : '▶️'}</button>
               </div>
             </div>`;
         }).join('');
       }
 
     } catch (err) {
-      if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</td></tr>`;
+      if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</td></tr>`;
       if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</div>`;
+    }
+  }
+
+  // ---------------- MODAL: ADD CLIENT (3X-UI STYLE) ----------------
+  function openCreateXuiModal() {
+    const modal = document.getElementById('createXuiModalOverlay');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+    }
+    const pw = document.getElementById('newXuiPassword');
+    if (pw && !pw.value) genXuiPassword();
+  }
+
+  function closeCreateXuiModal() {
+    const modal = document.getElementById('createXuiModalOverlay');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
     }
   }
 
@@ -5059,6 +5290,94 @@ async function updateUserAppLimit(phone, maxDevices) {
   </div>
 </div>
 
+
+
+<!-- ================= MODAL: ADD CLIENT (3X-UI STYLE) ================= -->
+<div class="app-modal-overlay" id="createXuiModalOverlay" onclick="if(event.target===this) closeCreateXuiModal()">
+  <div class="app-modal" style="max-width: 520px; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+      <h3 style="font-size: 15px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; margin: 0;">
+        <span style="color: var(--accent);">➕</span>
+        <span>افزودن کلاینت جدید (3X-UI)</span>
+      </h3>
+      <button type="button" onclick="closeCreateXuiModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 4px 8px;">✕</button>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>شماره موبایل یا شناسه کاربر (Remark):</label>
+        <input type="text" id="newXuiEmail" placeholder="09170008899" dir="ltr" style="font-family: monospace;">
+        <div class="hint">شناسه برای ورود در اپلیکیشن و نام کلاینت در 3x-ui است.</div>
+      </div>
+
+      <div class="form-group">
+        <label>🔑 رمز ورود به اپلیکیشن:</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="newXuiPassword" placeholder="خالی = خودکار" dir="ltr" inputmode="numeric" maxlength="9" style="flex:1; font-family: monospace;">
+          <button type="button" onclick="genXuiPassword()" class="btn-xs-pill" style="height: 38px; padding: 0 10px; font-weight: 600;">🎲 تصادفی</button>
+        </div>
+        <div class="hint">عددی ۴ تا ۹ رقم؛ مشتری با این رمز وارد اپ می‌شود.</div>
+      </div>
+
+      <div class="form-group">
+        <label>📱 محدودیت دستگاه در اپ:</label>
+        <select id="newXuiAppLimit">
+          <option value="1" selected>۱ دستگاه (تک کاربره)</option>
+          <option value="2">۲ دستگاه</option>
+          <option value="3">۳ دستگاه</option>
+          <option value="4">۴ دستگاه</option>
+          <option value="5">۵ دستگاه</option>
+          <option value="10">۱۰ دستگاه</option>
+          <option value="20">۲۰ دستگاه (حداکثر)</option>
+        </select>
+        <div class="hint">مستقلاً در اپلیکیشن کنترل می‌شود.</div>
+      </div>
+
+      <div class="form-group full">
+        <label>حجم و مدت زمان اشتراک:</label>
+        <select id="newXuiPlan" onchange="onPlanSelectChange(this)">
+          <option value="10:30">۱۰ گیگابایت - ۳۰ روزه</option>
+          <option value="20:30">۲۰ گیگابایت - ۳۰ روزه</option>
+          <option value="30:30" selected>۳۰ گیگابایت - ۳۰ روزه</option>
+          <option value="40:30">۴۰ گیگابایت - ۳۰ روزه</option>
+          <option value="50:30">۵۰ گیگابایت - ۳۰ روزه</option>
+          <option value="100:30">۱۰۰ گیگابایت - ۳۰ روزه (ویژه)</option>
+          <option value="custom">حجم و روز دلخواه...</option>
+        </select>
+      </div>
+
+      <div class="form-group full" id="customPlanInputs" style="display: none;">
+        <label>حجم دلخواه (GB) و مدت (روز):</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="number" id="customVolGB" value="50" min="1" max="500" placeholder="حجم GB" style="flex:1;">
+          <input type="number" id="customDays" value="30" min="1" max="365" placeholder="روز" style="flex:1;">
+        </div>
+      </div>
+
+      <!-- Result box after creation -->
+      <div id="newCreatedUserBox" class="form-group full" style="display: none; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <strong style="color: var(--success); font-size: 13px;">✅ کلاینت با موفقیت ساخته شد</strong>
+          <button type="button" onclick="document.getElementById('newCreatedUserBox').style.display='none'" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;">✕</button>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">پیام آمادهٔ ارسال برای مشتری:</div>
+        <textarea id="createdSaleMsg" readonly rows="6" style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.35); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 8px 10px; font-family: inherit; font-size: 12px; line-height: 1.7; resize: vertical; margin-bottom: 6px;"></textarea>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+          <button type="button" onclick="copyCreatedSaleMsg()" class="btn-xs-pill" style="background: var(--success); color: #04231A; font-weight: 700;">📋 کپی پیام مشتری</button>
+          <button type="button" onclick="copyCreatedSubUrl()" class="btn-xs-pill">🔗 کپی لینک ساب</button>
+        </div>
+        <input type="hidden" id="createdSubUrl">
+      </div>
+
+      <div class="form-group full" style="margin-top: 6px; display: flex; gap: 8px; justify-content: flex-end;">
+        <button type="button" onclick="closeCreateXuiModal()" class="btn-xs-pill" style="padding: 10px 18px; font-size: 13px;">انصراف</button>
+        <button type="button" onclick="createXuiUser()" class="btn-xui-primary" style="padding: 10px 22px; font-size: 13px;">
+          <span>➕ ایجاد کلاینت</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal: Edit 3X-UI User (Limits & App Password) -->
 <div class="app-modal-overlay" id="xuiEditModalOverlay" onclick="if(event.target===this) closeXuiEditModal()">
