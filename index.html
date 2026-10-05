@@ -2579,25 +2579,21 @@
   }
 
   async function fetchCurrentConfig() {
-    const token = document.getElementById('ghToken').value.trim();
+    // خواندن از همان منبعی که اپلیکیشن می‌خواند (API اصلی)
     try {
-      const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONFIG_PATH}`, {
-        headers: token ? { 'Authorization': `token ${token}` } : {}
-      });
-
+      const res = await fetch(`${CF_WORKER_API}/api/remote-config?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
-        const data = await res.json();
-        currentSha = data.sha;
-        const decoded = decodeURIComponent(escape(atob(data.content)));
-        const cfg = JSON.parse(decoded);
+        const cfg = await res.json();
         populateForm(cfg);
-        document.getElementById('connStatus').innerText = 'متصل به مخزن strongvpn-panel';
+        const st = document.getElementById('connStatus');
+        if (st) st.innerText = 'متصل به API اپلیکیشن';
         return;
       }
     } catch (e) {
       console.error(e);
-      document.getElementById('connStatus').innerText = 'خطا در بارگذاری اولیه داده‌ها';
     }
+    const st = document.getElementById('connStatus');
+    if (st) st.innerText = 'خطا در بارگذاری اولیه داده‌ها';
   }
 
   function populateForm(cfg) {
@@ -3283,12 +3279,6 @@ async function fetchFreeConfigsFromWorker() {
   }
 
   async function saveAndCommitToGitHub() {
-    const token = document.getElementById('ghToken').value.trim();
-    if (!token) {
-      showToast('لطفاً ابتدا توکن شخصی گیت‌هاب را وارد کنید.', true);
-      return;
-    }
-
     const fallbacks = getFallbackUris();
 
     const configObj = {
@@ -3341,41 +3331,32 @@ async function fetchFreeConfigsFromWorker() {
       }).catch(e => console.warn('CF ad sync:', e));
     } catch (_) {}
 
-    const jsonStr = JSON.stringify(configObj, null, 2);
-    const b64Content = btoa(unescape(encodeURIComponent(jsonStr)));
-
+    // ذخیره مستقیم در API اپ (D1) — همان منبعی که اپلیکیشن می‌خواند؛ ورکر خودش به گیت‌هاب هم همگام می‌کند.
+    // PATCH فقط همین بخش‌ها را عوض می‌کند و بقیه (مثل بنر خرید) دست‌نخورده می‌ماند.
     try {
-      const payload = {
-        message: `Update Strong VPN remote config [${new Date().toISOString()}]`,
-        content: b64Content,
-        branch: 'main'
-      };
-      if (currentSha) {
-        payload.sha = currentSha;
-      }
-
-      const putRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONFIG_PATH}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `token ${token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
+      const res = await fetch(`${CF_WORKER_API}/api/remote-config`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({
+          version: configObj.version,
+          announcement: configObj.announcement,
+          endpoints: configObj.endpoints,
+          app: configObj.app,
+          fallback_configs: configObj.fallback_configs
+        })
       });
-
-      if (putRes.ok) {
-        const resData = await putRes.json();
-        currentSha = resData.content.sha;
-        showToast('تغییرات با موفقیت در گیت‌هاب ذخیره و منتشر شد!');
-        document.getElementById('lastUpdatedLabel').innerText = 'ذخیره شد: ' + new Date().toLocaleTimeString('fa-IR');
+      const d = await res.json().catch(() => ({}));
+      if (res.ok && d.ok) {
+        showToast(configObj.announcement.active ? 'ذخیره شد ✅ اعلان فعال است' : 'ذخیره شد ✅ اعلان غیرفعال شد');
+        const lbl = document.getElementById('lastUpdatedLabel');
+        if (lbl) lbl.innerText = 'ذخیره شد: ' + new Date().toLocaleTimeString('fa-IR');
+        if (typeof populateForm === 'function' && d.config) populateForm(d.config);
       } else {
-        const err = await putRes.json();
-        showToast('خطا در ذخیره مخزن: ' + (err.message || 'نامشخص'), true);
+        showToast('خطا در ذخیره: ' + (d.error || d.message || res.status), true);
       }
     } catch (e) {
       console.error(e);
-      showToast('خطا در ارتباط با سرور گیت‌هاب', true);
+      showToast('خطا در ارتباط با سرور', true);
     }
   }
 
