@@ -1863,10 +1863,21 @@
               <option value="1" selected>۱ دستگاه (تک کاربره)</option>
               <option value="2">۲ دستگاه (دو کاربره)</option>
               <option value="3">۳ دستگاه</option>
+              <option value="4">۴ دستگاه</option>
               <option value="5">۵ دستگاه</option>
-              <option value="10">نامحدود (بدون محدودیت اپ)</option>
+              <option value="10">۱۰ دستگاه</option>
+              <option value="20">۲۰ دستگاه (حداکثر)</option>
             </select>
             <div class="hint" style="color: var(--text-2);">⚡ این محدودیت مستقلاً در سرور اپلیکیشن اعمال می‌شود و به 3x-ui کاری ندارد.</div>
+          </div>
+
+          <div class="form-group">
+            <label>🔑 رمز ورود به اپلیکیشن:</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="newXuiPassword" placeholder="خالی = ساخت خودکار" dir="ltr" inputmode="numeric" maxlength="9" style="flex:1;">
+              <button type="button" onclick="genXuiPassword()" style="background: rgba(var(--accent-rgb), 0.15); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.3); border-radius: 10px; padding: 0 12px; font-size: 12px; cursor: pointer; font-family: inherit; white-space: nowrap;">🎲 تصادفی</button>
+            </div>
+            <div class="hint">عددی ۴ تا ۹ رقم. کاربر با «شماره + این رمز» وارد اپ می‌شود.</div>
           </div>
 
           <div class="form-group full" style="margin-top: 6px;">
@@ -1882,6 +1893,9 @@
             <strong style="color: var(--success); font-size: 14px;">✅ کاربر با موفقیت در 3x-ui ساخته شد!</strong>
             <button type="button" onclick="document.getElementById('newCreatedUserBox').style.display='none'" style="background: transparent; border: none; color: #94a3b8; font-size: 16px; cursor: pointer;">✕</button>
           </div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">پیام آمادهٔ ارسال برای مشتری:</div>
+          <textarea id="createdSaleMsg" readonly rows="7" style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: var(--text); padding: 10px 12px; font-family: inherit; font-size: 13px; line-height: 1.8; resize: vertical; margin-bottom: 8px;"></textarea>
+          <button type="button" onclick="copyCreatedSaleMsg()" style="background: var(--success); color: #04231A; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 12.5px; margin-bottom: 12px;">📋 کپی پیام مشتری</button>
           <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
             لینک سابسکریپشن اختصاصی:
           </div>
@@ -3926,6 +3940,12 @@ async function updateUserAppLimit(phone, maxDevices) {
     }
 
     const appLimit = parseInt(document.getElementById('newXuiAppLimit')?.value || 1, 10) || 1;
+    const fa = '۰۱۲۳۴۵۶۷۸۹';
+    const appPass = (document.getElementById('newXuiPassword')?.value || '').trim().replace(/[۰-۹]/g, d => String(fa.indexOf(d)));
+    if (appPass && !/^[1-9][0-9]{3,8}$/.test(appPass)) {
+      showToast('رمز اپ باید عددی و ۴ تا ۹ رقم باشد (بدون صفر در ابتدا)', true);
+      return;
+    }
 
     showToast('در حال ساخت کاربر در 3x-ui...');
     try {
@@ -3933,20 +3953,20 @@ async function updateUserAppLimit(phone, maxDevices) {
       const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
-        body: JSON.stringify({ email: email, volume_gb: volGB, days: days })
+        body: JSON.stringify({ email: email, volume_gb: volGB, days: days, password: appPass, max_devices: appLimit })
       });
       const data = await res.json();
       if (!data.success) {
         showToast('خطا در 3x-ui: ' + (data.message || 'نامشخص'), true);
         return;
       }
-
-      // 2. Set App-only Device Limit in Cloudflare
-      await fetch(`${CF_WORKER_API}/api/admin/app-limits`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
-        body: JSON.stringify({ phone: email, max_devices: appLimit })
-      });
+      // (محدودیت دستگاه و رمز اپ در همان درخواست ساخت ثبت می‌شوند)
+      const toFa = v => String(v).replace(/[0-9]/g, d => fa[d]);
+      const msgEl = document.getElementById('createdSaleMsg');
+      if (msgEl) {
+        msgEl.value = `✅ اشتراک شما فعال شد\n\n👤 نام کاربری: ${data.email}\n🔑 رمز ورود اپ: ${data.password}\n📦 حجم: ${toFa(data.volume_gb)} گیگابایت\n⏳ مدت: ${toFa(data.days)} روز\n📱 تعداد دستگاه مجاز: ${toFa(data.max_devices)}\n\nبرای ورود، نام کاربری و رمز را در اپلیکیشن وارد کنید.\nپشتیبانی: @Daryafti_Services`;
+      }
+      const pwEl = document.getElementById('newXuiPassword'); if (pwEl) pwEl.value = '';
 
       // 3. Show created link
       const subUrl = `https://sb1.dev-stong.ir:2053/sub/${data.subId}`;
@@ -3963,6 +3983,17 @@ async function updateUserAppLimit(phone, maxDevices) {
     } catch (e) {
       showToast('خطا در ارتباط با سرور: ' + e.message, true);
     }
+  }
+
+  function genXuiPassword() {
+    const a = new Uint32Array(1); crypto.getRandomValues(a);
+    const el = document.getElementById('newXuiPassword');
+    if (el) el.value = String(100000 + (a[0] % 900000));
+  }
+
+  function copyCreatedSaleMsg() {
+    const el = document.getElementById('createdSaleMsg');
+    if (el && el.value) { navigator.clipboard.writeText(el.value); showToast('پیام مشتری کپی شد!'); }
   }
 
   function copyCreatedSubUrl() {
