@@ -1,5 +1,5 @@
 {
-  "version": 1791191997106,
+  "version": 1791192599534,
   "announcement": {
     "id": 1790267432,
     "active": true,
@@ -27,13 +27,13 @@
   "fallback_configs": [],
   "clear_cache_revision": 4,
   "home_banner": {
-    "enabled": true,
+    "enabled": false,
     "show_for": "all",
-    "title": "خرید و تمدید اشتراک",
-    "subtitle": "خرید آنلاین و تحویل آنی از وب‌سایت",
-    "button_text": "خرید اشتراک",
+    "title": "",
+    "subtitle": "",
+    "button_text": "",
     "url": "",
-    "color": "#0EA5E9",
+    "color": "#0ea5e9",
     "icon": "shop"
   }
 }
