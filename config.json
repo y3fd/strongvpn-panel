@@ -1,5 +1,5 @@
 {
-  "version": 1791188193392,
+  "version": 1791191997106,
   "announcement": {
     "id": 1790267432,
     "active": true,
@@ -25,5 +25,15 @@
     "windows_portable_url": "https://auth.djanah99.ir/download/windows-portable"
   },
   "fallback_configs": [],
-  "clear_cache_revision": 4
+  "clear_cache_revision": 4,
+  "home_banner": {
+    "enabled": true,
+    "show_for": "all",
+    "title": "خرید و تمدید اشتراک",
+    "subtitle": "خرید آنلاین و تحویل آنی از وب‌سایت",
+    "button_text": "خرید اشتراک",
+    "url": "",
+    "color": "#0EA5E9",
+    "icon": "shop"
+  }
 }
