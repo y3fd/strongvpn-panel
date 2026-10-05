@@ -1618,6 +1618,40 @@
       </div>
     </div>
 
+    <div class="card" id="homeBannerCard">
+      <div class="card-header">
+        <div class="card-title"><span>🛒 دکمه/بنر خرید صفحهٔ اصلی اپ (از طریق API)</span></div>
+        <label class="switch-container">
+          <span style="font-size: 13px; font-weight: 600;">فعال</span>
+          <div class="switch"><input type="checkbox" id="hbEnabled"><span class="slider"></span></div>
+        </label>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>عنوان:</label><input type="text" id="hbTitle" placeholder="خرید و تمدید اشتراک"></div>
+        <div class="form-group"><label>زیرعنوان:</label><input type="text" id="hbSubtitle" placeholder="خرید آنلاین و تحویل آنی از وب‌سایت"></div>
+        <div class="form-group"><label>متن دکمه:</label><input type="text" id="hbButton" placeholder="خرید اشتراک"></div>
+        <div class="form-group"><label>نمایش برای:</label>
+          <select id="hbShowFor">
+            <option value="all">همهٔ کاربران</option>
+            <option value="free">فقط کاربران رایگان</option>
+            <option value="paid">فقط کاربران دارای اشتراک</option>
+            <option value="expiring">رایگان + رو به اتمام/منقضی</option>
+          </select></div>
+        <div class="form-group full"><label>لینک (خالی = سایت فروشگاه):</label>
+          <input type="text" id="hbUrl" dir="ltr" placeholder="https://shop.djanah99.ir/?phone={phone}">
+          <div class="hint">عبارت <code dir="ltr">{phone}</code> با شمارهٔ کاربر جایگزین می‌شود. لینک تلگرام هم مجاز است.</div></div>
+        <div class="form-group"><label>رنگ:</label><input type="color" id="hbColor" value="#0ea5e9" style="height: 42px; padding: 2px;"></div>
+        <div class="form-group"><label>آیکون:</label>
+          <select id="hbIcon">
+            <option value="shop">🛍 فروشگاه</option><option value="bolt">⚡ برق</option><option value="gift">🎁 هدیه</option>
+            <option value="star">⭐ ستاره</option><option value="renew">🔄 تمدید</option><option value="support">🎧 پشتیبانی</option>
+          </select></div>
+        <div class="form-group full">
+          <button type="button" onclick="saveHomeBanner()" style="background: var(--accent); color: var(--accent-ink); border: none; padding: 12px 24px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; width: 100%;">💾 ذخیره و اعمال روی همهٔ اپ‌ها</button>
+          <div class="hint">با هر بار باز شدن اپ اعمال می‌شود؛ نیازی به آپدیت اپ نیست.</div>
+        </div>
+      </div>
+    </div>
     </div><!-- /tab-announcement -->
 
     <!-- Tab: Users Management (Dual System: Internal DB + 3X-UI) -->
@@ -4764,6 +4798,32 @@ async function updateUserAppLimit(phone, maxDevices) {
     localStorage.setItem('svpn_active_category', cat);
     localStorage.setItem('svpn_active_tab', tabToShow);
   }
+
+  async function loadHomeBanner() {
+    try {
+      const r = await fetch(`${CF_WORKER_API}/api/remote-config?t=${Date.now()}`);
+      const c = await r.json(); const b = c.home_banner || {};
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+      const en = document.getElementById('hbEnabled'); if (en) en.checked = b.enabled !== false;
+      set('hbTitle', b.title || ''); set('hbSubtitle', b.subtitle || ''); set('hbButton', b.button_text || '');
+      set('hbShowFor', b.show_for || 'all'); set('hbUrl', b.url || ''); set('hbColor', (b.color || '#0ea5e9').toLowerCase()); set('hbIcon', b.icon || 'shop');
+    } catch (_) {}
+  }
+
+  async function saveHomeBanner() {
+    const v = id => (document.getElementById(id)?.value || '').trim();
+    const url = v('hbUrl');
+    if (url && !/^(https?:\/\/|tg:\/\/)/.test(url)) { showToast('لینک باید با https:// یا tg:// شروع شود', true); return; }
+    const banner = { enabled: !!document.getElementById('hbEnabled')?.checked, show_for: v('hbShowFor') || 'all',
+      title: v('hbTitle'), subtitle: v('hbSubtitle'), button_text: v('hbButton'), url: url, color: v('hbColor'), icon: v('hbIcon') || 'shop' };
+    try {
+      const r = await fetch(`${CF_WORKER_API}/api/remote-config`, { method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET }, body: JSON.stringify({ home_banner: banner }) });
+      const d = await r.json();
+      showToast(d.ok ? 'بنر صفحهٔ اصلی ذخیره شد ✅' : 'خطا در ذخیره', !d.ok);
+    } catch (e) { showToast('خطا در ارتباط با سرور', true); }
+  }
+  document.addEventListener('DOMContentLoaded', loadHomeBanner);
 
   function switchTab(name) {
     if (name === 'users') {
