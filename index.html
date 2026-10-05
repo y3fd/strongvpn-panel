@@ -1770,9 +1770,12 @@
               <label>🔒 سقف دستگاه همزمان در اپلیکیشن:</label>
               <select id="intNewMaxDevices">
                 <option value="1" selected>۱ دستگاه (تک کاربره)</option>
-                <option value="2">۲ دستگاه (دو کاربره)</option>
+                <option value="2">۲ دستگاه</option>
                 <option value="3">۳ دستگاه</option>
+                <option value="4">۴ دستگاه</option>
                 <option value="5">۵ دستگاه</option>
+                <option value="10">۱۰ دستگاه</option>
+                <option value="20">۲۰ دستگاه (حداکثر)</option>
               </select>
               <div class="hint" style="color: var(--text-2);">کنترل دقیق بر روی تعداد نشست‌های آنلاین هم‌زمان</div>
             </div>
@@ -3682,8 +3685,10 @@ async function fetchFreeConfigsFromWorker() {
                   <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
                   <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
                   <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
+                  <option value="4" ${f.appLimit == 4 ? 'selected' : ''}>۴ دستگاه</option>
                   <option value="5" ${f.appLimit == 5 ? 'selected' : ''}>۵ دستگاه</option>
-                  <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>نامحدود</option>
+                  <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>۱۰ دستگاه</option>
+                  <option value="20" ${f.appLimit == 20 ? 'selected' : ''}>۲۰ دستگاه</option>
                 </select>
               </td>
               <td style="padding: 10px; text-align: center;">
@@ -5032,11 +5037,13 @@ async function updateUserAppLimit(phone, maxDevices) {
       <div class="form-group">
         <label>🔒 سقف دستگاه‌های مجاز:</label>
         <select id="intEditMaxDevices">
-          <option value="1">۱ دستگاه</option>
+          <option value="1">۱ دستگاه (تک کاربره)</option>
           <option value="2">۲ دستگاه</option>
           <option value="3">۳ دستگاه</option>
+          <option value="4">۴ دستگاه</option>
           <option value="5">۵ دستگاه</option>
           <option value="10">۱۰ دستگاه</option>
+          <option value="20">۲۰ دستگاه (حداکثر)</option>
         </select>
       </div>
 
@@ -5118,11 +5125,13 @@ async function updateUserAppLimit(phone, maxDevices) {
       <div class="form-group full">
         <label>📱 سقف اتصال همزمان در اپلیکیشن (Device Limit):</label>
         <select id="xuiEditMaxDevices" style="background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 12px; color: var(--text); padding: 10px 12px; width: 100%;">
-          <option value="1">۱ دستگاه (تک‌کاربره - استاندارد)</option>
-          <option value="2">۲ دستگاه (دو کاربره)</option>
+          <option value="1">۱ دستگاه (تک کاربره)</option>
+          <option value="2">۲ دستگاه</option>
           <option value="3">۳ دستگاه</option>
-          <option value="5">۵ دستگاه (خانوادگی)</option>
-          <option value="10">نامحدود (بدون سقف ورود)</option>
+          <option value="4">۴ دستگاه</option>
+          <option value="5">۵ دستگاه</option>
+          <option value="10">۱۰ دستگاه</option>
+          <option value="20">۲۰ دستگاه (حداکثر)</option>
         </select>
         <div class="hint">در صورت رسیدن به این سقف، دستگاه جدید برای ورود با هشدار خطا مواجه می‌شود.</div>
       </div>
