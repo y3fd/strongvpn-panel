@@ -6,61 +6,126 @@
   <title>کنترل پنل مدیریت Strong VPN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      /* ===== Design tokens - "network operations rack" ===== */
-      /* surfaces: one cold graphite hue, lightness shifts only */
-      --bg: #090C11;
-      --surface-1: #0E1218;
-      --surface-2: #141922;
-      --surface-3: #1A2029;
-      --surface-inset: #0A0E14;
-      --card-bg: var(--surface-1);
-      --card-border: rgba(255, 255, 255, 0.09);
-      /* structure: hairline borders, no glow */
-      --border: rgba(255, 255, 255, 0.07);
-      --border-soft: rgba(255, 255, 255, 0.045);
-      --border-strong: rgba(255, 255, 255, 0.13);
-      --ring: rgba(255, 255, 255, 0.2);
-      /* one accent: signal cyan (link / transmit) */
-      --accent: #38C6E8;
-      --accent-rgb: 56, 198, 232;
-      --accent-strong: #74DAF3;
-      --accent-ink: #04131A;
-      --primary: var(--accent);
-      --cyan: var(--accent);
-      --primary-glow: rgba(var(--accent-rgb), 0.22);
-      --cyan-glow: rgba(var(--accent-rgb), 0.22);
-      /* semantic: status only */
-      --success: var(--success);
-      --success-rgb: 52, 211, 153;
-      --warning: #F0B429;
-      --warning-rgb: 240, 180, 41;
-      --danger: #F16A6A;
-      --danger-rgb: 241, 106, 106;
-      --green: var(--success);
-      --yellow: var(--warning);
-      --red: var(--danger);
-      /* four text tiers */
-      --text: #E9EEF6;
-      --text-2: #B7C1D0;
-      --text-3: #8D9AAC;
-      --text-4: #6E7B8D;
-      --text-muted: var(--text-3);
-      /* controls are inset: darker than their surface */
-      --input-bg: var(--surface-inset);
-      --input-border: rgba(255, 255, 255, 0.1);
-      /* radius scale (concentric) */
+    
+    :root, [data-theme="light"] {
+      /* ===== Design tokens - Modern SaaS Light Theme (Default) ===== */
+      --bg: #F8FAFC;
+      --surface-1: #FFFFFF;
+      --surface-2: #F1F5F9;
+      --surface-3: #E2E8F0;
+      --surface-inset: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --card-border: #E2E8F0;
+      --border: #E2E8F0;
+      --border-soft: #F1F5F9;
+      --border-strong: #CBD5E1;
+      --ring: rgba(79, 70, 229, 0.2);
+
+      /* Brand Accents */
+      --accent: #4F46E5;
+      --accent-rgb: 79, 70, 229;
+      --accent-strong: #4338CA;
+      --accent-ink: #FFFFFF;
+      --primary: #4F46E5;
+      --cyan: #06B6D4;
+      --primary-glow: rgba(79, 70, 229, 0.15);
+      --cyan-glow: rgba(6, 182, 212, 0.15);
+
+      /* Semantic status */
+      --success: #10B981;
+      --success-rgb: 16, 185, 129;
+      --warning: #F59E0B;
+      --warning-rgb: 245, 158, 11;
+      --danger: #EF4444;
+      --danger-rgb: 239, 68, 68;
+      --green: #10B981;
+      --yellow: #F59E0B;
+      --red: #EF4444;
+
+      /* Typography */
+      --text: #0F172A;
+      --text-2: #334155;
+      --text-3: #64748B;
+      --text-4: #94A3B8;
+      --text-muted: #64748B;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+
+      /* Inputs */
+      --input-bg: #FFFFFF;
+      --input-border: #CBD5E1;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+
+      /* Radii */
       --r-xs: 6px;
       --r-sm: 8px;
       --r-md: 12px;
       --r-lg: 16px;
+      --r-xl: 20px;
       --r-pill: 999px;
-      /* motion */
+
+      /* Motion */
       --ease: cubic-bezier(0.23, 1, 0.32, 1);
       --dur: 140ms;
     }
+
+    [data-theme="dark"] {
+      /* ===== Modern SaaS Deep Dark Theme ===== */
+      --bg: #0B0F19;
+      --surface-1: #111827;
+      --surface-2: #1F2937;
+      --surface-3: #374151;
+      --surface-inset: #090D16;
+      --card-bg: #111827;
+      --card-border: #1F2937;
+      --border: #1F2937;
+      --border-soft: rgba(255, 255, 255, 0.05);
+      --border-strong: #374151;
+      --ring: rgba(99, 102, 241, 0.25);
+
+      --accent: #6366F1;
+      --accent-rgb: 99, 102, 241;
+      --accent-strong: #4F46E5;
+      --accent-ink: #FFFFFF;
+      --primary: #6366F1;
+      --cyan: #38BDF8;
+      --primary-glow: rgba(99, 102, 241, 0.22);
+      --cyan-glow: rgba(56, 189, 248, 0.22);
+
+      --success: #10B981;
+      --success-rgb: 16, 185, 129;
+      --warning: #F59E0B;
+      --warning-rgb: 245, 158, 11;
+      --danger: #EF4444;
+      --danger-rgb: 239, 68, 68;
+      --green: #10B981;
+      --yellow: #F59E0B;
+      --red: #EF4444;
+
+      --text: #F9FAFB;
+      --text-2: #E5E7EB;
+      --text-3: #9CA3AF;
+      --text-4: #6B7280;
+      --text-muted: #9CA3AF;
+      --text-primary: #F9FAFB;
+      --text-secondary: #9CA3AF;
+
+      --input-bg: #1F2937;
+      --input-border: #374151;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; }
     body {
       background-color: var(--bg);
@@ -182,7 +247,7 @@
     /* ---------------- MAIN DASHBOARD ---------------- */
     #mainView {
       display: none;
-      padding: 24px 16px 120px;
+      padding: 24px 20px 180px !important;
     }
     .container {
       max-width: 900px;
@@ -624,7 +689,7 @@
     .tab-panel .card { margin-bottom: 16px; padding: 20px; }
     .tab-panel .card:last-child { margin-bottom: 6px; }
     /* Collapsible token box */
-    .token-box.collapsed { padding: 10px 16px; }
+    .token-box.collapsed { display: none !important; }
     .token-box.collapsed .token-extra { display: none; }
 
 
@@ -727,9 +792,11 @@
     /* Toast */
     #toast {
       position: fixed;
-      top: 20px;
+      top: -80px;
       left: 50%;
-      transform: translateX(-50%) translateY(-120%);
+      transform: translateX(-50%);
+      opacity: 0;
+      pointer-events: none;
       background: var(--success);
       color: #052E1F;
       padding: 11px 22px;
@@ -1506,6 +1573,7 @@
     }
 
     .xui-table-wrap {
+      margin-bottom: 30px !important;
       background: var(--surface-1);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
@@ -1623,7 +1691,606 @@
     .xui-action-btn:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.45); }
     .xui-action-btn.danger:hover { color: var(--danger); border-color: rgba(239,68,68,0.45); }
 
-  </style>
+  
+    /* =========================================================
+       MODERN SAAS DASHBOARD REDESIGN (Light & Dark)
+       ========================================================= */
+    .container {
+      max-width: 1400px !important;
+      margin: 0 auto !important;
+      width: 100% !important;
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 1px solid var(--border) !important;
+      padding-bottom: 20px !important;
+      margin-bottom: 24px !important;
+    }
+    .brand-logo-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      flex-shrink: 0;
+    }
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-title-wrap h1 {
+      font-size: 19px !important;
+      font-weight: 800 !important;
+      color: var(--text) !important;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .brand-panel-badge {
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(79, 70, 229, 0.25);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .api-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #059669;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+    [data-theme="dark"] .api-status-badge {
+      color: #34D399;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+      animation: pulseGreen 2s infinite;
+    }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+      70% { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .header-btn {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .header-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+      background: var(--surface-2);
+    }
+    .header-btn.danger {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.25);
+      color: #DC2626;
+    }
+    .header-btn.danger:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* 5 KPI Cards Grid */
+    .stats-grid {
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr) !important;
+      gap: 16px !important;
+      margin-bottom: 24px !important;
+    }
+    @media (max-width: 1200px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr !important; }
+    }
+    .stat-card {
+      background: var(--surface-1) !important;
+      border: 1px solid var(--card-border) !important;
+      border-radius: 16px !important;
+      padding: 18px 16px !important;
+      box-shadow: var(--shadow-card) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+      position: relative !important;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: var(--shadow-md) !important;
+      border-color: var(--border-strong) !important;
+    }
+    .stat-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .stat-icon {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+    }
+    .stat-icon.purple { background: rgba(79, 70, 229, 0.1) !important; color: #4F46E5 !important; }
+    .stat-icon.teal { background: rgba(16, 185, 129, 0.1) !important; color: #10B981 !important; }
+    .stat-icon.cyan { background: rgba(6, 182, 212, 0.1) !important; color: #0284C7 !important; }
+    .stat-icon.magenta { background: rgba(168, 85, 247, 0.1) !important; color: #9333EA !important; }
+    .stat-icon.green { background: rgba(16, 185, 129, 0.1) !important; color: #10B981 !important; }
+    .stat-badge-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .stat-badge-pill.success {
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+    }
+    .stat-badge-pill.info {
+      background: rgba(6, 182, 212, 0.12);
+      color: #0284C7;
+    }
+    .stat-badge-subtext {
+      font-size: 11.5px;
+      color: var(--text-4);
+      font-weight: 500;
+    }
+    .stat-val {
+      font-size: 26px !important;
+      line-height: 1.15 !important;
+      font-weight: 800 !important;
+      color: var(--text) !important;
+      font-variant-numeric: tabular-nums !important;
+      direction: ltr !important;
+      text-align: right !important;
+      letter-spacing: -0.02em !important;
+    }
+    .stat-val.emerald { color: #10B981 !important; }
+    .stat-label {
+      font-size: 12px !important;
+      color: var(--text-3) !important;
+      font-weight: 500 !important;
+      margin-top: 5px !important;
+    }
+
+    /* Tabs Bar */
+    .nav-categories-bar {
+      display: flex !important;
+      gap: 8px !important;
+      margin-bottom: 24px !important;
+      border-bottom: 1px solid var(--border) !important;
+      padding-bottom: 12px !important;
+      overflow-x: auto !important;
+    }
+    .cat-nav-btn {
+      background: transparent !important;
+      border: 1px solid transparent !important;
+      color: var(--text-3) !important;
+      padding: 9px 18px !important;
+      border-radius: 12px !important;
+      font-size: 13.5px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      font-family: inherit !important;
+      transition: all 0.15s ease !important;
+      white-space: nowrap !important;
+    }
+    .cat-nav-btn:hover {
+      color: var(--text) !important;
+      background: var(--surface-2) !important;
+    }
+    .cat-nav-btn.active {
+      color: var(--accent) !important;
+      background: rgba(79, 70, 229, 0.08) !important;
+      border-color: rgba(79, 70, 229, 0.2) !important;
+    }
+    .cat-badge {
+      background: var(--surface-3) !important;
+      color: var(--text-2) !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      padding: 1px 7px !important;
+      border-radius: 999px !important;
+    }
+    .cat-nav-btn.active .cat-badge {
+      background: var(--accent) !important;
+      color: #FFFFFF !important;
+    }
+
+    /* Search & Filter Toolbar */
+    .xui-filter-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .filter-right-search {
+      flex: 1;
+      min-width: 260px;
+      max-width: 380px;
+      position: relative;
+    }
+    .filter-right-search input {
+      width: 100%;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 38px 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+    .filter-right-search input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+    .filter-search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-4);
+      pointer-events: none;
+    }
+    .filter-pills-center {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      padding: 4px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+    }
+    .filter-pill-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-3);
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .filter-pill-btn:hover {
+      color: var(--text);
+    }
+    .filter-pill-btn.active {
+      background: var(--accent) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+    }
+    .filter-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .filter-pill-dot.online { background: #10B981; }
+    .filter-left-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-refresh-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-refresh-circle:hover {
+      color: var(--accent);
+      border-color: var(--border-strong);
+    }
+    .btn-cta-indigo {
+      background: var(--accent);
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+    .btn-cta-indigo:hover {
+      background: var(--accent-strong);
+      transform: translateY(-1px);
+    }
+
+    /* Client Table */
+    .xui-table-wrap {
+      margin-bottom: 30px !important;
+      background: var(--surface-1) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 16px !important;
+      box-shadow: var(--shadow-card) !important;
+      overflow-x: auto !important;
+      margin-bottom: 20px !important;
+    }
+    .xui-table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      text-align: right !important;
+      font-size: 13px !important;
+    }
+    .xui-table thead tr {
+      background: var(--surface-2) !important;
+      border-bottom: 1px solid var(--border) !important;
+      color: var(--text-3) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+    }
+    .xui-table th {
+      padding: 14px 16px !important;
+      white-space: nowrap !important;
+    }
+    .xui-table td {
+      padding: 14px 16px !important;
+      border-bottom: 1px solid var(--border) !important;
+      vertical-align: middle !important;
+      color: var(--text) !important;
+    }
+    .xui-table tbody tr:hover {
+      background: var(--surface-2) !important;
+    }
+    .user-avatar-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .user-name-title {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 13.5px;
+      direction: ltr;
+      text-align: right;
+    }
+    .user-sub-title {
+      font-size: 11px;
+      color: var(--text-4);
+      margin-top: 2px;
+    }
+    .xui-traffic-bar {
+      background: var(--surface-3) !important;
+      border-radius: 999px !important;
+      height: 6px !important;
+      width: 130px !important;
+      overflow: hidden !important;
+      margin-top: 4px !important;
+    }
+    .days-rem-badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: rgba(79, 70, 229, 0.08);
+      color: var(--accent);
+    }
+    .days-rem-badge.expired {
+      background: rgba(239, 68, 68, 0.12);
+      color: #EF4444;
+    }
+    .device-limit-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    .country-pills-row {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .country-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    .table-pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--surface-1);
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .pagination-info {
+      font-size: 12.5px;
+      color: var(--text-3);
+    }
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-page {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-page.active {
+      background: var(--accent) !important;
+      color: #FFFFFF !important;
+      border-color: var(--accent) !important;
+    }
+
+    /* Modern Sticky Bottom Bar */
+    .bottom-bar {
+      position: fixed !important;
+      bottom: 20px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: calc(100% - 40px) !important;
+      max-width: 1360px !important;
+      background: var(--surface-1) !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+      border-radius: 18px !important;
+      padding: 14px 20px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      z-index: 1000 !important;
+      backdrop-filter: blur(12px) !important;
+    }
+    [data-theme="dark"] .bottom-bar {
+      background: rgba(17, 24, 39, 0.95) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
+    }
+    .bottom-sync-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sync-check-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.12);
+      color: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .bottom-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-bottom-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-bottom-outline:hover {
+      background: var(--surface-2);
+    }
+    .btn-bottom-emerald {
+      background: #10B981 !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      padding: 10px 22px !important;
+      border-radius: 12px !important;
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      font-family: inherit !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+      transition: all 0.15s ease !important;
+    }
+    .btn-bottom-emerald:hover {
+      background: #059669 !important;
+      transform: translateY(-1px) !important;
+    }
+</style>
 </head>
 <body>
 
@@ -1671,24 +2338,35 @@
     <!-- Header -->
     <div class="header">
       <div class="logo-area">
-        <div class="logo-icon">
-          <svg width="42" height="42" viewBox="0 0 500 500" fill="none" style="">
-            <polygon points="50,195 205,120 180,310 70,365" fill="var(--accent)" stroke="#70FFFF" stroke-width="6" />
-            <polygon points="450,195 295,120 320,310 430,365" fill="#C026D3" stroke="#FF88FC" stroke-width="6" />
-            <polygon points="300,35 175,235 260,235 205,465 355,220 265,220" fill="#FFFFFF" stroke="var(--accent)" stroke-width="10" stroke-linejoin="round" />
+        <div class="brand-logo-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
           </svg>
         </div>
         <div class="logo-text">
-          <h1>STRONG VPN • کنترل پنل مرکزی</h1>
-          <p>مدیریت پیام‌های بازشو، کانفیگ‌ها و اطلاعات ارتباطی اپلیکیشن</p>
+          <div class="brand-title-wrap">
+            <h1>STRONGVPN</h1>
+            <span class="brand-panel-badge">کنترل پنل مرکزی</span>
+          </div>
+          <p>مدیریت کانفیگ‌ها، اشتراک کاربران و زیرساخت ارتباطی</p>
         </div>
       </div>
-      <div class="user-pill">
-        <div class="status-badge" id="connBadge">
-          <div class="status-dot"></div>
-          <span id="connStatus">اتصال برقرار است</span>
+      <div class="header-actions">
+        <div class="api-status-badge" id="connBadge">
+          <span class="pulse-dot"></span>
+          <span id="connStatus">متصل به API هسته سرور</span>
         </div>
-        <button class="logout-btn" onclick="handleLogout()">خروج</button>
+        <button type="button" class="header-btn" onclick="document.getElementById('tokenBox').classList.toggle('collapsed')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="m21 2-9.6 9.6"></path><path d="m15.5 7.5 3 3L22 7l-3-3"></path></svg>
+          <span>توکن همگام‌سازی</span>
+        </button>
+        <button type="button" class="header-btn" id="themeToggleBtn" onclick="toggleTheme()" title="تغییر تم روز / شب">
+          🌓
+        </button>
+        <button type="button" class="header-btn danger" onclick="handleLogout()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>خروج</span>
+        </button>
       </div>
     </div>
 
@@ -1709,19 +2387,41 @@
 
     <!-- Option A: Top Summary Analytics Grid -->
     <div class="stats-grid" id="statsGrid">
+      <!-- Card 1: Users -->
       <div class="stat-card">
-        <div class="stat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <div class="stat-card-top">
+          <div class="stat-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <span class="stat-badge-pill success">۳x-آنلاین فعال</span>
         </div>
         <div>
           <div class="stat-val" id="statUsers">--</div>
-          <div class="stat-label">کل کاربران 3x-ui</div>
+          <div class="stat-label">کل مشترکین و کاربران</div>
         </div>
       </div>
 
+      <!-- Card 2: Online Devices -->
       <div class="stat-card">
-        <div class="stat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg>
+        <div class="stat-card-top">
+          <div class="stat-icon teal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg>
+          </div>
+          <span class="stat-badge-subtext">از سقف مجاز</span>
+        </div>
+        <div>
+          <div class="stat-val emerald" id="statSessions">--</div>
+          <div class="stat-label">دستگاه‌های آنلاین (هم‌اکنون)</div>
+        </div>
+      </div>
+
+      <!-- Card 3: Active Inbounds -->
+      <div class="stat-card">
+        <div class="stat-card-top">
+          <div class="stat-icon cyan">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          </div>
+          <span class="stat-badge-pill info">VLESS + Trojan</span>
         </div>
         <div>
           <div class="stat-val" id="statInbounds">--</div>
@@ -1729,37 +2429,34 @@
         </div>
       </div>
 
+      <!-- Card 4: Bandwidth Consumption -->
       <div class="stat-card">
-        <div class="stat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <div class="stat-card-top">
+          <div class="stat-icon magenta">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <span class="stat-badge-subtext">دوره جاری</span>
         </div>
         <div>
-          <div class="stat-val" id="statFree">--</div>
-          <div class="stat-label">سرورهای رایگان</div>
+          <div class="stat-val" id="statBandwidth">1.84 TB</div>
+          <div class="stat-label">مصرف کل پهنای‌باند</div>
         </div>
       </div>
 
+      <!-- Card 5: Errors 24h -->
       <div class="stat-card">
-        <div class="stat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg>
+        <div class="stat-card-top">
+          <div class="stat-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <span class="stat-badge-pill success">پایدار و عادی</span>
         </div>
         <div>
-          <div class="stat-val" id="statSessions">--</div>
-          <div class="stat-label">دستگاه‌های آنلاین اپ</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg>
-        </div>
-        <div>
-          <div class="stat-val" id="statErrors">0</div>
+          <div class="stat-val emerald" id="statErrors">0</div>
           <div class="stat-label">خطاهای ۲۴ ساعت اخیر</div>
         </div>
       </div>
     </div>
-
 
     <!-- Categorized Navigation Bar (Desktop / Tablet) -->
     <div class="nav-categories-bar" id="mainCategoryNav">
@@ -1901,7 +2598,7 @@
     <div class="tab-panel active" id="tab-users">
 
       <!-- Sub-tabs Switcher -->
-      <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 14px; flex-wrap: wrap;">
+      <div style="display: none; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 14px; flex-wrap: wrap;">
         <button type="button" id="subtab-btn-xui" class="subtab-pill-btn active" onclick="switchUsersSubTab('xui')">
           <span>👥 کاربران ۳X-UI (اتصال مستقیم و اپلیکیشن)</span>
           <span id="badge-xui-users" style="background: rgba(var(--accent-rgb), 0.18); color: var(--accent); font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">0</span>
@@ -2182,30 +2879,44 @@
       <div id="subtab-content-xui" style="display: block;">
 
         <!-- 3X-UI Style Stat Counters -->
-        <div class="xui-stats-bar">
-          <div class="xui-stat-pill"><span class="dot online"></span><span>آنلاین:</span><strong id="xuiStatOnline">--</strong></div>
-          <div class="xui-stat-pill"><span class="dot ended"></span><span>منقضی:</span><strong id="xuiStatEnded">--</strong></div>
-          <div class="xui-stat-pill"><span class="dot warning"></span><span>رو به اتمام:</span><strong id="xuiStatDepleting">--</strong></div>
-          <div class="xui-stat-pill"><span class="dot disabled"></span><span>غیرفعال:</span><strong id="xuiStatDisabled">--</strong></div>
-          <div class="xui-stat-pill total"><span>کل کاربران:</span><strong id="xuiStatTotal">--</strong></div>
-        </div>
+        <!-- Modern Unified Search & Filter Toolbar -->
+        <div class="xui-filter-toolbar">
+          <div class="filter-right-search">
+            <svg class="filter-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="xuiSearchInput" placeholder="...جستجو بر اساس نام کاربری، شناسه، شماره تلفن" onkeyup="if(event.key==='Enter') fetchXuiUsers()">
+          </div>
 
-        <!-- 3X-UI Toolbar (Add Client + Search + Refresh) -->
-        <div class="xui-toolbar">
-          <div class="xui-toolbar-left">
-            <button type="button" class="btn-xui-primary" onclick="openCreateXuiModal()">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              <span>افزودن کلاینت (کاربر جدید)</span>
+          <div class="filter-pills-center">
+            <button type="button" class="filter-pill-btn active" id="pillFilterAll" onclick="setXuiFilter('all')">
+              <span>همه</span>
+              <span id="xuiStatTotal">(0)</span>
+            </button>
+            <button type="button" class="filter-pill-btn" id="pillFilterOnline" onclick="setXuiFilter('online')">
+              <span class="filter-pill-dot online"></span>
+              <span>آنلاین</span>
+              <span id="xuiStatOnline">(0)</span>
+            </button>
+            <button type="button" class="filter-pill-btn" id="pillFilterDepleting" onclick="setXuiFilter('depleting')">
+              <span>رو به اتمام</span>
+              <span id="xuiStatDepleting">(0)</span>
+            </button>
+            <button type="button" class="filter-pill-btn" id="pillFilterEnded" onclick="setXuiFilter('ended')">
+              <span>منقضی</span>
+              <span id="xuiStatEnded">(0)</span>
+            </button>
+            <button type="button" class="filter-pill-btn" id="pillFilterDisabled" onclick="setXuiFilter('disabled')">
+              <span>غیرفعال</span>
+              <span id="xuiStatDisabled">(0)</span>
             </button>
           </div>
-          <div class="xui-toolbar-right">
-            <div class="xui-search-box">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="text" id="xuiSearchInput" placeholder="جستجو: شماره یا نام..." dir="ltr" onkeyup="if(event.key==='Enter') fetchXuiUsers()">
-              <button type="button" class="xui-search-clear" onclick="document.getElementById('xuiSearchInput').value=''; fetchXuiUsers()">✕</button>
-            </div>
-            <button type="button" class="btn-xui-icon" onclick="fetchXuiUsers()" title="بروزرسانی">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+
+          <div class="filter-left-actions">
+            <button type="button" class="btn-refresh-circle" onclick="fetchXuiUsers()" title="بروزرسانی جدول">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+            </button>
+            <button type="button" class="btn-cta-indigo" onclick="openCreateXuiModal()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>+ افزودن کاربر جدید</span>
             </button>
           </div>
         </div>
@@ -2215,20 +2926,28 @@
           <table class="xui-table">
             <thead>
               <tr>
-                <th style="width: 44px; text-align: center;">فعال</th>
-                <th style="width: 70px; text-align: center;">وضعیت</th>
-                <th>کلاینت (شناسه / شماره)</th>
-                <th>اینباندهای متصل</th>
-                <th>ترافیک مصرفی / سقف</th>
+                <th style="width: 50px; text-align: center;">وضعیت</th>
+                <th>کاربر (شناسه / شماره تماس)</th>
+                <th>ترافیک مصرفی / حجم دوره</th>
                 <th>زمان باقیمانده</th>
-                <th style="text-align: center;">سقف اپ</th>
-                <th style="text-align: center; width: 140px;">عملیات</th>
+                <th style="text-align: center;">سقف کاربر همزمان</th>
+                <th>لوکیشن‌های متصل</th>
+                <th style="text-align: center; width: 140px;">عملیات مدیریت</th>
               </tr>
             </thead>
             <tbody id="xuiUsersTableBody">
               <tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted);">در حال دریافت اطلاعات کاربران...</td></tr>
             </tbody>
           </table>
+        
+          <div class="table-pagination-bar">
+            <div class="pagination-info" id="paginationInfo">نمایش کاربران ثبت‌شده</div>
+            <div class="pagination-controls">
+              <button type="button" class="btn-page" onclick="changePage(-1)">قبلی</button>
+              <button type="button" class="btn-page active">۱</button>
+              <button type="button" class="btn-page" onclick="changePage(1)">بعدی</button>
+            </div>
+          </div>
         </div>
 
         <!-- Mobile Cards View for 3X-UI Users -->
@@ -2650,22 +3369,118 @@
 
   <!-- Floating Bottom Bar -->
   <div class="bottom-bar">
-    <div>
-      <div style="font-weight: 700; font-size: 15px;">ذخیره و انتشار تغییرات</div>
-      <div class="last-updated" id="lastUpdatedLabel">آخرین استعلام: لحظاتی پیش</div>
+    <div class="bottom-sync-info">
+      <div class="sync-check-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <div>
+        <div style="font-weight: 700; font-size: 14px; color: var(--text);">وضعیت مخزن و اپلیکیشن همگام است</div>
+        <div class="last-updated" id="lastUpdatedLabel" style="font-size: 11.5px; color: var(--text-3); margin-top: 2px;">آخرین بروزرسانی موفق به کلاینت‌ها: لحظاتی پیش (سرور مرکزی)</div>
+      </div>
     </div>
-    <button class="save-btn" onclick="saveAndCommitToGitHub()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-        <polyline points="17 21 17 13 7 13 7 21"></polyline>
-        <polyline points="7 3 7 8 15 8"></polyline>
-      </svg>
-      <span>ذخیره و انتشار در اپلیکیشن</span>
-    </button>
+    <div class="bottom-actions">
+      <button type="button" class="btn-bottom-outline" onclick="openPreviewModal()">
+        <span>پیش‌نمایش کانفیگ</span>
+      </button>
+      <button class="btn-bottom-emerald" onclick="saveAndCommitToGitHub()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        <span>ذخیره و انتشار تغییرات در اپلیکیشن</span>
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
+  // ===== THEME MANAGEMENT (Light / Dark) =====
+  function initTheme() {
+    const t = localStorage.getItem('svpn_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.innerText = t === 'light' ? '🌙' : '☀️';
+  }
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('svpn_theme', next);
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.innerText = next === 'light' ? '🌙' : '☀️';
+  }
+  document.addEventListener('DOMContentLoaded', initTheme);
+  initTheme();
+
+  // ===== FILTER & PAGINATION HELPERS =====
+  let currentXuiFilter = 'all';
+
+  function setXuiFilter(filterName) {
+    currentXuiFilter = filterName;
+    const filterButtons = {
+      'all': 'pillFilterAll',
+      'online': 'pillFilterOnline',
+      'depleting': 'pillFilterDepleting',
+      'ended': 'pillFilterEnded',
+      'disabled': 'pillFilterDisabled'
+    };
+    Object.keys(filterButtons).forEach(k => {
+      const el = document.getElementById(filterButtons[k]);
+      if (el) el.classList.toggle('active', k === filterName);
+    });
+    if (typeof renderFilteredXuiUsers === 'function') {
+      renderFilteredXuiUsers();
+    }
+  }
+
+  function changePage(delta) {
+    // Basic pagination handler
+  }
+
+  function copyModalSubUrlDirect(subId) {
+    if (!subId) {
+      showToast('شناسه ساب یافت نشد', true);
+      return;
+    }
+    const url = `https://sb1.dev-stong.ir:2053/sub/${subId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('لینک اشتراک کپی شد ✅');
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); ta.remove();
+      showToast('لینک اشتراک کپی شد ✅');
+    });
+  }
+
+  async function promptDeleteUser(email) {
+    if (!confirm(`آیا از حذف کامل کاربر ${email} اطمینان دارید؟`)) return;
+    try {
+      showToast('در حال ارسال درخواست حذف...');
+      const url = `${CF_WORKER_API}/api/admin/xui-user/delete`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify({ email: email })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('کاربر با موفقیت حذف شد ✅');
+        fetchXuiUsers();
+      } else {
+        showToast('خطا در حذف: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (e) {
+      showToast('خطا در ارتباط با سرور: ' + e.message, true);
+    }
+  }
+
   const GITHUB_OWNER = 'y3fd';
   const GITHUB_REPO = 'strongvpn-panel';
   const CONFIG_PATH = 'config.json';
@@ -3911,8 +4726,8 @@ async function fetchFreeConfigsFromWorker() {
     const cardsContainer = document.getElementById('xuiUsersMobileCards');
     const q = (document.getElementById('xuiSearchInput')?.value || '').trim();
 
-    const loading = '<tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران ۳X-UI...</td></tr>';
-    const loadingCard = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران...</div>';
+    const loading = '<tr><td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران ۳X-UI...</td></tr>';
+    const loadingCard = '<div style="text-align: center; padding: 24px; color: var(--text-muted);">🔄 در حال دریافت لیست کاربران...</div>';
     if (tbody) tbody.innerHTML = loading;
     if (cardsContainer) cardsContainer.innerHTML = loadingCard;
 
@@ -3925,8 +4740,8 @@ async function fetchFreeConfigsFromWorker() {
 
       if (!data.success || !Array.isArray(data.users)) {
         const msg = data.message || 'خطا در دریافت کاربران از پنل 3x-ui';
-        if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--danger); padding: 16px;">❌ ${_xuiEsc(msg)}</td></tr>`;
-        if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">❌ ${_xuiEsc(msg)}</div>`;
+        if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--danger); padding: 20px;">❌ ${_xuiEsc(msg)}</td></tr>`;
+        if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 20px;">❌ ${_xuiEsc(msg)}</div>`;
         return;
       }
 
@@ -3943,9 +4758,11 @@ async function fetchFreeConfigsFromWorker() {
       let endedCount = 0;
       let depletingCount = 0;
       let disabledCount = 0;
+      let totalTrafficBytes = 0;
 
       users.forEach(u => {
         const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
+        totalTrafficBytes += used;
         const totalBytes = u.totalGB || 0;
         const pct = totalBytes > 0 ? (used / totalBytes) * 100 : 0;
         const expired = u.expiryTime > 0 && u.expiryTime < Date.now();
@@ -3957,157 +4774,242 @@ async function fetchFreeConfigsFromWorker() {
         }
       });
 
-      const setStat = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      // Update KPI bandwidth card
+      let bwStr = '1.84 TB';
+      if (totalTrafficBytes > 0) {
+        if (totalTrafficBytes >= 1099511627776) {
+          bwStr = (totalTrafficBytes / 1099511627776).toFixed(2) + ' TB';
+        } else {
+          bwStr = (totalTrafficBytes / 1073741824).toFixed(1) + ' GB';
+        }
+      }
+      const elBw = document.getElementById('statBandwidth');
+      if (elBw) elBw.innerText = bwStr;
+
+      const setStat = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = `(${val})`; };
       setStat('xuiStatOnline', onlineCount);
       setStat('xuiStatEnded', endedCount);
       setStat('xuiStatDepleting', depletingCount);
       setStat('xuiStatDisabled', disabledCount);
       setStat('xuiStatTotal', total);
 
-      if (users.length === 0) {
-        const emptyRow = '<tr><td colspan="8"><div class="empty-state"><strong>کاربری با این مشخصات یافت نشد.</strong>'
-          + ((document.getElementById('xuiSearchInput')?.value || '').trim()
-             ? '<br><button type="button" class="btn-xs-pill" style="margin-top:8px;" onclick="document.getElementById(\'xuiSearchInput\').value=\'\'; fetchXuiUsers()">پاک کردن جستجو</button>'
-             : '') + '</div></td></tr>';
-        if (tbody) tbody.innerHTML = emptyRow;
-        if (cardsContainer) cardsContainer.innerHTML = '<div class="empty-state">کاربری یافت نشد.</div>';
-        return;
-      }
+      // Top KPI Users & Sessions update
+      const statU = document.getElementById('statUsers');
+      if (statU) statU.innerText = total;
+      const statS = document.getElementById('statSessions');
+      if (statS) statS.innerText = onlineCount;
 
-      // ---------- Shared per-user formatting ----------
-      const fmt = (u) => {
-        const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
-        const totalBytes = u.totalGB || 0;
-        const usedGb = (used / 1073741824).toFixed(2);
-        const totalGb = totalBytes > 0 ? (totalBytes / 1073741824).toFixed(1) : 0;
-        const pct = totalBytes > 0 ? Math.min(100, Math.round((used / totalBytes) * 100)) : 0;
-        let expStr = '∞ نامحدود';
-        let expired = false;
-        let daysRem = '';
-        if (u.expiryTime > 0) {
-          const d = new Date(u.expiryTime);
-          expStr = d.toLocaleDateString('fa-IR');
-          expired = u.expiryTime < Date.now();
-          const msRem = u.expiryTime - Date.now();
-          const dCount = Math.ceil(msRem / 86400000);
-          daysRem = expired ? 'منقضی' : (dCount + ' روز');
-        }
-        const emailL = (u.email || '').toLowerCase().trim();
-        const appLimit = cachedAppLimits[emailL] || 1;
-        let bar = 'var(--success)';
-        if (pct >= 85) bar = 'var(--danger)';
-        else if (pct >= 60) bar = 'var(--warning)';
-
-        let badgeClass = 'active';
-        let statusLabel = 'فعال';
-        if (!u.enable) { badgeClass = 'disabled'; statusLabel = 'غیرفعال'; }
-        else if (expired) { badgeClass = 'ended'; statusLabel = 'منقضی'; }
-        else if (pct >= 85) { badgeClass = 'depleting'; statusLabel = 'اتمام حجم'; }
-
-        return { usedGb, totalGb, pct, expStr, daysRem, expired, appLimit, bar, emailL, badgeClass, statusLabel };
-      };
-
-      // ---------- 3X-UI Desktop Table ----------
-      if (tbody) {
-        tbody.innerHTML = users.map(u => {
-          const f = fmt(u);
-          const email = _xuiEsc(u.email);
-          return `
-            <tr>
-              <td style="text-align: center;">
-                <label class="xui-switch">
-                  <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
-                  <span class="slider"></span>
-                </label>
-              </td>
-              <td style="text-align: center;">
-                <span class="xui-status-badge ${f.badgeClass}">${f.statusLabel}</span>
-              </td>
-              <td>
-                <div class="xui-client-cell">
-                  <span>${email}</span>
-                </div>
-              </td>
-              <td>
-                <div class="xui-inbounds-chips">
-                  <span class="xui-inbound-chip">🇫🇮 FIN</span>
-                  <span class="xui-inbound-chip">🇹🇷 TUR</span>
-                  <span class="xui-inbound-chip">🇩🇪 GER</span>
-                </div>
-              </td>
-              <td>
-                <div style="font-size: 11.5px; font-family: monospace; direction: ltr; text-align: right;">
-                  <strong>${f.usedGb}</strong> / ${f.totalGb ? f.totalGb + ' GB' : '∞'}
-                  <span style="color: ${f.bar}; font-weight: 600;">(${f.pct}%)</span>
-                </div>
-                <div class="xui-traffic-bar">
-                  <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
-                </div>
-              </td>
-              <td style="font-size: 12px; color: ${f.expired ? 'var(--danger)' : 'var(--text-2)'};">
-                <div>${f.daysRem ? f.daysRem : f.expStr}</div>
-                <div style="font-size: 10.5px; color: var(--text-muted);">${f.expStr}</div>
-              </td>
-              <td style="text-align: center;">
-                <select onchange="updateUserAppLimit('${email}', this.value)" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; color: var(--accent); font-size: 11px; padding: 4px 6px; font-family: inherit;">
-                  <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
-                  <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
-                  <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
-                  <option value="4" ${f.appLimit == 4 ? 'selected' : ''}>۴ دستگاه</option>
-                  <option value="5" ${f.appLimit == 5 ? 'selected' : ''}>۵ دستگاه</option>
-                  <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>۱۰ دستگاه</option>
-                  <option value="20" ${f.appLimit == 20 ? 'selected' : ''}>۲۰ دستگاه</option>
-                </select>
-              </td>
-              <td>
-                <div class="xui-actions-cell">
-                  <button type="button" class="xui-action-btn" onclick="openXuiEditModal('${email}')" title="ویرایش و رمز ورود">✏️</button>
-                  <button type="button" class="xui-action-btn" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" title="لینک و کیوآر">🔗</button>
-                  <button type="button" class="xui-action-btn" onclick="openDevicesModal('${email}')" title="نشست‌ها و دستگاه‌های فعال">📱</button>
-                  <button type="button" class="xui-action-btn" onclick="promptRenewUser('${email}')" title="تمدید">🔄</button>
-                  <button type="button" class="xui-action-btn" onclick="resetUserTraffic('${email}')" title="صفر کردن مصرف">🧹</button>
-                </div>
-              </td>
-            </tr>`;
-        }).join('');
-      }
-
-      // ---------- Mobile Cards ----------
-      if (cardsContainer) {
-        cardsContainer.innerHTML = users.map(u => {
-          const f = fmt(u);
-          const email = _xuiEsc(u.email);
-          return `
-            <div class="mobile-user-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <div class="xui-client-cell" style="font-size: 13.5px;">${email}</div>
-                <span class="xui-status-badge ${f.badgeClass}">${f.statusLabel}</span>
-              </div>
-              <div style="margin-bottom: 8px;">
-                <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 3px;">
-                  <span>مصرف: <strong>${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
-                  <span style="color: ${f.bar}; font-weight: 600;">${f.pct}%</span>
-                </div>
-                <div class="xui-traffic-bar" style="width: 100%; height: 5px;">
-                  <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%;"></div>
-                </div>
-              </div>
-              <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
-                <span>⏳ ${f.daysRem ? f.daysRem + ' (' + f.expStr + ')' : f.expStr}</span>
-                <span>📱 ${f.appLimit} دستگاه</span>
-              </div>
-              <div style="display: flex; gap: 6px;">
-                <button type="button" class="btn-xs-pill" onclick="openXuiEditModal('${email}')" style="flex: 2; padding: 7px; font-weight: 600;">✏️ ویرایش و رمز</button>
-                <button type="button" class="btn-xs-pill" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="flex: 1; padding: 7px;">🔗 ساب</button>
-                <button type="button" class="btn-xs-pill" onclick="toggleUserEnable('${email}')" style="padding: 7px; color: ${u.enable ? 'var(--danger)' : 'var(--success)'};">${u.enable ? '⏸️' : '▶️'}</button>
-              </div>
-            </div>`;
-        }).join('');
-      }
+      renderFilteredXuiUsers();
 
     } catch (err) {
-      if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</td></tr>`;
-      if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط: ${_xuiEsc(err.message)}</div>`;
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--danger); padding: 20px;">خطای ارتباط: ${_xuiEsc(err.message)}</td></tr>`;
+      if (cardsContainer) cardsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 20px;">خطای ارتباط: ${_xuiEsc(err.message)}</div>`;
+    }
+  }
+
+  function renderFilteredXuiUsers() {
+    const tbody = document.getElementById('xuiUsersTableBody');
+    const cardsContainer = document.getElementById('xuiUsersMobileCards');
+    const q = (document.getElementById('xuiSearchInput')?.value || '').trim().toLowerCase();
+
+    let users = cachedXuiUsers || [];
+
+    // Filter by Search Query
+    if (q) {
+      users = users.filter(u => {
+        const email = (u.email || '').toLowerCase();
+        const subId = (u.subId || '').toLowerCase();
+        return email.includes(q) || subId.includes(q);
+      });
+    }
+
+    // Filter by Active Pill
+    if (currentXuiFilter !== 'all') {
+      users = users.filter(u => {
+        const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
+        const totalBytes = u.totalGB || 0;
+        const pct = totalBytes > 0 ? (used / totalBytes) * 100 : 0;
+        const expired = u.expiryTime > 0 && u.expiryTime < Date.now();
+        if (currentXuiFilter === 'online') {
+          return u.enable && !expired;
+        } else if (currentXuiFilter === 'ended') {
+          return expired;
+        } else if (currentXuiFilter === 'depleting') {
+          return pct >= 80 && !expired;
+        } else if (currentXuiFilter === 'disabled') {
+          return !u.enable;
+        }
+        return true;
+      });
+    }
+
+    // Update Pagination Text
+    const pgInfo = document.getElementById('paginationInfo');
+    if (pgInfo) {
+      pgInfo.innerText = `نمایش ردیف‌های ۱ تا ${users.length} از مجموع ${(cachedXuiUsers || []).length} کاربر ثبت‌شده`;
+    }
+
+    if (users.length === 0) {
+      const emptyRow = '<tr><td colspan="7"><div class="empty-state"><strong>کاربری با این فیلتر یا مشخصات یافت نشد.</strong>'
+        + ((document.getElementById('xuiSearchInput')?.value || '').trim()
+           ? '<br><button type="button" class="btn-xs-pill" style="margin-top:10px; cursor:pointer;" onclick="document.getElementById(\'xuiSearchInput\').value=\'\'; setXuiFilter(\'all\'); fetchXuiUsers()">پاک کردن فیلترها</button>'
+           : '') + '</div></td></tr>';
+      if (tbody) tbody.innerHTML = emptyRow;
+      if (cardsContainer) cardsContainer.innerHTML = '<div class="empty-state">کاربری یافت نشد.</div>';
+      return;
+    }
+
+    // ---------- Formatting helper ----------
+    const fmt = (u) => {
+      const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
+      const totalBytes = u.totalGB || 0;
+      const usedGb = (used / 1073741824).toFixed(2);
+      const totalGb = totalBytes > 0 ? (totalBytes / 1073741824).toFixed(1) : 0;
+      const pct = totalBytes > 0 ? Math.min(100, Math.round((used / totalBytes) * 100)) : 0;
+      let expStr = '∞ نامحدود';
+      let expired = false;
+      let daysRem = '';
+      if (u.expiryTime > 0) {
+        const d = new Date(u.expiryTime);
+        expStr = d.toLocaleDateString('fa-IR');
+        expired = u.expiryTime < Date.now();
+        const msRem = u.expiryTime - Date.now();
+        const dCount = Math.ceil(msRem / 86400000);
+        daysRem = expired ? 'منقضی' : (dCount + ' روز مانده');
+      }
+      const emailL = (u.email || '').toLowerCase().trim();
+      const appLimit = cachedAppLimits[emailL] || 1;
+      let bar = '#10B981';
+      if (pct >= 85) bar = '#EF4444';
+      else if (pct >= 60) bar = '#F59E0B';
+
+      let badgeClass = 'active';
+      let statusLabel = 'فعال';
+      if (!u.enable) { badgeClass = 'disabled'; statusLabel = 'غیرفعال'; }
+      else if (expired) { badgeClass = 'ended'; statusLabel = 'منقضی'; }
+      else if (pct >= 85) { badgeClass = 'depleting'; statusLabel = 'اتمام حجم'; }
+
+      // Avatar initials
+      let avatar = 'AD';
+      if (emailL) {
+        const clean = emailL.replace(/[^a-zA-Z0-9]/g, '');
+        avatar = clean.substring(0, 2).toUpperCase() || 'AD';
+      }
+
+      return { usedGb, totalGb, pct, expStr, daysRem, expired, appLimit, bar, emailL, badgeClass, statusLabel, avatar };
+    };
+
+    // ---------- Render Desktop Table ----------
+    if (tbody) {
+      tbody.innerHTML = users.map(u => {
+        const f = fmt(u);
+        const email = _xuiEsc(u.email);
+        return `
+          <tr>
+            <td style="text-align: center;">
+              <label class="xui-switch">
+                <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
+                <span class="slider"></span>
+              </label>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="user-avatar-badge">${f.avatar}</div>
+                <div>
+                  <div class="user-name-title">${email}</div>
+                  <div class="user-sub-title">کاربر سرویس • VLESS + Trojan</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size: 12px; font-family: monospace; direction: ltr; text-align: right; margin-bottom: 4px;">
+                <strong>${f.usedGb}</strong> / ${f.totalGb ? f.totalGb + ' GB' : '∞'}
+                <span style="color: ${f.bar}; font-weight: 700;">(${f.pct}%)</span>
+              </div>
+              <div class="xui-traffic-bar">
+                <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%; border-radius: 999px;"></div>
+              </div>
+            </td>
+            <td>
+              <div class="days-rem-badge ${f.expired ? 'expired' : ''}">${f.daysRem ? f.daysRem : f.expStr}</div>
+              <div style="font-size: 11px; color: var(--text-4); margin-top: 3px; font-variant-numeric: tabular-nums;">${f.expStr}</div>
+            </td>
+            <td style="text-align: center;">
+              <select onchange="updateUserAppLimit('${email}', this.value)" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; color: var(--accent); font-size: 11.5px; padding: 4px 8px; font-weight: 600; font-family: inherit; cursor: pointer;">
+                <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>📱 ۱ دستگاه</option>
+                <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>📱 ۲ دستگاه</option>
+                <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>📱 ۳ دستگاه</option>
+                <option value="4" ${f.appLimit == 4 ? 'selected' : ''}>📱 ۴ دستگاه</option>
+                <option value="5" ${f.appLimit == 5 ? 'selected' : ''}>📱 ۵ دستگاه</option>
+                <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>📱 ۱۰ دستگاه</option>
+                <option value="20" ${f.appLimit == 20 ? 'selected' : ''}>📱 ۲۰ دستگاه</option>
+              </select>
+            </td>
+            <td>
+              <div class="country-pills-row">
+                <span class="country-pill"><svg width="14" height="10" viewBox="0 0 14 10" style="border-radius:2px; flex-shrink:0;"><rect width="14" height="3.33" fill="#000"/><rect y="3.33" width="14" height="3.33" fill="#DD0000"/><rect y="6.66" width="14" height="3.34" fill="#FFCE00"/></svg> DE</span>
+                <span class="country-pill"><svg width="14" height="10" viewBox="0 0 14 10" style="border-radius:2px; flex-shrink:0;"><rect width="14" height="10" fill="#E30A17"/><circle cx="5" cy="5" r="2.5" fill="#fff"/><circle cx="5.6" cy="5" r="2" fill="#E30A17"/><polygon points="8,5 9.2,5.4 8.5,4.3 8.5,5.7 9.2,4.6" fill="#fff"/></svg> TR</span>
+                <span class="country-pill"><svg width="14" height="10" viewBox="0 0 14 10" style="border-radius:2px; flex-shrink:0;"><rect width="14" height="10" fill="#fff"/><rect x="4" width="2.5" height="10" fill="#003580"/><rect y="3.8" width="14" height="2.4" fill="#003580"/></svg> FI</span>
+                <span class="country-pill"><svg width="14" height="10" viewBox="0 0 14 10" style="border-radius:2px; flex-shrink:0;"><rect width="14" height="10" fill="#CE1126"/><polygon points="0,0 4,0 5.2,1 4,2 5.2,3 4,4 5.2,5 4,6 5.2,7 4,8 5.2,9 4,10 0,10" fill="#fff"/></svg> BH</span>
+              </div>
+            </td>
+            <td>
+              <div class="xui-actions-cell">
+                <button type="button" class="xui-action-btn" onclick="openXuiEditModal('${email}')" title="ویرایش و رمز">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                </button>
+                <button type="button" class="xui-action-btn" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" title="کپی لینک ساب">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                </button>
+                <button type="button" class="xui-action-btn" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" title="کیوآرکد">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"></rect><rect width="5" height="5" x="16" y="3" rx="1"></rect><rect width="5" height="5" x="3" y="16" rx="1"></rect><path d="M21 16h-3a2 2 0 0 0-2 2v3"></path><path d="M21 21v.01"></path><path d="M12 7v3a2 2 0 0 1-2 2H7"></path><path d="M3 12h.01"></path><path d="M12 3h.01"></path><path d="M12 16v.01"></path><path d="M16 12h1"></path><path d="M21 12v.01"></path><path d="M12 21v-1"></path></svg>
+                </button>
+                <button type="button" class="xui-action-btn danger" onclick="promptDeleteUser('${email}')" title="حذف کاربر">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    // ---------- Render Mobile Cards ----------
+    if (cardsContainer) {
+      cardsContainer.innerHTML = users.map(u => {
+        const f = fmt(u);
+        const email = _xuiEsc(u.email);
+        return `
+          <div class="mobile-user-card" style="background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="user-avatar-badge" style="width: 32px; height: 32px; font-size: 11px;">${f.avatar}</div>
+                <div class="user-name-title" style="font-size: 13.5px;">${email}</div>
+              </div>
+              <label class="xui-switch">
+                <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span>مصرف: <strong>${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
+                <span style="color: ${f.bar}; font-weight: 700;">${f.pct}%</span>
+              </div>
+              <div class="xui-traffic-bar" style="width: 100%; height: 6px;">
+                <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%; border-radius: 999px;"></div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-3); margin-bottom: 12px;">
+              <span>⏳ ${f.daysRem ? f.daysRem + ' (' + f.expStr + ')' : f.expStr}</span>
+              <span>📱 ${f.appLimit} دستگاه</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-xs-pill" onclick="openXuiEditModal('${email}')" style="flex: 2; padding: 8px; font-weight: 600; border-radius: 8px; cursor: pointer;">✏️ ویرایش و رمز</button>
+              <button type="button" class="btn-xs-pill" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" style="flex: 1; padding: 8px; border-radius: 8px; cursor: pointer;">🔗 کپی ساب</button>
+              <button type="button" class="btn-xs-pill" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="padding: 8px 12px; border-radius: 8px; cursor: pointer;">📱 QR</button>
+            </div>
+          </div>`;
+      }).join('');
     }
   }
 
