@@ -1,5 +1,5 @@
 {
-  "version": 1791192777589,
+  "version": 1791295319483,
   "announcement": {
     "id": 1790267432,
     "active": false,
@@ -17,7 +17,7 @@
     "shop_base_url": "https://shop.djanah99.ir"
   },
   "app": {
-    "latest_version": "1.0.0",
+    "latest_version": "1.0.3",
     "min_version": "1.0.0",
     "apk_url": "https://auth.djanah99.ir/download/universal",
     "apk_arm64_url": "https://auth.djanah99.ir/download/arm64",
