@@ -2105,9 +2105,8 @@
             <div class="form-group">
               <label>🌐 سرورهای مجاز برای این کاربر:</label>
               <select id="intNewServerTier">
-                <option value="free" selected>سرورهای رایگان پنل (تعریف‌شده در تب سرورها)</option>
-                <option value="vip">سرورهای ویژه VIP</option>
-                <option value="all">تمام سرورهای موجود در پنل</option>
+                <option value="vip" selected>سرورهای ویژه VIP (لینک اشتراک اختصاصی + دستی)</option>
+                <option value="free">سرورهای عمومی / رایگان</option>
               </select>
             </div>
 
@@ -5002,7 +5001,7 @@ async function updateUserAppLimit(phone, maxDevices) {
     document.getElementById('intEditAddDays').value = '30';
 
     document.getElementById('intEditMaxDevices').value = user.max_devices || 1;
-    document.getElementById('intEditServerTier').value = user.tier || 'free';
+    document.getElementById('intEditServerTier').value = (user.tier === 'all' || user.tier === 'vip') ? 'vip' : (user.tier || 'vip');
     document.getElementById('intEditActive').value = user.active ? '1' : '0';
     document.getElementById('intEditNote').value = user.note || '';
 
@@ -5431,9 +5430,8 @@ async function updateUserAppLimit(phone, maxDevices) {
       <div class="form-group">
         <label>🌐 دسته سرورها:</label>
         <select id="intEditServerTier">
-          <option value="vip">سرورهای ویژه VIP</option>
-          <option value="free">سرورهای عمومی</option>
-          <option value="all">تمام سرورها</option>
+          <option value="vip">سرورهای ویژه VIP (لینک اشتراک اختصاصی + دستی)</option>
+          <option value="free">سرورهای عمومی / رایگان</option>
         </select>
       </div>
 
