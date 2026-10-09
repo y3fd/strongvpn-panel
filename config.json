@@ -1,12 +1,12 @@
 {
-  "version": 1791568142400,
+  "version": 1791569611130,
   "announcement": {
-    "id": 1791568200,
+    "id": 1791569610,
     "active": false,
     "type": "update",
-    "title": "نسخه جدید StrongVPN آماده است",
-    "message": "سرورهای پرسرعت جدید اضافه شدند. لطفا نسخه جدید را دریافت کنید.",
-    "action_text": "دانلود نسخه جدید",
+    "title": "تست اعلان جدید StrongVPN",
+    "message": "سرورهای اختصاصی آلمان و ترکیه با پینگ زیر ۵۰ فعال شدند.",
+    "action_text": "بروزرسانی فوری",
     "action_url": "https://auth.djanah99.ir/download/universal"
   },
   "endpoints": {
