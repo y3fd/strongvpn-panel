@@ -1199,6 +1199,12 @@
                 <option value="5">۵ دستگاه</option>
               </select>
             </div>
+
+            <!-- Optional Note -->
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">یادداشت یا نام مشتری (اختیاری):</label>
+              <input type="text" class="form-input" id="intNewNote" placeholder="مثال: مشتری تلگرام / تمدیدی">
+            </div>
           </div>
           <div style="display: flex; gap: 8px; justify-content: flex-end;">
             <button type="button" class="btn btn-teal" onclick="createInternalUser()">➕ ثبت کاربر در دیتابیس پنل</button>
@@ -4706,10 +4712,10 @@ async function updateUserAppLimit(phone, maxDevices) {
       }
 
       showToast('✅ ' + data.message);
-      // Reset form
-      document.getElementById('intNewUsername').value = '';
-      document.getElementById('intNewPassword').value = '';
-      document.getElementById('intNewNote').value = '';
+      // Reset form safely with null-checks
+      const uEl = document.getElementById('intNewUsername'); if (uEl) uEl.value = '';
+      const pEl = document.getElementById('intNewPassword'); if (pEl) pEl.value = '';
+      const nEl = document.getElementById('intNewNote'); if (nEl) nEl.value = '';
       fetchInternalUsers();
     } catch (err) {
       showToast('خطای شبکه: ' + err.message, true);
