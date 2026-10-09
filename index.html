@@ -1143,49 +1143,57 @@
               <span>افزودن کاربر اختصاصی جدید به دیتابیس اپلیکیشن</span>
             </div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 12px;">
+            <!-- Username -->
             <div>
               <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">شماره موبایل یا نام کاربری:</label>
               <div style="display: flex; gap: 6px;">
-                <input type="text" class="form-input" id="intNewUsername" placeholder="مثال: 09170058180 یا u4821" dir="ltr" style="flex: 1;">
-                <button type="button" class="btn btn-outline" onclick="genInternalUsername()" style="padding: 0 10px; font-size: 11.5px; white-space: nowrap;">🎲 تصادفی</button>
+                <input type="text" class="form-input" id="intNewUsername" placeholder="مثال: 09170058180 یا u4821" dir="ltr" style="flex: 1; font-family: monospace;">
+                <button type="button" class="btn btn-teal" onclick="genInternalUsername()" style="padding: 0 10px; font-size: 11.5px; white-space: nowrap; font-weight: 600;">🎲 تصادفی (کوتاه)</button>
               </div>
             </div>
+
+            <!-- Password -->
             <div>
               <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">رمز عبور اشتراک:</label>
               <div style="display: flex; gap: 6px;">
-                <input type="text" class="form-input" id="intNewPassword" placeholder="رمز عبور ورود به اپ" dir="ltr" style="flex: 1;">
+                <input type="text" class="form-input" id="intNewPassword" placeholder="رمز ورود به اپ" dir="ltr" style="flex: 1; font-family: monospace;">
                 <button type="button" class="btn btn-outline" onclick="genInternalPassword()" style="padding: 0 10px; font-size: 11.5px; white-space: nowrap;">🎲 تصادفی</button>
               </div>
             </div>
+
+            <!-- Manual Volume (GB) -->
             <div>
-              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">بسته ترافیک و حجم:</label>
-              <select class="form-input" id="intQuotaSelect" onchange="onIntQuotaSelectChange(this)">
-                <option value="30">۳۰ گیگابایت</option>
-                <option value="50" selected>۵۰ گیگابایت</option>
-                <option value="80">۸۰ گیگابایت</option>
-                <option value="100">۱۰۰ گیگابایت</option>
-                <option value="unlimited">نامحدود</option>
-                <option value="custom">شخصی‌سازی حجم...</option>
-              </select>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">حجم ترافیک (GB دستی):</label>
+              <input type="number" class="form-input" id="intNewQuotaGb" value="10" placeholder="مثلاً: 10" dir="ltr" min="0" step="any" style="font-family: monospace;">
+              <div style="display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap;">
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewQuotaGb').value='10'" style="padding: 2px 7px; font-size: 10.5px;">10GB</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewQuotaGb').value='20'" style="padding: 2px 7px; font-size: 10.5px;">20GB</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewQuotaGb').value='30'" style="padding: 2px 7px; font-size: 10.5px;">30GB</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewQuotaGb').value='50'" style="padding: 2px 7px; font-size: 10.5px;">50GB</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewQuotaGb').value='100'" style="padding: 2px 7px; font-size: 10.5px;">100GB</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewQuotaGb').value='0'" style="padding: 2px 7px; font-size: 10.5px;">نامحدود (0)</button>
+              </div>
             </div>
-            <div id="intCustomDurationGroup" style="display: none;">
-              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">حجم سفارشی (GB):</label>
-              <input type="number" class="form-input" id="intNewCustomGb" placeholder="مثلاً 120" dir="ltr">
-            </div>
+
+            <!-- Manual Expiration (Days) -->
             <div>
-              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">مدت اعتبار:</label>
-              <select class="form-input" id="intDurationSelect">
-                <option value="30" selected>یک ماهه (۳۰ روز)</option>
-                <option value="60">دو ماهه (۶۰ روز)</option>
-                <option value="90">سه ماهه (۹۰ روز)</option>
-                <option value="unlimited">بدون انقضا</option>
-              </select>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">مدت اعتبار / انقضا (روز دستی):</label>
+              <input type="number" class="form-input" id="intNewDurationDays" value="30" placeholder="مثلاً: 30" dir="ltr" min="0" style="font-family: monospace;">
+              <div style="display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap;">
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewDurationDays').value='15'" style="padding: 2px 7px; font-size: 10.5px;">۱۵ روز</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewDurationDays').value='30'" style="padding: 2px 7px; font-size: 10.5px;">۳۰ روز</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewDurationDays').value='60'" style="padding: 2px 7px; font-size: 10.5px;">۶۰ روز</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewDurationDays').value='90'" style="padding: 2px 7px; font-size: 10.5px;">۹۰ روز</button>
+                <button type="button" class="btn-xs-pill" onclick="document.getElementById('intNewDurationDays').value='0'" style="padding: 2px 7px; font-size: 10.5px;">بدون انقضا (0)</button>
+              </div>
             </div>
+
+            <!-- Max Devices -->
             <div>
               <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">حداکثر دستگاه مجاز:</label>
               <select class="form-input" id="intNewMaxDevices">
-                <option value="1">۱ دستگاه</option>
+                <option value="1">۱ دستگاه (تک کاربره)</option>
                 <option value="2" selected>۲ دستگاه</option>
                 <option value="3">۳ دستگاه</option>
                 <option value="5">۵ دستگاه</option>
@@ -1829,24 +1837,26 @@
         <div class="hint">مستقلاً در اپلیکیشن کنترل می‌شود.</div>
       </div>
 
-      <div class="form-group full">
-        <label>حجم و مدت زمان اشتراک:</label>
-        <select id="newXuiPlan" onchange="onPlanSelectChange(this)">
-          <option value="10:30">۱۰ گیگابایت - ۳۰ روزه</option>
-          <option value="20:30">۲۰ گیگابایت - ۳۰ روزه</option>
-          <option value="30:30" selected>۳۰ گیگابایت - ۳۰ روزه</option>
-          <option value="40:30">۴۰ گیگابایت - ۳۰ روزه</option>
-          <option value="50:30">۵۰ گیگابایت - ۳۰ روزه</option>
-          <option value="100:30">۱۰۰ گیگابایت - ۳۰ روزه (ویژه)</option>
-          <option value="custom">حجم و روز دلخواه...</option>
-        </select>
+      <div class="form-group">
+        <label>📦 حجم اشتراک (GB دستی):</label>
+        <input type="number" id="customVolGB" value="10" min="1" max="1000" placeholder="مثلاً: 10" dir="ltr" style="font-family: monospace;">
+        <div style="display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap;">
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customVolGB').value='10'" style="padding: 2px 7px; font-size: 11px;">10GB</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customVolGB').value='20'" style="padding: 2px 7px; font-size: 11px;">20GB</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customVolGB').value='30'" style="padding: 2px 7px; font-size: 11px;">30GB</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customVolGB').value='50'" style="padding: 2px 7px; font-size: 11px;">50GB</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customVolGB').value='100'" style="padding: 2px 7px; font-size: 11px;">100GB</button>
+        </div>
       </div>
 
-      <div class="form-group full" id="customPlanInputs" style="display: none;">
-        <label>حجم دلخواه (GB) و مدت (روز):</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="number" id="customVolGB" value="50" min="1" max="500" placeholder="حجم GB" style="flex:1;">
-          <input type="number" id="customDays" value="30" min="1" max="365" placeholder="روز" style="flex:1;">
+      <div class="form-group">
+        <label>⏳ مدت اعتبار (روز دستی):</label>
+        <input type="number" id="customDays" value="30" min="1" max="365" placeholder="مثلاً: 30" dir="ltr" style="font-family: monospace;">
+        <div style="display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap;">
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customDays').value='15'" style="padding: 2px 7px; font-size: 11px;">۱۵ روز</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customDays').value='30'" style="padding: 2px 7px; font-size: 11px;">۳۰ روز</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customDays').value='60'" style="padding: 2px 7px; font-size: 11px;">۶۰ روز</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('customDays').value='90'" style="padding: 2px 7px; font-size: 11px;">۹۰ روز</button>
         </div>
       </div>
 
@@ -4166,17 +4176,8 @@ async function updateUserAppLimit(phone, maxDevices) {
       showToast('لطفاً شماره یا ایمیل کاربر را وارد کنید', true);
       return;
     }
-    const planVal = document.getElementById('newXuiPlan')?.value || '30:30';
-    let volGB = 30;
-    let days = 30;
-    if (planVal === 'custom') {
-      volGB = parseInt(document.getElementById('customVolGB')?.value || 50, 10) || 50;
-      days = parseInt(document.getElementById('customDays')?.value || 30, 10) || 30;
-    } else {
-      const parts = planVal.split(':');
-      volGB = parseInt(parts[0], 10) || 30;
-      days = parseInt(parts[1], 10) || 30;
-    }
+    let volGB = parseFloat(document.getElementById('customVolGB')?.value || 10) || 10;
+    let days = parseInt(document.getElementById('customDays')?.value || 30, 10) || 30;
 
     const appLimit = parseInt(document.getElementById('newXuiAppLimit')?.value || 1, 10) || 1;
     const fa = '۰۱۲۳۴۵۶۷۸۹';
@@ -4664,10 +4665,10 @@ async function updateUserAppLimit(phone, maxDevices) {
     async function createInternalUser() {
     const username = (document.getElementById('intNewUsername')?.value || '').trim();
     const password = (document.getElementById('intNewPassword')?.value || '').trim();
-    const quotaSel = document.getElementById('intNewQuotaSelect')?.value;
-    const durSel = document.getElementById('intNewDurationSelect')?.value;
-    const maxDevices = parseInt(document.getElementById('intNewMaxDevices')?.value || 1, 10);
-    const tier = document.getElementById('intNewServerTier')?.value || 'free';
+    const quotaVal = parseFloat(document.getElementById('intNewQuotaGb')?.value || 10) || 0;
+    const daysVal = parseFloat(document.getElementById('intNewDurationDays')?.value || 30) || 0;
+    const maxDevices = parseInt(document.getElementById('intNewMaxDevices')?.value || 2, 10);
+    const tier = 'vip';
     const note = (document.getElementById('intNewNote')?.value || '').trim();
 
     if (!username || !password) {
@@ -4675,29 +4676,9 @@ async function updateUserAppLimit(phone, maxDevices) {
       return;
     }
 
-    let totalGb = 0;
-    if (quotaSel === 'custom') {
-      totalGb = parseFloat(document.getElementById('intNewCustomQuota')?.value || 0);
-    } else {
-      totalGb = parseFloat(quotaSel);
-    }
-
-    let durationType = 'days';
-    let durationValue = 30;
-
-    if (durSel === 'unlimited') {
-      durationType = 'unlimited';
-      durationValue = 0;
-    } else if (durSel === 'custom') {
-      durationType = document.getElementById('intNewCustomDurationUnit')?.value || 'days';
-      durationValue = parseFloat(document.getElementById('intNewCustomDurationValue')?.value || 1);
-    } else if (durSel.startsWith('hours:')) {
-      durationType = 'hours';
-      durationValue = parseFloat(durSel.split(':')[1]);
-    } else if (durSel.startsWith('days:')) {
-      durationType = 'days';
-      durationValue = parseFloat(durSel.split(':')[1]);
-    }
+    const totalGb = quotaVal;
+    const durationType = daysVal <= 0 ? 'unlimited' : 'days';
+    const durationValue = Math.max(0, daysVal);
 
     showToast('در حال ثبت کاربر در دیتابیس ابری...');
     try {
