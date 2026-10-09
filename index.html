@@ -2107,15 +2107,15 @@
 
   async function testWorkerConnection() {
     const statusEl = document.getElementById('workerConnectionStatus');
-    if (statusEl) statusEl.innerHTML = '⏳ در حال تست اتصال زنده به درگاه‌ها...';
-    showToast('در حال تست اتصال به سرور...');
+    if (statusEl) statusEl.innerHTML = '⏳ در حال تست همزمان اتصال به درگاه‌ها...';
+    showToast('در حال بررسی اتصال به سرور...');
 
-    const results = [];
-    for (const ep of DEFAULT_ENDPOINTS) {
+    const promises = DEFAULT_ENDPOINTS.map(async (ep) => {
       const t0 = Date.now();
+      const name = ep.includes('hrms') ? 'رله ضد فیلتر هرمس' : (ep.includes('auth') ? 'کلودفلر مستقیم' : 'کلودفلر جایگزین');
       try {
         const ctrl = new AbortController();
-        const tid = setTimeout(() => ctrl.abort(), 5000);
+        const tid = setTimeout(() => ctrl.abort(), 3500);
         const res = await _nativeFetch(`${ep}/api/remote-config?secret=${encodeURIComponent(CF_ADMIN_SECRET)}&t=${Date.now()}`, {
           headers: { 'X-Admin-Secret': CF_ADMIN_SECRET },
           signal: ctrl.signal
@@ -2123,14 +2123,16 @@
         clearTimeout(tid);
         const elapsed = Date.now() - t0;
         if (res.ok) {
-          results.push(`✅ <strong>${ep.includes('hrms') ? 'رله ضد فیلتر هرمس' : (ep.includes('auth') ? 'کلودفلر مستقیم' : 'کلودفلر جایگزین')}</strong>: متصل (${elapsed}ms)`);
+          return `✅ <strong>${name}</strong>: متصل (${elapsed}ms)`;
         } else {
-          results.push(`⚠️ ${ep.split('/')[2]}: وضعیت ${res.status}`);
+          return `⚠️ <strong>${name}</strong>: وضعیت ${res.status}`;
         }
       } catch (err) {
-        results.push(`❌ <strong>${ep.includes('hrms') ? 'رله ضد فیلتر هرمس' : (ep.includes('auth') ? 'کلودفلر مستقیم' : 'کلودفلر جایگزین')}</strong>: قطع (${err.message})`);
+        return `❌ <strong>${name}</strong>: قطع (${err.message})`;
       }
-    }
+    });
+
+    const results = await Promise.all(promises);
     if (statusEl) {
       statusEl.innerHTML = results.join('<br>');
     }
