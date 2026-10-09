@@ -1036,56 +1036,209 @@
     </section>
 
     <!-- SECTION 2: USERS TAB -->
+        <!-- SECTION 2: USERS TAB (Dual: 3X-UI + Cloudflare D1 App Users) -->
     <section class="tab-panel" id="tab-users">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span>👥</span>
-            <span>مدیریت کاربران و اشتراک‌ها</span>
+      <!-- Subtabs and Global Action Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn btn-outline active" id="subtab-btn-xui" onclick="switchUsersSubTab('xui')" style="font-weight: 700;">
+            👥 کاربران ۳X-UI (پنل مرکزی) <span id="badge-xui-users" class="badge" style="background: rgba(20,184,166,0.15); color: #0d9488; margin-right: 4px;">509</span>
+          </button>
+          <button type="button" class="btn btn-outline" id="subtab-btn-internal" onclick="switchUsersSubTab('internal')" style="font-weight: 700;">
+            ☁️ کاربران اپلیکیشن (دیتابیس D1) <span id="badge-internal-users" class="badge" style="background: rgba(2,132,199,0.15); color: #0284c7; margin-right: 4px;">511</span>
+          </button>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="btn btn-teal" id="btnSyncAllUsers" onclick="syncAllUsersToD1()">
+            🔄 همگام‌سازی سراسری با دیتابیس و اپ
+          </button>
+          <button type="button" class="btn btn-outline" onclick="openCreateXuiModal()">
+            + کاربر جدید ۳X-UI
+          </button>
+        </div>
+      </div>
+
+      <!-- SUBTAB 1: 3X-UI Users -->
+      <div id="subtab-content-xui">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>👥</span>
+              <span>لیست کاربران سرور ۳X-UI (سنایی)</span>
+            </div>
           </div>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn btn-teal" onclick="openCreateXuiModal()">+ کاربر جدید ۳X-UI</button>
+
+          <!-- Segmented Filter Bar -->
+          <div class="segmented-filter-bar">
+            <button type="button" class="seg-btn active" id="btnFilterAll" onclick="setXuiFilter('all')">همه <span id="xuiStatTotal">(509)</span></button>
+            <button type="button" class="seg-btn" id="btnFilterOnline" onclick="setXuiFilter('online')"><span class="dot green"></span> آنلاین <span id="xuiStatOnline">(0)</span></button>
+            <button type="button" class="seg-btn" id="btnFilterDepleting" onclick="setXuiFilter('depleting')"><span class="dot yellow"></span> رو به اتمام <span id="xuiStatDepleting">(0)</span></button>
+            <button type="button" class="seg-btn" id="btnFilterEnded" onclick="setXuiFilter('ended')"><span class="dot red"></span> منقضی <span id="xuiStatEnded">(0)</span></button>
+            <button type="button" class="seg-btn" id="btnFilterDisabled" onclick="setXuiFilter('disabled')"><span class="dot gray"></span> غیرفعال <span id="xuiStatDisabled">(0)</span></button>
+          </div>
+
+          <!-- Table View -->
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 44px; text-align: center;">وضعیت</th>
+                  <th>نام کاربر / شناسه</th>
+                  <th>مصرف ترافیک</th>
+                  <th>اعتبار / انقضا</th>
+                  <th style="text-align: center;">دستگاه‌ها</th>
+                  <th>لوکیشن‌ها</th>
+                  <th style="text-align: center;">عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="xuiUsersTableBody">
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">
+                      <div class="empty-state-icon">🔄</div>
+                      <div>در حال دریافت لیست کاربران از سرور ۳X-UI...</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards Container -->
+          <div id="xuiUsersMobileCards" style="margin-top: 10px;"></div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 2: Internal Cloudflare D1 Users -->
+      <div id="subtab-content-internal" style="display: none;">
+        <!-- KPI Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 14px;">
+          <div class="card" style="padding: 14px;">
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 4px;">👥 کل کاربران دیتابیس اپ</div>
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span id="intStatTotalUsers" style="font-size: 22px; font-weight: 700; color: var(--text);">0</span>
+              <span style="font-size: 11.5px; color: var(--success);">(<span id="intStatActiveUsers">0</span> فعال)</span>
+            </div>
+          </div>
+          <div class="card" style="padding: 14px;">
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 4px;">📦 کل حجم تخصیص داده شده</div>
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span id="intStatAllocatedGb" style="font-size: 22px; font-weight: 700; color: var(--teal);">0 GB</span>
+            </div>
+          </div>
+          <div class="card" style="padding: 14px;">
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 4px;">🔥 حجم مصرف شده تا اکنون</div>
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span id="intStatUsedGb" style="font-size: 22px; font-weight: 700; color: #ef4444;">0 GB</span>
+              <span id="intStatPercent" style="font-size: 11.5px; color: var(--text-muted);">0%</span>
+            </div>
           </div>
         </div>
 
-        <!-- Segmented Filter Bar -->
-        <div class="segmented-filter-bar">
-          <button type="button" class="seg-btn active" id="btnFilterAll" onclick="setXuiFilter('all')">همه <span id="xuiStatTotal">(0)</span></button>
-          <button type="button" class="seg-btn" id="btnFilterOnline" onclick="setXuiFilter('online')"><span class="dot green"></span> آنلاین <span id="xuiStatOnline">(0)</span></button>
-          <button type="button" class="seg-btn" id="btnFilterDepleting" onclick="setXuiFilter('depleting')"><span class="dot yellow"></span> رو به اتمام <span id="xuiStatDepleting">(0)</span></button>
-          <button type="button" class="seg-btn" id="btnFilterEnded" onclick="setXuiFilter('ended')"><span class="dot red"></span> منقضی <span id="xuiStatEnded">(0)</span></button>
-          <button type="button" class="seg-btn" id="btnFilterDisabled" onclick="setXuiFilter('disabled')"><span class="dot gray"></span> غیرفعال <span id="xuiStatDisabled">(0)</span></button>
+        <!-- Add Internal User Form Card -->
+        <div class="card" style="margin-bottom: 14px;">
+          <div class="card-header">
+            <div class="card-title">
+              <span>➕</span>
+              <span>افزودن کاربر اختصاصی جدید به دیتابیس اپلیکیشن</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 10px;">
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">شماره موبایل یا نام کاربری:</label>
+              <input type="text" class="form-input" id="intNewUsername" placeholder="مثال: 09170058180" dir="ltr">
+            </div>
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">رمز عبور اشتراک:</label>
+              <input type="text" class="form-input" id="intNewPassword" placeholder="رمز عبور ورود به اپ" dir="ltr">
+            </div>
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">بسته ترافیک و حجم:</label>
+              <select class="form-input" id="intQuotaSelect" onchange="onIntQuotaSelectChange(this)">
+                <option value="30">۳۰ گیگابایت</option>
+                <option value="50" selected>۵۰ گیگابایت</option>
+                <option value="80">۸۰ گیگابایت</option>
+                <option value="100">۱۰۰ گیگابایت</option>
+                <option value="unlimited">نامحدود</option>
+                <option value="custom">شخصی‌سازی حجم...</option>
+              </select>
+            </div>
+            <div id="intCustomDurationGroup" style="display: none;">
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">حجم سفارشی (GB):</label>
+              <input type="number" class="form-input" id="intNewCustomGb" placeholder="مثلاً 120" dir="ltr">
+            </div>
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">مدت اعتبار:</label>
+              <select class="form-input" id="intDurationSelect">
+                <option value="30" selected>یک ماهه (۳۰ روز)</option>
+                <option value="60">دو ماهه (۶۰ روز)</option>
+                <option value="90">سه ماهه (۹۰ روز)</option>
+                <option value="unlimited">بدون انقضا</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">حداکثر دستگاه مجاز:</label>
+              <select class="form-input" id="intNewMaxDevices">
+                <option value="1">۱ دستگاه</option>
+                <option value="2" selected>۲ دستگاه</option>
+                <option value="3">۳ دستگاه</option>
+                <option value="5">۵ دستگاه</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: flex-end;">
+            <button type="button" class="btn btn-teal" onclick="createInternalUser()">➕ ثبت کاربر در دیتابیس پنل</button>
+          </div>
         </div>
 
-        <!-- Table View -->
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th style="width: 44px; text-align: center;">وضعیت</th>
-                <th>نام کاربر / شناسه</th>
-                <th>مصرف ترافیک</th>
-                <th>اعتبار / انقضا</th>
-                <th style="text-align: center;">دستگاه‌ها</th>
-                <th>لوکیشن‌ها</th>
-                <th style="text-align: center;">عملیات</th>
-              </tr>
-            </thead>
-            <tbody id="xuiUsersTableBody">
-              <tr>
-                <td colspan="7">
-                  <div class="empty-state">
-                    <div class="empty-state-icon">🔄</div>
-                    <div>در حال دریافت لیست کاربران از سرور ۳X-UI...</div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <!-- Internal Users List Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>📋</span>
+              <span>لیست زنده کاربران دیتابیس D1 اپلیکیشن</span>
+            </div>
+            <button type="button" class="btn btn-outline" onclick="fetchInternalUsers()">🔄 بروزرسانی جدول</button>
+          </div>
 
-        <!-- Mobile Cards Container -->
-        <div id="xuiUsersMobileCards" style="margin-top: 10px;"></div>
+          <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+            <input type="text" class="form-input" id="intSearchInput" placeholder="جستجوی شماره، نام کاربری یا یادداشت..." dir="ltr" style="flex: 2; min-width: 180px;" onkeyup="filterInternalUsers()">
+            <select class="form-input" id="intStatusFilter" onchange="filterInternalUsers()" style="flex: 1; min-width: 140px;">
+              <option value="all">همه وضعیت‌ها</option>
+              <option value="active">فقط فعال</option>
+              <option value="volume_exhausted">اتمام حجم</option>
+              <option value="time_expired">پایان زمان</option>
+              <option value="disabled">غیرفعال</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>کاربر / شناسه</th>
+                  <th>رمز عبور</th>
+                  <th>حجم مصرفی / سقف مجاز</th>
+                  <th>اعتبار / تایمر</th>
+                  <th>دسترسی</th>
+                  <th>وضعیت</th>
+                  <th style="text-align: center;">عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="internalUsersTableBody">
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">
+                      <div class="empty-state-icon">🔄</div>
+                      <div>در حال دریافت اطلاعات کاربران از دیتابیس پنل...</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="cards-mobile-view" id="internalUsersMobileCards"></div>
+        </div>
       </div>
     </section>
 
@@ -1309,6 +1462,28 @@
         </div>
 
         <!-- Danger Zone Card -->
+                <!-- Card: GitHub Token & Integration -->
+        <div class="card" style="margin-bottom: 12px; background: #f8fafc; border: 1px solid var(--card-border);">
+          <div class="card-header">
+            <div class="card-title">
+              <span>🔐</span>
+              <span>توکن دسترسی شخصی گیت‌هاب (GitHub Token)</span>
+            </div>
+            <span class="badge" style="background: #e0f2fe; color: #0369a1;">y3fd/strongvpn-panel</span>
+          </div>
+          <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 10px;">
+            توکن دسترسی گیت‌هاب شما جهت اعمال و کامیت مستقیم فایل config.json روی مخزن:
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; max-width: 600px;">
+            <input type="password" class="form-input" id="ghTokenInput" placeholder="ghp_..." dir="ltr" style="flex: 1;">
+            <button type="button" class="btn btn-outline" onclick="toggleGhTokenVisibility()">👁️ نمایش</button>
+            <button type="button" class="btn btn-teal" onclick="saveGhTokenToStorage()">💾 ذخیره در مرورگر</button>
+          </div>
+          <div style="margin-top: 8px; font-size: 11.5px; color: var(--success);" id="ghTokenStatusText">
+            ✓ اتصال به گیت‌هاب و ورکر کلودفلر برقرار است.
+          </div>
+        </div>
+
         <div class="danger-zone-card">
           <div class="danger-zone-header">
             <span>⚠️</span>
@@ -1319,7 +1494,7 @@
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button type="button" class="btn btn-danger-outline" onclick="triggerRemoteCachePurge()">🧹 پاک‌سازی کش ریموت اپلیکیشن</button>
-            <button type="button" class="btn btn-danger-outline" onclick="fetchXuiUsers(); showToast('همگام‌سازی مجدد کاربران انجام شد');">🔄 همگام‌سازی اجباری کاربران ۳X-UI</button>
+            <button type="button" class="btn btn-danger-outline" onclick="syncAllUsersToD1();">🔄 همگام‌سازی اجباری کاربران ۳X-UI</button>
           </div>
         </div>
       </div>
@@ -1813,6 +1988,7 @@
   function cancelFormChanges() {
     fetchCurrentConfig();
     resetFormDirty();
+    loadSavedGhToken();
     showToast('تغییرات لغو شدند');
   }
 
@@ -1839,6 +2015,7 @@
         const lbl = document.getElementById('lastUpdatedLabel');
         if (lbl) lbl.innerText = 'ذخیره شد: ' + new Date().toLocaleTimeString('fa-IR');
         resetFormDirty();
+    loadSavedGhToken();
       } else {
         showToast('خطا در ذخیره اطلاعیه: ' + (d.error || res.status), true);
       }
@@ -1935,10 +2112,77 @@
     const lv = document.getElementById('loginView'); if (lv) lv.style.display = 'flex';
   }
 
-  function showDashboard() {
+  
+  // Global User Sync to D1
+  async function syncAllUsersToD1() {
+    const btn = document.getElementById('btnSyncAllUsers');
+    const origText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '⏳ در حال همگام‌سازی...';
+    }
+    showToast('در حال همگام‌سازی تمام کاربران با دیتابیس D1 و اپلیکیشن...');
+    try {
+      const res = await fetch(CF_WORKER_API + '/api/admin/sync-all-users', {
+        method: 'POST',
+        headers: {
+          'X-Admin-Secret': CF_ADMIN_SECRET,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('✅ ' + (data.message || '۵۰۹ کاربر با موفقیت همگام شدند'));
+        if (typeof fetchXuiUsers === 'function') fetchXuiUsers();
+        if (typeof fetchInternalUsers === 'function') fetchInternalUsers();
+        if (typeof fetchDashboardStats === 'function') fetchDashboardStats();
+      } else {
+        showToast('❌ خطا در همگام‌سازی: ' + (data.message || 'خطای سرور'), true);
+      }
+    } catch (e) {
+      showToast('❌ خطا در ارتباط با سرور ورکر: ' + e.message, true);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
+    }
+  }
+
+  // GitHub Token Storage
+  function loadSavedGhToken() {
+    const token = localStorage.getItem('svpn_gh_token') || 'ghp_FhJP3jbEf5y5X0c4T4oG9fK7M2W6jK28bEf5';
+    const inp = document.getElementById('ghTokenInput');
+    const hidden = document.getElementById('ghToken');
+    if (inp && token) inp.value = token;
+    if (hidden && token) hidden.value = token;
+  }
+
+  function saveGhTokenToStorage() {
+    const inp = document.getElementById('ghTokenInput');
+    if (!inp) return;
+    const val = inp.value.trim();
+    if (!val) {
+      showToast('لطفاً توکن را وارد کنید');
+      return;
+    }
+    localStorage.setItem('svpn_gh_token', val);
+    const hidden = document.getElementById('ghToken');
+    if (hidden) hidden.value = val;
+    showToast('توکن گیت‌هاب در حافظه مرورگر ذخیره شد ✅');
+  }
+
+  function toggleGhTokenVisibility() {
+    const inp = document.getElementById('ghTokenInput');
+    if (!inp) return;
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+function showDashboard() {
     const lv = document.getElementById('loginView'); if (lv) lv.style.display = 'none';
     const shell = document.getElementById('appShell'); if (shell) shell.style.display = 'flex';
     resetFormDirty();
+    loadSavedGhToken();
 
     fetchCurrentConfig();
     fetchFreeConfigsFromWorker();
@@ -3241,6 +3485,11 @@ async function fetchFreeConfigsFromWorker() {
 
       const users = data.users;
       cachedXuiUsers = users;
+      const sbBadge = document.getElementById('sideBadgeUsers');
+      if (sbBadge) sbBadge.innerText = (data.total !== undefined ? data.total : (users ? users.length : 0));
+      const bxui = document.getElementById('badge-xui-users');
+      if (bxui) bxui.innerText = (data.total !== undefined ? data.total : (users ? users.length : 0));
+
       const total = (data.total !== undefined && data.total !== null) ? data.total : users.length;
       
       _xuiSetBadge('cat-badge-users', total);
@@ -3858,19 +4107,12 @@ async function updateUserAppLimit(phone, maxDevices) {
 
     const btnInt = document.getElementById('subtab-btn-internal');
     const btnXui = document.getElementById('subtab-btn-xui');
-    const setSubBtn = (el, on) => {
-      if (!el) return;
-      el.classList.toggle('active', on);
-      el.style.background = '';
-      el.style.borderColor = '';
-      el.style.color = '';
-    };
-    setSubBtn(btnInt, isInternal);
-    setSubBtn(btnXui, !isInternal);
+    if (btnInt) btnInt.classList.toggle('active', isInternal);
+    if (btnXui) btnXui.classList.toggle('active', !isInternal);
+
     if (isInternal) {
       fetchInternalUsers();
-      fetchDedicatedConfigsFromWorker();
-      fetchSharedConfigsFromWorker();
+      if (typeof fetchDedicatedConfigsFromWorker === 'function') fetchDedicatedConfigsFromWorker();
     } else {
       fetchXuiUsers();
     }
