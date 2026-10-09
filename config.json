@@ -1,13 +1,13 @@
 {
-  "version": 1791295319483,
+  "version": 1791567614814,
   "announcement": {
-    "id": 1790267432,
-    "active": false,
-    "type": "update",
-    "title": "اطلاعیه",
-    "message": "نسخه جدید اپلیکیشن",
-    "action_text": "دانلود نسخه جدید",
-    "action_url": "https://auth.djanah99.ir/download/universal"
+    "id": 1234,
+    "active": true,
+    "type": "info",
+    "title": "تست اطلاعیه",
+    "message": "این یک پیام آزمایشی است",
+    "action_text": "باشه",
+    "action_url": ""
   },
   "endpoints": {
     "website_url": "https://shop.djanah99.ir",
