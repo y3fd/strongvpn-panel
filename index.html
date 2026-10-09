@@ -1143,14 +1143,20 @@
               <span>افزودن کاربر اختصاصی جدید به دیتابیس اپلیکیشن</span>
             </div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 10px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px;">
             <div>
               <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">شماره موبایل یا نام کاربری:</label>
-              <input type="text" class="form-input" id="intNewUsername" placeholder="مثال: 09170058180" dir="ltr">
+              <div style="display: flex; gap: 6px;">
+                <input type="text" class="form-input" id="intNewUsername" placeholder="مثال: 09170058180 یا u4821" dir="ltr" style="flex: 1;">
+                <button type="button" class="btn btn-outline" onclick="genInternalUsername()" style="padding: 0 10px; font-size: 11.5px; white-space: nowrap;">🎲 تصادفی</button>
+              </div>
             </div>
             <div>
               <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">رمز عبور اشتراک:</label>
-              <input type="text" class="form-input" id="intNewPassword" placeholder="رمز عبور ورود به اپ" dir="ltr">
+              <div style="display: flex; gap: 6px;">
+                <input type="text" class="form-input" id="intNewPassword" placeholder="رمز عبور ورود به اپ" dir="ltr" style="flex: 1;">
+                <button type="button" class="btn btn-outline" onclick="genInternalPassword()" style="padding: 0 10px; font-size: 11.5px; white-space: nowrap;">🎲 تصادفی</button>
+              </div>
             </div>
             <div>
               <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">بسته ترافیک و حجم:</label>
@@ -1793,7 +1799,10 @@
     <div class="form-grid">
       <div class="form-group full">
         <label>شماره موبایل یا شناسه کاربر (Remark):</label>
-        <input type="text" id="newXuiEmail" placeholder="09170008899" dir="ltr" style="font-family: monospace;">
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="newXuiEmail" placeholder="09170008899 یا نام کاربری" dir="ltr" style="flex:1; font-family: monospace;">
+          <button type="button" onclick="genXuiUsername()" class="btn-xs-pill" style="height: 38px; padding: 0 10px; font-weight: 600; white-space: nowrap;">🎲 تصادفی (کوتاه)</button>
+        </div>
         <div class="hint">شناسه برای ورود در اپلیکیشن و نام کلاینت در 3x-ui است.</div>
       </div>
 
@@ -4212,6 +4221,39 @@ async function updateUserAppLimit(phone, maxDevices) {
       fetchXuiUsers();
     } catch (e) {
       showToast('خطا در ارتباط با سرور: ' + e.message, true);
+    }
+  }
+
+  // Short random username generator (4-5 chars: e.g. u4821, s7394, v8120)
+  function generateShortUsername() {
+    const prefixes = ['u', 's', 'v'];
+    const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const n = Math.floor(1000 + Math.random() * 9000);
+    return `${p}${n}`;
+  }
+
+  function genXuiUsername() {
+    const el = document.getElementById('newXuiEmail');
+    if (el) {
+      el.value = generateShortUsername();
+      el.focus();
+    }
+  }
+
+  function genInternalUsername() {
+    const el = document.getElementById('intNewUsername');
+    if (el) {
+      el.value = generateShortUsername();
+      el.focus();
+    }
+  }
+
+  function genInternalPassword() {
+    const a = new Uint32Array(1); crypto.getRandomValues(a);
+    const el = document.getElementById('intNewPassword');
+    if (el) {
+      el.value = String(100000 + (a[0] % 900000));
+      el.focus();
     }
   }
 
