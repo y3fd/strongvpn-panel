@@ -1462,7 +1462,32 @@
         </div>
 
         <!-- Danger Zone Card -->
-                <!-- Card: GitHub Token & Integration -->
+                <!-- Card: Worker Gateway & Connection (Anti-Filter Relay) -->
+        <div class="card" style="margin-bottom: 12px; background: #f8fafc; border: 1px solid var(--card-border);">
+          <div class="card-header">
+            <div class="card-title">
+              <span>🌐</span>
+              <span>درگاه ارتباطی ورکر و دیتابیس (Worker Gateway)</span>
+            </div>
+            <span class="badge" style="background: #ecfdf5; color: #047857;">پایدار در ایران ✓</span>
+          </div>
+          <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 10px;">
+            جهت جلوگیری از خطای فیلترینگ در ایران (Failed to fetch)، پنل به‌صورت خودکار بین سرور ضد فیلتر و کلودفلر جابجا می‌شود:
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; max-width: 650px; margin-bottom: 8px; flex-wrap: wrap;">
+            <select class="form-input" id="workerEndpointSelect" onchange="changeWorkerEndpoint(this.value)" style="flex: 1; font-family: monospace; font-size: 12.5px; min-width: 250px;">
+              <option value="https://hrms.strongdev.space/cf-api">🚀 رله ضد فیلتر هرمس (https://hrms.strongdev.space/cf-api) - پیشنهادی در ایران</option>
+              <option value="https://auth.djanah99.ir">☁️ کلودفلر مستقیم (https://auth.djanah99.ir)</option>
+              <option value="https://app-sync.yousof-janahi-006.workers.dev">🔄 کلودفلر جایگزین (https://app-sync.yousof-janahi-006.workers.dev)</option>
+            </select>
+            <button type="button" class="btn btn-teal" onclick="testWorkerConnection()">⚡ تست اتصال زنده</button>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;" id="workerConnectionStatus">
+            💡 در صورت بروز خطای ارتباطی روی اینترنت همراه، رله ضد فیلتر هرمس را انتخاب کنید.
+          </div>
+        </div>
+
+        <!-- Card: GitHub Token & Integration -->
         <div class="card" style="margin-bottom: 12px; background: #f8fafc; border: 1px solid var(--card-border);">
           <div class="card-header">
             <div class="card-title">
@@ -1971,6 +1996,148 @@
 <!-- JAVASCRIPT LOGIC -->
 <script>
 
+  // ========================================================
+  // CLOUDFLARE WORKER GATEWAY & ANTI-FILTER RESILIENCE ENGINE
+  // ========================================================
+  const DEFAULT_ENDPOINTS = [
+    'https://hrms.strongdev.space/cf-api', // 1. Anti-filter relay (bulletproof in Iran)
+    'https://auth.djanah99.ir',            // 2. Direct Cloudflare Worker
+    'https://app-sync.yousof-janahi-006.workers.dev' // 3. Fallback worker
+  ];
+  let CF_WORKER_API = localStorage.getItem('strongvpn_worker_api') || DEFAULT_ENDPOINTS[0];
+  const CF_ADMIN_SECRET = '80136a8179fa1e1f81749a3ac3cce568';
+
+  // Smart fetch interceptor: automatic failover, timeout, and secret injection
+  const _nativeFetch = window.fetch.bind(window);
+  window.fetch = async function(input, init = {}) {
+    let urlStr = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+
+    const isWorkerCall = urlStr.includes('/api/') && (
+      urlStr.startsWith(CF_WORKER_API) ||
+      urlStr.includes('auth.djanah99.ir') ||
+      urlStr.includes('hrms.strongdev.space/cf-api') ||
+      urlStr.includes('workers.dev') ||
+      urlStr.startsWith('/api/')
+    );
+
+    if (!isWorkerCall) {
+      return _nativeFetch(input, init);
+    }
+
+    let apiPath = '';
+    try {
+      if (urlStr.startsWith('/')) {
+        apiPath = urlStr;
+      } else {
+        const parsed = new URL(urlStr);
+        apiPath = parsed.pathname.replace(/^\/cf-api/, '') + parsed.search;
+      }
+    } catch (_) {
+      apiPath = urlStr;
+    }
+
+    const sep = apiPath.includes('?') ? '&' : '?';
+    const authPath = `${apiPath}${sep}secret=${encodeURIComponent(CF_ADMIN_SECRET)}`;
+
+    const candidateEndpoints = [
+      CF_WORKER_API,
+      ...DEFAULT_ENDPOINTS
+    ].filter((v, i, a) => a.indexOf(v) === i);
+
+    let lastErr = null;
+
+    for (const base of candidateEndpoints) {
+      try {
+        const fullUrl = `${base}${authPath}`;
+        let headersObj = {};
+        if (init && init.headers) {
+          if (typeof init.headers.forEach === 'function') {
+            init.headers.forEach((v, k) => { headersObj[k] = v; });
+          } else if (typeof init.headers === 'object') {
+            headersObj = Object.assign({}, init.headers);
+          }
+        }
+        headersObj['X-Admin-Secret'] = CF_ADMIN_SECRET;
+        if (!headersObj['Accept']) headersObj['Accept'] = 'application/json';
+
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 12000);
+
+        const res = await _nativeFetch(fullUrl, {
+          ...init,
+          headers: headersObj,
+          signal: ctrl.signal
+        });
+        clearTimeout(tid);
+
+        if (res.status === 200 || res.status === 201 || res.status === 204) {
+          if (CF_WORKER_API !== base) {
+            CF_WORKER_API = base;
+            localStorage.setItem('strongvpn_worker_api', base);
+            updateGatewayUI();
+          }
+          return res;
+        } else if (res.status === 401 || res.status === 403) {
+          return res;
+        } else {
+          lastErr = new Error(`خطای سرور HTTP ${res.status}`);
+        }
+      } catch (err) {
+        lastErr = err;
+        console.warn(`[Gateway Failover] ${base} unreachable: ${err.message}. Trying next fallback...`);
+      }
+    }
+
+    throw lastErr || new Error('خطا در برقراری ارتباط با کلیه درگاه‌های سرور ورکر');
+  };
+
+  function updateGatewayUI() {
+    const sel = document.getElementById('workerEndpointSelect');
+    if (sel && sel.value !== CF_WORKER_API) {
+      sel.value = CF_WORKER_API;
+    }
+  }
+
+  function changeWorkerEndpoint(newVal) {
+    if (!newVal) return;
+    CF_WORKER_API = newVal;
+    localStorage.setItem('strongvpn_worker_api', newVal);
+    showToast('درگاه ورکر تغییر یافت: ' + newVal);
+  }
+
+  async function testWorkerConnection() {
+    const statusEl = document.getElementById('workerConnectionStatus');
+    if (statusEl) statusEl.innerHTML = '⏳ در حال تست اتصال زنده به درگاه‌ها...';
+    showToast('در حال تست اتصال به سرور...');
+
+    const results = [];
+    for (const ep of DEFAULT_ENDPOINTS) {
+      const t0 = Date.now();
+      try {
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 5000);
+        const res = await _nativeFetch(`${ep}/api/remote-config?secret=${encodeURIComponent(CF_ADMIN_SECRET)}&t=${Date.now()}`, {
+          headers: { 'X-Admin-Secret': CF_ADMIN_SECRET },
+          signal: ctrl.signal
+        });
+        clearTimeout(tid);
+        const elapsed = Date.now() - t0;
+        if (res.ok) {
+          results.push(`✅ <strong>${ep.includes('hrms') ? 'رله ضد فیلتر هرمس' : (ep.includes('auth') ? 'کلودفلر مستقیم' : 'کلودفلر جایگزین')}</strong>: متصل (${elapsed}ms)`);
+        } else {
+          results.push(`⚠️ ${ep.split('/')[2]}: وضعیت ${res.status}`);
+        }
+      } catch (err) {
+        results.push(`❌ <strong>${ep.includes('hrms') ? 'رله ضد فیلتر هرمس' : (ep.includes('auth') ? 'کلودفلر مستقیم' : 'کلودفلر جایگزین')}</strong>: قطع (${err.message})`);
+      }
+    }
+    if (statusEl) {
+      statusEl.innerHTML = results.join('<br>');
+    }
+    showToast('تست اتصال تکمیل شد');
+  }
+
+
   // Form dirty state management
   let formDirty = false;
   function markFormDirty() {
@@ -2435,8 +2602,7 @@ function showDashboard() {
     document.getElementById('lastUpdatedLabel').innerText = 'بروزرسانی شد: ' + new Date().toLocaleTimeString('fa-IR');
   }
 
-  const CF_WORKER_API = 'https://auth.djanah99.ir';
-  const CF_ADMIN_SECRET = '80136a8179fa1e1f81749a3ac3cce568';
+  // (CF_WORKER_API and CF_ADMIN_SECRET moved to top of script with failover)
 
   // ---------------- Free Configs Management ----------------
   async function testFreeServersHealth() {
