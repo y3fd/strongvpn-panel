@@ -264,9 +264,12 @@
       margin-right: var(--sidebar-w);
       min-height: 100vh;
       background: var(--bg-main);
-      padding: 14px 18px 80px;
+      padding: 14px 20px 80px;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      max-width: calc(100vw - var(--sidebar-w));
     }
 
     /* Top Header Bar */
@@ -943,8 +946,9 @@
       opacity: 0;
       width: 0;
       height: 0;
+      position: absolute;
     }
-    .slider {
+    .switch .slider {
       position: absolute;
       cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -953,7 +957,7 @@
       border-radius: 24px;
       border: 1px solid rgba(255, 255, 255, 0.12);
     }
-    .slider:before {
+    .switch .slider:before {
       position: absolute;
       content: "";
       height: 18px;
@@ -964,12 +968,335 @@
       transition: .25s;
       border-radius: 50%;
     }
-    input:checked + .slider {
+    .switch input:checked + .slider {
       background-color: var(--teal, #14b8a6);
       border-color: var(--teal, #14b8a6);
     }
-    input:checked + .slider:before {
+    .switch input:checked + .slider:before {
       transform: translateX(20px);
+    }
+
+    /* Table Compact Switch Toggle (UI/UX Pro Max) */
+    .xui-switch {
+      position: relative !important;
+      display: inline-block !important;
+      width: 36px !important;
+      height: 20px !important;
+      vertical-align: middle !important;
+      margin: 0 auto !important;
+      flex-shrink: 0 !important;
+    }
+    .xui-switch input {
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+    }
+    .xui-switch .slider {
+      position: absolute !important;
+      cursor: pointer !important;
+      top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      background-color: #cbd5e1 !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      border-radius: 20px !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+    .xui-switch .slider:before {
+      position: absolute !important;
+      content: "" !important;
+      height: 14px !important;
+      width: 14px !important;
+      left: 2px !important;
+      bottom: 2px !important;
+      background-color: white !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      border-radius: 50% !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+    }
+    .xui-switch input:checked + .slider {
+      background-color: #10b981 !important;
+      border-color: #10b981 !important;
+    }
+    .xui-switch input:checked + .slider:before {
+      transform: translateX(16px) !important;
+    }
+
+    /* ===== UI/UX PRO MAX: USERS MODULE & BENTO GRID ===== */
+    .users-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .users-kpi-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 12px rgba(15, 23, 42, 0.02);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .users-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+      border-color: #cbd5e1;
+    }
+    .users-kpi-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .users-kpi-icon.teal { background: rgba(20, 184, 166, 0.12); color: #0d9488; }
+    .users-kpi-icon.green { background: rgba(16, 185, 129, 0.12); color: #059669; }
+    .users-kpi-icon.amber { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+    .users-kpi-icon.blue { background: rgba(2, 132, 199, 0.12); color: #0284c7; }
+    .users-kpi-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .users-kpi-label {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-bottom: 3px;
+      font-weight: 500;
+    }
+    .users-kpi-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      font-family: 'Vazirmatn', sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Modern Users Data Table */
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: right;
+    }
+    .user-avatar-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(20, 184, 166, 0.1);
+      border: 1px solid rgba(20, 184, 166, 0.25);
+      color: #0d9488;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      font-family: monospace;
+      flex-shrink: 0;
+    }
+    .user-name-title {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0f172a;
+      direction: ltr;
+      unicode-bidi: isolate;
+      letter-spacing: 0.5px;
+    }
+    .user-sub-id {
+      font-size: 11px;
+      color: #64748b;
+      font-family: monospace;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-protocol {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    /* Traffic Column */
+    .traffic-cell {
+      min-width: 155px;
+    }
+    .traffic-metrics-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 11.5px;
+      font-family: monospace;
+      direction: ltr;
+      margin-bottom: 5px;
+      font-variant-numeric: tabular-nums;
+      color: #475569;
+    }
+    .traffic-metrics-row strong {
+      color: #0f172a;
+    }
+    .traffic-bar-track {
+      width: 100%;
+      height: 6px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .traffic-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Expiry Badge */
+    .expiry-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .days-rem-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      width: fit-content;
+      font-variant-numeric: tabular-nums;
+    }
+    .days-rem-badge.active,
+    .days-rem-badge:not(.expired) {
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .days-rem-badge.expired {
+      background: rgba(239, 68, 68, 0.1);
+      color: #dc2626;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+    .expiry-date-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      font-variant-numeric: tabular-nums;
+      font-family: monospace;
+    }
+
+    /* Device Limit Select */
+    .app-limit-select {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      color: #0f172a;
+      font-size: 11.5px;
+      padding: 5px 8px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .app-limit-select:focus {
+      border-color: var(--teal);
+    }
+
+    /* Location Flags Cluster */
+    .country-pills-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+    .country-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    /* Table Actions */
+    .xui-actions-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-action-edit {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(20, 184, 166, 0.12);
+      color: #0d9488;
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .btn-action-edit:hover {
+      background: #14b8a6;
+      color: #ffffff;
+      border-color: #14b8a6;
+      box-shadow: 0 2px 8px rgba(20, 184, 166, 0.35);
+    }
+    .xui-action-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      outline: none;
+    }
+    .xui-action-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .xui-action-btn.danger:hover {
+      background: #fef2f2;
+      color: #ef4444;
+      border-color: #fecaca;
+    }
+
+    #xuiUsersMobileCards {
+      display: none;
+    }
+
+    @media (max-width: 860px) {
+      .users-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .table-wrap { display: none; }
+      #xuiUsersMobileCards { display: block; }
+    }
+    @media (max-width: 480px) {
+      .users-kpi-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1208,17 +1535,49 @@
 
       <!-- SUBTAB 1: 3X-UI Users -->
       <div id="subtab-content-xui">
+        <!-- Bento KPI Summary Grid (UI/UX Pro Max) -->
+        <div class="users-kpi-grid">
+          <div class="users-kpi-card">
+            <div class="users-kpi-icon teal">👥</div>
+            <div class="users-kpi-body">
+              <div class="users-kpi-label">کل مشترکین ۳X-UI</div>
+              <div class="users-kpi-value" id="kpiTotalUsers">۵۳۳</div>
+            </div>
+          </div>
+          <div class="users-kpi-card">
+            <div class="users-kpi-icon green">🟢</div>
+            <div class="users-kpi-body">
+              <div class="users-kpi-label">سرویس‌های آنلاین</div>
+              <div class="users-kpi-value" id="kpiOnlineUsers" style="color: #059669;">--</div>
+            </div>
+          </div>
+          <div class="users-kpi-card">
+            <div class="users-kpi-icon amber">⏳</div>
+            <div class="users-kpi-body">
+              <div class="users-kpi-label">رو به اتمام یا منقضی</div>
+              <div class="users-kpi-value" id="kpiWarningUsers" style="color: #d97706;">--</div>
+            </div>
+          </div>
+          <div class="users-kpi-card">
+            <div class="users-kpi-icon blue">⚡</div>
+            <div class="users-kpi-body">
+              <div class="users-kpi-label">کل ترافیک مصرفی</div>
+              <div class="users-kpi-value" id="kpiTotalTraffic" style="color: #0284c7; direction: ltr;">--</div>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-header">
             <div class="card-title">
               <span>👥</span>
-              <span>لیست کاربران سرور ۳X-UI (سنایی)</span>
+              <span>مدیریت مشترکین و اختصاص رمز ورود اپلیکیشن</span>
             </div>
           </div>
 
           <!-- Segmented Filter Bar -->
           <div class="segmented-filter-bar">
-            <button type="button" class="seg-btn active" id="btnFilterAll" onclick="setXuiFilter('all')">همه <span id="xuiStatTotal">(509)</span></button>
+            <button type="button" class="seg-btn active" id="btnFilterAll" onclick="setXuiFilter('all')">همه <span id="xuiStatTotal">(533)</span></button>
             <button type="button" class="seg-btn" id="btnFilterOnline" onclick="setXuiFilter('online')"><span class="dot green"></span> آنلاین <span id="xuiStatOnline">(0)</span></button>
             <button type="button" class="seg-btn" id="btnFilterDepleting" onclick="setXuiFilter('depleting')"><span class="dot yellow"></span> رو به اتمام <span id="xuiStatDepleting">(0)</span></button>
             <button type="button" class="seg-btn" id="btnFilterEnded" onclick="setXuiFilter('ended')"><span class="dot red"></span> منقضی <span id="xuiStatEnded">(0)</span></button>
@@ -1230,13 +1589,13 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width: 44px; text-align: center;">وضعیت</th>
-                  <th>نام کاربر / شناسه</th>
-                  <th>مصرف ترافیک</th>
-                  <th>اعتبار / انقضا</th>
-                  <th style="text-align: center;">دستگاه‌ها</th>
-                  <th>لوکیشن‌ها</th>
-                  <th style="text-align: center;">عملیات</th>
+                  <th style="width: 46px; text-align: center;">وضعیت</th>
+                  <th style="min-width: 170px;">کاربر و شناسه ساب</th>
+                  <th style="min-width: 160px;">مصرف ترافیک</th>
+                  <th style="min-width: 130px;">اعتبار / انقضا</th>
+                  <th style="text-align: center; width: 110px;">سقف دستگاه</th>
+                  <th style="min-width: 150px;">سرورها و نودها</th>
+                  <th style="text-align: center; width: 140px;">عملیات</th>
                 </tr>
               </thead>
               <tbody id="xuiUsersTableBody">
@@ -3885,6 +4244,13 @@ async function fetchFreeConfigsFromWorker() {
       const statS = document.getElementById('statSessions');
       if (statS) statS.innerText = onlineCount;
 
+      // Bento KPI Summary Cards
+      const setCardVal = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      setCardVal('kpiTotalUsers', total);
+      setCardVal('kpiOnlineUsers', onlineCount);
+      setCardVal('kpiWarningUsers', depletingCount + endedCount);
+      setCardVal('kpiTotalTraffic', bwStr);
+
       renderFilteredXuiUsers();
 
     } catch (err) {
@@ -3982,7 +4348,9 @@ async function fetchFreeConfigsFromWorker() {
         avatar = clean.substring(0, 2).toUpperCase() || 'AD';
       }
 
-      return { usedGb, totalGb, pct, expStr, daysRem, expired, appLimit, bar, emailL, badgeClass, statusLabel, avatar };
+      const subIdShort = u.subId ? (u.subId.length > 8 ? u.subId.substring(0, 8) + '...' : u.subId) : '---';
+
+      return { usedGb, totalGb, pct, expStr, daysRem, expired, appLimit, bar, emailL, badgeClass, statusLabel, avatar, subIdShort };
     };
 
     // ---------- Render Desktop Table ----------
@@ -3993,46 +4361,53 @@ async function fetchFreeConfigsFromWorker() {
         return `
           <tr>
             <td style="text-align: center;">
-              <label class="xui-switch">
+              <label class="xui-switch" title="${u.enable ? 'غیرفعال‌سازی کاربر' : 'فعال‌سازی کاربر'}">
                 <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
                 <span class="slider"></span>
               </label>
             </td>
             <td>
-              <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="user-cell">
                 <div class="user-avatar-badge">${f.avatar}</div>
                 <div>
-                  <div class="user-name-title">${email}</div>
-                  <div class="user-sub-title">کاربر سرویس • VLESS + Trojan</div>
+                  <div class="user-name-title" dir="ltr">${email}</div>
+                  <div class="user-sub-id" dir="ltr">
+                    <span class="badge-protocol">VLESS</span>
+                    <span>ساب: ${f.subIdShort}</span>
+                  </div>
                 </div>
               </div>
             </td>
             <td>
-              <div style="font-size: 12px; font-family: monospace; direction: ltr; text-align: right; margin-bottom: 4px;">
-                <strong>${f.usedGb}</strong> / ${f.totalGb ? f.totalGb + ' GB' : '∞'}
-                <span style="color: ${f.bar}; font-weight: 700;">(${f.pct}%)</span>
-              </div>
-              <div class="xui-traffic-bar">
-                <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%; border-radius: 999px;"></div>
+              <div class="traffic-cell">
+                <div class="traffic-metrics-row" dir="ltr">
+                  <span><strong>${f.usedGb}</strong> / ${f.totalGb ? f.totalGb + ' GB' : '∞'}</span>
+                  <span style="color: ${f.bar}; font-weight: 700;">${f.pct}%</span>
+                </div>
+                <div class="traffic-bar-track">
+                  <div class="traffic-bar-fill" style="background: ${f.bar}; width: ${f.pct}%;"></div>
+                </div>
               </div>
             </td>
             <td>
-              <div class="days-rem-badge ${f.expired ? 'expired' : ''}">${f.daysRem ? f.daysRem : f.expStr}</div>
-              <div style="font-size: 11px; color: var(--text-4); margin-top: 3px; font-variant-numeric: tabular-nums;">${f.expStr}</div>
+              <div class="expiry-cell">
+                <div class="days-rem-badge ${f.expired ? 'expired' : ''}">${f.daysRem ? f.daysRem : f.expStr}</div>
+                <div class="expiry-date-sub" dir="ltr">${f.expStr}</div>
+              </div>
             </td>
             <td style="text-align: center;">
-              <select onchange="updateUserAppLimit('${email}', this.value)" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; color: var(--accent); font-size: 11.5px; padding: 4px 8px; font-weight: 600; font-family: inherit; cursor: pointer;">
-                <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>📱 ۱ دستگاه</option>
-                <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>📱 ۲ دستگاه</option>
-                <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>📱 ۳ دستگاه</option>
-                <option value="4" ${f.appLimit == 4 ? 'selected' : ''}>📱 ۴ دستگاه</option>
-                <option value="5" ${f.appLimit == 5 ? 'selected' : ''}>📱 ۵ دستگاه</option>
-                <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>📱 ۱۰ دستگاه</option>
-                <option value="20" ${f.appLimit == 20 ? 'selected' : ''}>📱 ۲۰ دستگاه</option>
+              <select class="app-limit-select" onchange="updateUserAppLimit('${email}', this.value)" title="سقف اتصال هم‌زمان">
+                <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
+                <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
+                <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
+                <option value="4" ${f.appLimit == 4 ? 'selected' : ''}>۴ دستگاه</option>
+                <option value="5" ${f.appLimit == 5 ? 'selected' : ''}>۵ دستگاه</option>
+                <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>۱۰ دستگاه</option>
+                <option value="20" ${f.appLimit == 20 ? 'selected' : ''}>۲۰ دستگاه</option>
               </select>
             </td>
             <td>
-              <div class="country-pills-row">
+              <div class="country-pills-row" title="آلمان، ترکیه، فنلاند، بحرین">
                 <span class="country-pill"><svg width="14" height="10" viewBox="0 0 14 10" style="border-radius:2px; flex-shrink:0;"><rect width="14" height="3.33" fill="#000"/><rect y="3.33" width="14" height="3.33" fill="#DD0000"/><rect y="6.66" width="14" height="3.34" fill="#FFCE00"/></svg> DE</span>
                 <span class="country-pill"><svg width="14" height="10" viewBox="0 0 14 10" style="border-radius:2px; flex-shrink:0;"><rect width="14" height="10" fill="#E30A17"/><circle cx="5" cy="5" r="2.5" fill="#fff"/><circle cx="5.6" cy="5" r="2" fill="#E30A17"/><polygon points="8,5 9.2,5.4 8.5,4.3 8.5,5.7 9.2,4.6" fill="#fff"/></svg> TR</span>
                 <span class="country-pill"><svg width="14" height="10" viewBox="0 0 14 10" style="border-radius:2px; flex-shrink:0;"><rect width="14" height="10" fill="#fff"/><rect x="4" width="2.5" height="10" fill="#003580"/><rect y="3.8" width="14" height="2.4" fill="#003580"/></svg> FI</span>
@@ -4041,8 +4416,8 @@ async function fetchFreeConfigsFromWorker() {
             </td>
             <td>
               <div class="xui-actions-cell">
-                <button type="button" class="xui-action-btn" onclick="openXuiEditModal('${email}')" title="ویرایش و رمز">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                <button type="button" class="btn-action-edit" onclick="openXuiEditModal('${email}')" title="ویرایش و تعیین رمز عبور">
+                  <span>✏️ ویرایش و رمز</span>
                 </button>
                 <button type="button" class="xui-action-btn" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" title="کپی لینک ساب">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
@@ -4065,34 +4440,46 @@ async function fetchFreeConfigsFromWorker() {
         const f = fmt(u);
         const email = _xuiEsc(u.email);
         return `
-          <div class="mobile-user-card" style="background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow-sm);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div class="user-avatar-badge" style="width: 32px; height: 32px; font-size: 11px;">${f.avatar}</div>
-                <div class="user-name-title" style="font-size: 13.5px;">${email}</div>
+          <div class="mobile-user-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(15,23,42,0.03), 0 4px 12px rgba(15,23,42,0.02);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="user-avatar-badge" style="width: 34px; height: 34px; font-size: 11px;">${f.avatar}</div>
+                <div>
+                  <div class="user-name-title" dir="ltr" style="font-size: 13.5px;">${email}</div>
+                  <div class="user-sub-id" dir="ltr" style="font-size: 10.5px;">ساب: ${f.subIdShort}</div>
+                </div>
               </div>
-              <label class="xui-switch">
+              <label class="xui-switch" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}">
                 <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
                 <span class="slider"></span>
               </label>
             </div>
-            <div style="margin-bottom: 10px;">
-              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                <span>مصرف: <strong>${f.usedGb}</strong> از <strong>${f.totalGb ? f.totalGb + ' GB' : '∞'}</strong></span>
+            
+            <div style="background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-family: monospace; direction: ltr; margin-bottom: 5px;">
+                <span>مصرف: <strong>${f.usedGb}</strong> / ${f.totalGb ? f.totalGb + ' GB' : '∞'}</span>
                 <span style="color: ${f.bar}; font-weight: 700;">${f.pct}%</span>
               </div>
-              <div class="xui-traffic-bar" style="width: 100%; height: 6px;">
-                <div style="background: ${f.bar}; height: 100%; width: ${f.pct}%; border-radius: 999px;"></div>
+              <div class="traffic-bar-track">
+                <div class="traffic-bar-fill" style="background: ${f.bar}; width: ${f.pct}%;"></div>
               </div>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-3); margin-bottom: 12px;">
-              <span>⏳ ${f.daysRem ? f.daysRem + ' (' + f.expStr + ')' : f.expStr}</span>
-              <span>📱 ${f.appLimit} دستگاه</span>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; margin-bottom: 14px; flex-wrap: wrap; gap: 6px;">
+              <span class="days-rem-badge ${f.expired ? 'expired' : ''}">⏳ ${f.daysRem ? f.daysRem + ' (' + f.expStr + ')' : f.expStr}</span>
+              <span style="color: #64748b; font-weight: 600;">📱 ${f.appLimit} دستگاه</span>
             </div>
+
             <div style="display: flex; gap: 8px;">
-              <button type="button" class="btn-xs-pill" onclick="openXuiEditModal('${email}')" style="flex: 2; padding: 8px; font-weight: 600; border-radius: 8px; cursor: pointer;">✏️ ویرایش و رمز</button>
-              <button type="button" class="btn-xs-pill" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" style="flex: 1; padding: 8px; border-radius: 8px; cursor: pointer;">🔗 کپی ساب</button>
-              <button type="button" class="btn-xs-pill" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="padding: 8px 12px; border-radius: 8px; cursor: pointer;">📱 QR</button>
+              <button type="button" class="btn-action-edit" onclick="openXuiEditModal('${email}')" style="flex: 2; justify-content: center; padding: 9px 12px; font-size: 12.5px;">
+                ✏️ ویرایش و رمز اپ
+              </button>
+              <button type="button" class="xui-action-btn" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" style="width: 40px; height: 38px;" title="کپی لینک ساب">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+              </button>
+              <button type="button" class="xui-action-btn" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="width: 40px; height: 38px;" title="کیوآرکد">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"></rect><rect width="5" height="5" x="16" y="3" rx="1"></rect><rect width="5" height="5" x="3" y="16" rx="1"></rect><path d="M21 16h-3a2 2 0 0 0-2 2v3"></path><path d="M21 21v.01"></path><path d="M12 7v3a2 2 0 0 1-2 2H7"></path><path d="M3 12h.01"></path><path d="M12 3h.01"></path><path d="M12 16v.01"></path><path d="M16 12h1"></path><path d="M21 12v.01"></path><path d="M12 21v-1"></path></svg>
+              </button>
             </div>
           </div>`;
       }).join('');
