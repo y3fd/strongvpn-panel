@@ -2276,8 +2276,7 @@
     const remember = document.getElementById('rememberMe').checked;
 
     const calcHash = await sha256(`${SALT}:${u.toLowerCase()}:${p}`);
-    const isMasterPass = (p === '09170058180Mm@' || p === '09170058180');
-    if (VALID_HASHES.includes(calcHash) || isMasterPass) {
+    if (VALID_HASHES.includes(calcHash)) {
       if (remember) {
         localStorage.setItem('svpn_auth', 'authenticated');
       } else {
@@ -2475,9 +2474,12 @@ function showDashboard() {
   const GITHUB_REPO = 'strongvpn-panel';
   const CONFIG_PATH = 'config.json';
   const VALID_HASHES = [
-    '9c1dec19adad88091055daa2317ffa23e980f325a30cb2fa80d30d68690bb4ac', // @yousofdaryafti
-    '3076a1c261b034ffb5b128dfb8388274b0b7b90f348d5878a0f3d9ccc55fef9a', // yousofdaryafti
-    '4ba705e5b8ff7e4e1c4cc1a802a6bb9f9c560ce55d8f92322d8ea78955b21032'  // yousof
+    '9c1dec19adad88091055daa2317ffa23e980f325a30cb2fa80d30d68690bb4ac', // @yousofdaryafti (v1)
+    '3076a1c261b034ffb5b128dfb8388274b0b7b90f348d5878a0f3d9ccc55fef9a', // yousofdaryafti (v1)
+    '4ba705e5b8ff7e4e1c4cc1a802a6bb9f9c560ce55d8f92322d8ea78955b21032', // yousof (v1)
+    '5012665f5b986cf34cff7119d66dafd60ad8bb05855447a9c46c4ee27cc19cc7', // @yousofdaryafti (v2)
+    '7d03fba428873e892a06f58f2810773d6d272493bba654142b325577f3a4ccfc', // yousofdaryafti (v2)
+    'e4194400e2df6e681ce32d8dc35181c0936788eebdab6658a762e4ba5d3599c7'  // yousof (v2)
   ];
   const SALT = 'strongvpn_panel_salt_2026';
 
@@ -4048,14 +4050,10 @@ async function fetchFreeConfigsFromWorker() {
   }
 
   function generateXuiRandomPass() {
-    const chars = '0123456789abcdefghjkmnpqrstuvwxyz';
-    let pass = '';
-    for (let i = 0; i < 6; i++) {
-      pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    const pass = String(Math.floor(100000 + Math.random() * 900000));
     document.getElementById('xuiEditPassword').value = pass;
     document.getElementById('xuiEditPassword').type = 'text';
-    showToast('🎲 رمز عبور تصادفی ایجاد شد: ' + pass);
+    showToast('🎲 رمز عددی تصادفی ایجاد شد: ' + pass);
   }
 
   function copyXuiPass() {
