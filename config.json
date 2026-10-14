@@ -1,8 +1,8 @@
 {
-  "version": 1791569628624,
+  "version": 1791983674579,
   "announcement": {
-    "id": 1791569627,
-    "active": true,
+    "id": 1791983673,
+    "active": false,
     "type": "update",
     "title": "تست اعلان جدید StrongVPN",
     "message": "سرورهای اختصاصی آلمان و ترکیه با پینگ زیر ۵۰ فعال شدند.",
