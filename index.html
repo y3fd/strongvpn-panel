@@ -28,6 +28,11 @@
       --warning: #f59e0b;
       --warning-bg: #fffbeb;
       --success: #10b981;
+      --accent: #14b8a6;
+      --accent-rgb: 20, 184, 166;
+      --primary: #14b8a6;
+      --text: #f1f5f9;
+      --input-border: #334155;
       --font-base: 13px;
       --radius: 10px;
     }
@@ -822,6 +827,149 @@
     @media (max-width: 480px) {
       .metrics-bar { grid-template-columns: 1fr; }
       .form-row-inline { grid-template-columns: 1fr; gap: 6px; }
+    }
+
+    /* Modal System & Overlays */
+    .app-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 16, 29, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .app-modal-overlay.active,
+    .app-modal-overlay[style*="display: flex"] {
+      display: flex !important;
+    }
+    .app-modal {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      position: relative;
+      color: #f1f5f9;
+      animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
+    }
+    @keyframes modalFadeIn {
+      from { transform: scale(0.96) translateY(8px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    /* Modal Form Elements */
+    .app-modal .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .app-modal .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .app-modal label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .app-modal input[type="text"],
+    .app-modal input[type="password"],
+    .app-modal input[type="number"],
+    .app-modal select {
+      background: #1e293b !important;
+      border: 1px solid #334155 !important;
+      color: #f8fafc !important;
+      border-radius: 10px !important;
+      padding: 10px 12px !important;
+      font-size: 13px !important;
+      width: 100% !important;
+      outline: none !important;
+      box-sizing: border-box !important;
+      transition: border-color 0.2s, box-shadow 0.2s !important;
+      font-family: inherit;
+    }
+    .app-modal input:focus,
+    .app-modal select:focus {
+      border-color: var(--teal, #14b8a6) !important;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2) !important;
+    }
+    .app-modal .hint {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+    .btn-xs-pill {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11.5px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-xs-pill:hover {
+      background: rgba(20, 184, 166, 0.25);
+      color: #ffffff;
+      border-color: var(--teal, #14b8a6);
+    }
+
+    /* Modal Switch Toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.18);
+      transition: .25s;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 2px;
+      background-color: white;
+      transition: .25s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: var(--teal, #14b8a6);
+      border-color: var(--teal, #14b8a6);
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
     }
   </style>
 </head>
