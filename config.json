@@ -1,31 +1,36 @@
 {
-  "version": 1792049245706,
+  "version": 1792173600000,
   "announcement": {
     "id": 1791983673,
     "active": false,
     "type": "update",
-    "title": "تست اعلان جدید StrongVPN",
-    "message": "سرورهای اختصاصی آلمان و ترکیه با پینگ زیر ۵۰ فعال شدند.",
-    "action_text": "بروزرسانی فوری",
-    "action_url": "https://auth.djanah99.ir/download/universal"
+    "title": "StrongVPN",
+    "message": "اتصال مستقیم بدون فیلتر از سرور ایران فعال شد.",
+    "action_text": "بروزرسانی",
+    "action_url": "https://shop.strongdev.space/static/apk/universal.apk"
   },
   "endpoints": {
-    "website_url": "https://shop.djanah99.ir",
-    "support_url": "",
-    "panel_base_url": "",
-    "sub_domain": "",
-    "shop_base_url": "https://shop.djanah99.ir"
+    "website_url": "https://shop.strongdev.space",
+    "support_url": "https://t.me/daryafti_services",
+    "panel_base_url": "https://shop.strongdev.space/KZzbJuUKjXkBat0MfS",
+    "sub_domain": "shop.strongdev.space",
+    "sub_mirrors": [
+      "shop.strongdev.space",
+      "sb1.dev-stong.ir:2053",
+      "sub.strongdev.space"
+    ],
+    "shop_base_url": "https://shop.strongdev.space"
   },
   "app": {
     "latest_version": "1.0.7",
     "min_version": "1.0.0",
-    "apk_url": "https://auth.djanah99.ir/download/universal",
-    "apk_arm64_url": "https://auth.djanah99.ir/download/arm64",
-    "windows_url": "https://auth.djanah99.ir/download/windows",
-    "windows_portable_url": "https://auth.djanah99.ir/download/windows-portable"
+    "apk_url": "https://shop.strongdev.space/static/apk/universal.apk",
+    "apk_arm64_url": "https://shop.strongdev.space/static/apk/arm64-v8a.apk",
+    "windows_url": "https://shop.strongdev.space/static/windows/StrongVPN-Setup.exe",
+    "windows_portable_url": "https://shop.strongdev.space/static/windows/StrongVPN-Portable.zip"
   },
   "fallback_configs": [],
-  "clear_cache_revision": 4,
+  "clear_cache_revision": 5,
   "home_banner": {
     "enabled": false,
     "show_for": "all",
