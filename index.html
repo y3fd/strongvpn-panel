@@ -2537,7 +2537,16 @@
     'https://app-sync.yousof-janahi-006.workers.dev' // 3. Fallback worker
   ];
   let CF_WORKER_API = localStorage.getItem('strongvpn_worker_api') || DEFAULT_ENDPOINTS[0];
-  const CF_ADMIN_SECRET = '80136a8179fa1e1f81749a3ac3cce568';
+  // Admin API key is NEVER stored in this public file; entered once per device after login.
+  let CF_ADMIN_SECRET = localStorage.getItem('svpn_cf_secret') || sessionStorage.getItem('svpn_cf_secret') || '';
+  function ensureAdminSecret(force) {
+    if (CF_ADMIN_SECRET && !force) return true;
+    const s = (prompt('کلید API مدیریت (Admin Secret) را وارد کنید:') || '').trim();
+    if (!s) return false;
+    CF_ADMIN_SECRET = s;
+    localStorage.setItem('svpn_cf_secret', s);
+    return true;
+  }
 
   // Smart fetch interceptor: automatic failover, timeout, and secret injection
   const _nativeFetch = window.fetch.bind(window);
@@ -2610,6 +2619,9 @@
           }
           return res;
         } else if (res.status === 401 || res.status === 403) {
+          if (res.status === 401 && !init.__retried && ensureAdminSecret(true)) {
+            return window.fetch(input, Object.assign({}, init, { __retried: true }));
+          }
           return res;
         } else {
           lastErr = new Error(`خطای سرور HTTP ${res.status}`);
@@ -2789,6 +2801,7 @@
       } else {
         sessionStorage.setItem('svpn_auth', 'authenticated');
       }
+      ensureAdminSecret(false);
       showDashboard();
     } else {
       const err = document.getElementById('loginError');
@@ -2803,6 +2816,9 @@
 
   function handleLogout() {
     localStorage.removeItem('svpn_auth');
+    localStorage.removeItem('svpn_cf_secret');
+    sessionStorage.removeItem('svpn_cf_secret');
+    CF_ADMIN_SECRET = '';
     sessionStorage.removeItem('svpn_auth');
     const u = document.getElementById('loginUser'); if (u) u.value = '';
     const p = document.getElementById('loginPass'); if (p) p.value = '';
