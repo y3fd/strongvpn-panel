@@ -2853,7 +2853,7 @@
         if (typeof fetchInternalUsers === 'function') fetchInternalUsers();
         if (typeof fetchDashboardStats === 'function') fetchDashboardStats();
       } else {
-        showToast('❌ خطا در همگام‌سازی: ' + (data.message || 'خطای سرور'), true);
+        showToast('❌ خطا در همگام‌سازی: ' + (res.status === 401 ? 'کلید ادمین نامعتبر است؛ خارج شوید و دوباره وارد شوید' : (data.message || ('خطای سرور HTTP ' + res.status))), true);
       }
     } catch (e) {
       showToast('❌ خطا در ارتباط با سرور ورکر: ' + e.message, true);
