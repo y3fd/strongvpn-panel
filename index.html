@@ -2,7 +2,10 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
   <title>کنترل پنل مدیریت StrongVPN</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -811,25 +814,115 @@
     }
     #toast.error { background: var(--danger); }
 
-    /* Responsive */
+    /* Sidebar Backdrop for Mobile (Smooth iOS dismiss) */
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 16, 29, 0.68);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 998;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    .sidebar-backdrop.active {
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Responsive & Mobile First Polishing (iOS / Android) */
     @media (max-width: 860px) {
+      body {
+        padding-bottom: env(safe-area-inset-bottom, 20px);
+      }
       .sidebar {
         transform: translateX(100%);
-        transition: transform 0.25s ease;
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 999;
+        box-shadow: -8px 0 25px rgba(0,0,0,0.4);
       }
       .sidebar.mobile-open {
         transform: translateX(0);
       }
-      .main-content { margin-right: 0; padding: 12px 14px 80px; }
-      .hamburger-btn { display: inline-flex; }
+      .main-content {
+        margin-right: 0;
+        padding: 10px 12px 90px;
+      }
+      .hamburger-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        font-size: 18px;
+      }
+      .top-header {
+        gap: 10px;
+        padding-bottom: 8px;
+      }
+      .header-controls {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .quick-search-box {
+        width: 100%;
+        min-width: 100%;
+      }
+      .quick-search-box input {
+        height: 38px;
+        font-size: 16px !important; /* Prevents iOS Safari auto-zoom */
+      }
+      .btn-refresh {
+        width: 100%;
+        height: 36px;
+        justify-content: center;
+      }
       .metrics-bar { grid-template-columns: repeat(2, 1fr); }
       .overview-grid { grid-template-columns: 1fr; }
       .announcement-grid { grid-template-columns: 1fr; }
-      .floating-save-bar { left: 50%; width: 92%; justify-content: space-between; }
+      .floating-save-bar {
+        left: 50%;
+        width: 94%;
+        justify-content: space-between;
+        bottom: max(14px, env(safe-area-inset-bottom));
+      }
+
+      /* Inputs font-size 16px on mobile prevents iOS Safari unwanted auto-zoom */
+      input[type="text"],
+      input[type="password"],
+      input[type="number"],
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+
+      /* Modal responsive styling */
+      .app-modal {
+        padding: 18px 14px !important;
+        margin: 8px !important;
+        max-height: 92vh !important;
+        border-radius: 18px !important;
+      }
+
+      /* User Cards Polish */
+      .mobile-user-card {
+        padding: 14px 12px !important;
+        border-radius: 14px !important;
+      }
     }
+
     @media (max-width: 480px) {
       .metrics-bar { grid-template-columns: 1fr; }
       .form-row-inline { grid-template-columns: 1fr; gap: 6px; }
+      .users-kpi-grid { grid-template-columns: 1fr; }
+      .brand-title { font-size: 16px; }
+      .header-titles h1 { font-size: 16px; }
     }
 
     /* Modal System & Overlays */
@@ -1336,6 +1429,7 @@
 <!-- 2. MAIN APP SHELL -->
 <div id="appShell">
   <!-- Fixed Sidebar (210px) -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleMobileSidebar()"></div>
   <aside class="sidebar" id="sidebar">
     <div class="brand-box">
       <div class="brand-icon">⚡</div>
@@ -2771,14 +2865,22 @@
       if (hs) hs.innerText = titles[tabName].sub;
     }
     const sb = document.getElementById('sidebar');
+    const bd = document.getElementById('sidebarBackdrop');
     if (sb && sb.classList.contains('mobile-open')) {
       sb.classList.remove('mobile-open');
+    }
+    if (bd && bd.classList.contains('active')) {
+      bd.classList.remove('active');
     }
   }
 
   function toggleMobileSidebar() {
     const sb = document.getElementById('sidebar');
-    if (sb) sb.classList.toggle('mobile-open');
+    const bd = document.getElementById('sidebarBackdrop');
+    if (sb) {
+      const isOpen = sb.classList.toggle('mobile-open');
+      if (bd) bd.classList.toggle('active', isOpen);
+    }
   }
 
   function switchServersSubTab(sub) {
