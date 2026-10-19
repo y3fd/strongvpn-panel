@@ -2615,6 +2615,17 @@
           <span class="slider"></span>
         </label>
       </div>
+
+      <!-- 7. Custom Message for User in App -->
+      <div class="form-group full" style="background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.25); border-radius: 14px; padding: 14px;">
+        <label style="margin-bottom: 6px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+          <span>💬</span> <span>پیام اختصاصی کاربر در اپلیکیشن (اختیاری):</span>
+        </label>
+        <textarea id="xuiEditCustomMessage" rows="2" placeholder="متن پیامی که مایلید اختصاصاً به این کاربر در اپلیکیشن نمایش داده شود..." style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--input-border); border-radius: 10px; color: var(--text); padding: 10px; font-family: inherit; font-size: 13px; resize: vertical; box-sizing: border-box;"></textarea>
+        <div class="hint" style="margin-top: 6px; font-size: 11px; color: #94a3b8; line-height: 1.6;">
+          💡 در صورت پر بودن این فیلد، به محض باز شدن اپلیکیشن یا لاگین، این پیام به صورت پاپ‌آپ اختصاصی فقط به این کاربر نمایش داده می‌شود. (برای لغو پیام، کادر را خالی کنید)
+        </div>
+      </div>
     </div>
 
     <!-- Modal Footer Actions -->
@@ -4677,6 +4688,8 @@ async function fetchFreeConfigsFromWorker() {
     document.getElementById('xuiEditEmail').value = email;
     document.getElementById('xuiEditDisplayEmail').innerText = email;
     document.getElementById('xuiEditPassword').value = '';
+    const cmEl = document.getElementById('xuiEditCustomMessage');
+    if (cmEl) cmEl.value = '';
     document.getElementById('xuiEditPassword').type = 'password';
     document.getElementById('xuiEditTotalGb').value = '';
     document.getElementById('xuiEditRenewalMode').value = 'keep';
@@ -4706,6 +4719,8 @@ async function fetchFreeConfigsFromWorker() {
       const gbVal = u.totalGB > 0 ? Number((u.totalGB / 1073741824).toFixed(2)) : 0;
       document.getElementById('xuiEditTotalGb').value = gbVal;
       document.getElementById('xuiEditEnable').checked = u.enable !== false;
+      const customMsgEl = document.getElementById('xuiEditCustomMessage');
+      if (customMsgEl) customMsgEl.value = u.custom_message || u.customMessage || '';
 
       if (sb) {
         if (u.enable !== false) { sb.innerText = 'فعال'; sb.style.background = 'rgba(16,185,129,0.2)'; sb.style.color = 'var(--success)'; }
@@ -4796,6 +4811,7 @@ async function fetchFreeConfigsFromWorker() {
     const renewalMode = document.getElementById('xuiEditRenewalMode').value;
     const resetTraffic = document.getElementById('xuiEditResetTraffic').checked;
     const enable = document.getElementById('xuiEditEnable').checked;
+    const customMessage = (document.getElementById('xuiEditCustomMessage') ? document.getElementById('xuiEditCustomMessage').value : '').trim();
     const saveBtn = document.getElementById('btnSaveXuiEdit');
 
     if (!email) {
@@ -4804,7 +4820,7 @@ async function fetchFreeConfigsFromWorker() {
     }
 
     // قرارداد ورکر: volume_gb (گیگابایت) / days یا expiry_time / max_devices / enable / reset_traffic
-    const payload = { email, password, max_devices: maxDevices, enable };
+    const payload = { email, password, max_devices: maxDevices, enable, custom_message: customMessage };
     if (gbRaw !== '' && !isNaN(parseFloat(gbRaw))) {
       payload.volume_gb = Math.max(0, parseFloat(gbRaw)); // 0 یعنی بدون محدودیت حجم
     }
