@@ -11,34 +11,308 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    
+    /* ===== THEME & DESIGN TOKENS (HIGH-END VISUAL DESIGN & MINIMALIST UI) ===== */
     :root {
-      --sidebar-w: 210px;
-      --sidebar-bg: #0c1424;
-      --sidebar-hover: #142036;
+      --sidebar-w: 220px;
+      --sidebar-bg: #0b1120;
+      --sidebar-border: rgba(255, 255, 255, 0.06);
+      --sidebar-hover: #131c31;
       --sidebar-text: #94a3b8;
+      --sidebar-text-active: #ffffff;
       --teal: #14b8a6;
       --teal-hover: #0d9488;
       --teal-soft: rgba(20, 184, 166, 0.12);
-      --bg-main: #f1f4f8;
+      --bg-main: #f3f6fa;
       --card-bg: #ffffff;
       --card-border: #e2e8f0;
+      --card-border-subtle: #f1f5f9;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --text-sub: #94a3b8;
+      --text: #0f172a;
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --input-focus: #14b8a6;
+      --table-stripe: #f8fafc;
+      --table-hover: rgba(20, 184, 166, 0.04);
+      --table-header-bg: #f8fafc;
+      --modal-bg: #ffffff;
+      --modal-border: #e2e8f0;
+      --pill-inactive-bg: #f1f5f9;
+      --pill-inactive-border: #e2e8f0;
+      --pill-inactive-text: #475569;
+      --pill-active-bg: #14b8a6;
+      --pill-active-text: #ffffff;
+      --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
       --danger: #ef4444;
       --danger-bg: #fef2f2;
       --danger-border: #fecaca;
       --warning: #f59e0b;
       --warning-bg: #fffbeb;
+      --warning-border: #fde68a;
       --success: #10b981;
+      --success-bg: #ecfdf5;
+      --success-border: #a7f3d0;
       --accent: #14b8a6;
       --accent-rgb: 20, 184, 166;
       --primary: #14b8a6;
-      --text: #f1f5f9;
-      --input-border: #334155;
       --font-base: 13px;
-      --radius: 10px;
+      --radius: 12px;
+      --radius-sm: 8px;
     }
+
+    [data-theme="dark"] {
+      --sidebar-bg: #070c18;
+      --sidebar-border: rgba(255, 255, 255, 0.06);
+      --sidebar-hover: #10192d;
+      --sidebar-text: #94a3b8;
+      --sidebar-text-active: #38bdf8;
+      --bg-main: #070b14;
+      --card-bg: #0d1527;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-subtle: rgba(255, 255, 255, 0.04);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --text: #f8fafc;
+      --input-bg: #121c32;
+      --input-border: rgba(255, 255, 255, 0.12);
+      --input-focus: #14b8a6;
+      --table-stripe: rgba(255, 255, 255, 0.015);
+      --table-hover: rgba(20, 184, 166, 0.08);
+      --table-header-bg: #0a1120;
+      --modal-bg: #0d1527;
+      --modal-border: rgba(255, 255, 255, 0.1);
+      --pill-inactive-bg: rgba(255, 255, 255, 0.05);
+      --pill-inactive-border: rgba(255, 255, 255, 0.08);
+      --pill-inactive-text: #94a3b8;
+      --pill-active-bg: #14b8a6;
+      --pill-active-text: #ffffff;
+      --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-border: rgba(239, 68, 68, 0.25);
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-border: rgba(245, 158, 11, 0.25);
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --success-border: rgba(16, 185, 129, 0.25);
+    }
+
+    /* Tabular numbers for clean financial & traffic metrics */
+    .data-table td, .metric-val, .users-kpi-value, .badge, .status-tag, .traffic-bytes {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Modern Theme Toggle Button */
+    .theme-toggle-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--pill-inactive-bg);
+      border: 1px solid var(--pill-inactive-border);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--teal-soft);
+      color: var(--teal);
+      border-color: rgba(20, 184, 166, 0.35);
+      transform: translateY(-1px);
+    }
+    .theme-toggle-btn:active {
+      transform: scale(0.95);
+    }
+    [data-theme="dark"] .theme-toggle-btn .moon-icon { display: none; }
+    [data-theme="dark"] .theme-toggle-btn .sun-icon { display: block; }
+    :root:not([data-theme="dark"]) .theme-toggle-btn .sun-icon { display: none; }
+    :root:not([data-theme="dark"]) .theme-toggle-btn .moon-icon { display: block; }
+
+    /* Quick Search Input with Clear Button */
+    .quick-search-box {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .quick-search-box input {
+      padding-right: 32px !important;
+      padding-left: 28px !important;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--input-bg);
+      color: var(--text-main);
+      border: 1px solid var(--input-border);
+      font-family: inherit;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .quick-search-box input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+      outline: none;
+    }
+    .quick-search-box .search-svg-icon {
+      position: absolute;
+      right: 10px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .quick-search-box .search-clear-btn {
+      position: absolute;
+      left: 8px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.2);
+      border: none;
+      color: var(--text-muted);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.15s;
+    }
+    .quick-search-box .search-clear-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+
+    /* ===== UNIFIED USERS TOOLBAR & CATEGORY / SORT BAR ===== */
+    .users-toolbar-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .users-toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .segmented-filter-bar {
+      display: inline-flex;
+      background: var(--pill-inactive-bg);
+      border: 1px solid var(--pill-inactive-border);
+      border-radius: 9999px;
+      padding: 3px;
+      gap: 3px;
+      overflow-x: auto;
+      max-width: 100%;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .segmented-filter-bar::-webkit-scrollbar { display: none; }
+    .seg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--pill-inactive-text);
+      background: transparent;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .seg-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .seg-btn.active {
+      color: var(--pill-active-text) !important;
+      background: var(--pill-active-bg) !important;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(20, 184, 166, 0.35);
+    }
+    .status-indicator-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-indicator-dot.online { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
+    .status-indicator-dot.depleting { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.6); }
+    .status-indicator-dot.ended { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
+    .status-indicator-dot.disabled { background: #94a3b8; }
+
+    /* Sort Control Bar & Pills */
+    .sort-control-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .sort-bar-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .sort-pills-group {
+      display: inline-flex;
+      background: var(--pill-inactive-bg);
+      border: 1px solid var(--pill-inactive-border);
+      border-radius: 9999px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .sort-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--pill-inactive-text);
+      background: transparent;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .sort-pill-btn:hover {
+      color: var(--text-main);
+    }
+    .sort-pill-btn.active {
+      color: #ffffff !important;
+      background: #0d9488 !important;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(13, 148, 136, 0.35);
+    }
+    .users-count-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--teal);
+      background: var(--teal-soft);
+      padding: 3px 9px;
+      border-radius: 9999px;
+      border: 1px solid rgba(20, 184, 166, 0.25);
+    }
+    .sort-icon-indicator {
+      font-size: 11px;
+      color: var(--teal);
+      margin-right: 4px;
+    }
+
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif; }
     html, body { background-color: var(--bg-main); color: var(--text-main); font-size: var(--font-base); direction: rtl; }
@@ -1483,8 +1757,10 @@
   <main class="main-content">
     <!-- Top Header -->
     <header class="top-header">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button type="button" class="hamburger-btn" onclick="toggleMobileSidebar()">☰</button>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button type="button" class="hamburger-btn" onclick="toggleMobileSidebar()" title="منوی ناوبری">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
         <div class="header-titles">
           <h1 id="headerTitle">نمای کلی</h1>
           <p id="headerSubtitle">وضعیت سیستم، کاربران و سرورها در یک نگاه</p>
@@ -1492,12 +1768,18 @@
       </div>
 
       <div class="header-controls">
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="تغییر حالت شب و روز">
+          <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
         <div class="quick-search-box">
+          <svg class="search-svg-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input type="text" id="xuiSearchInput" placeholder="جستجوی کاربر، شماره یا شناسه..." oninput="renderFilteredXuiUsers()">
-          <span class="icon">🔍</span>
+          <button type="button" class="search-clear-btn" id="searchClearBtn" onclick="clearXuiSearch()" title="پاک کردن جستجو">✕</button>
         </div>
         <button type="button" class="btn-refresh" onclick="fetchDashboardStats(); fetchXuiUsers(); fetchCurrentConfig(); showToast('در حال دریافت اطلاعات تازه...');">
-          🔄 بروزرسانی داده‌ها
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+          <span>بروزرسانی داده‌ها</span>
         </button>
       </div>
     </header>
@@ -1662,21 +1944,43 @@
         </div>
 
         <div class="card">
-          <div class="card-header">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
             <div class="card-title">
               <span>👥</span>
-              <span>مدیریت مشترکین و اختصاص رمز ورود اپلیکیشن</span>
+              <span>مدیریت مشترکین ۳X-UI و اختصاص رمز ورود اپلیکیشن</span>
+            </div>
+            <div id="xuiFilteredCountText" class="users-count-pill">در حال بارگذاری...</div>
+          </div>
+
+          <!-- Unified Toolbar: Status Filters + Sort Controls -->
+          <div class="users-toolbar-container">
+            <div class="users-toolbar-row">
+              <!-- Segmented Filter Bar -->
+              <div class="segmented-filter-bar">
+                <button type="button" class="seg-btn active" id="btnFilterAll" onclick="setXuiFilter('all')">همه <span id="xuiStatTotal">(...)</span></button>
+                <button type="button" class="seg-btn" id="btnFilterOnline" onclick="setXuiFilter('online')"><span class="status-indicator-dot online"></span> آنلاین <span id="xuiStatOnline">(0)</span></button>
+                <button type="button" class="seg-btn" id="btnFilterDepleting" onclick="setXuiFilter('depleting')"><span class="status-indicator-dot depleting"></span> رو به اتمام <span id="xuiStatDepleting">(0)</span></button>
+                <button type="button" class="seg-btn" id="btnFilterEnded" onclick="setXuiFilter('ended')"><span class="status-indicator-dot ended"></span> منقضی <span id="xuiStatEnded">(0)</span></button>
+                <button type="button" class="seg-btn" id="btnFilterDisabled" onclick="setXuiFilter('disabled')"><span class="status-indicator-dot disabled"></span> غیرفعال <span id="xuiStatDisabled">(0)</span></button>
+              </div>
+
+              <!-- Sort Controls (Newest / Oldest / Traffic / Expiry) -->
+              <div class="sort-control-bar">
+                <span class="sort-bar-label">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 15 12 20 17 15"></polyline><line x1="12" y1="9" x2="12" y2="20"></line><polyline points="17 9 12 4 7 9"></polyline><line x1="12" y1="15" x2="12" y2="4"></line></svg>
+                  مرتب‌سازی:
+                </span>
+                <div class="sort-pills-group">
+                  <button type="button" class="sort-pill-btn active" data-sort="newest" onclick="setXuiSort('newest')" title="مرتب‌سازی بر اساس جدیدترین کاربران">✨ جدیدترین</button>
+                  <button type="button" class="sort-pill-btn" data-sort="oldest" onclick="setXuiSort('oldest')" title="مرتب‌سازی بر اساس قدیمی‌ترین کاربران">⏳ قدیمی‌ترین</button>
+                  <button type="button" class="sort-pill-btn" data-sort="traffic_desc" onclick="setXuiSort('traffic_desc')" title="بیشترین مصرف ترافیک">🔥 بیشترین حجم</button>
+                  <button type="button" class="sort-pill-btn" data-sort="expiry_asc" onclick="setXuiSort('expiry_asc')" title="نزدیک‌ترین زمان انقضا">⏰ نزدیک به انقضا</button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Segmented Filter Bar -->
-          <div class="segmented-filter-bar">
-            <button type="button" class="seg-btn active" id="btnFilterAll" onclick="setXuiFilter('all')">همه <span id="xuiStatTotal">(533)</span></button>
-            <button type="button" class="seg-btn" id="btnFilterOnline" onclick="setXuiFilter('online')"><span class="dot green"></span> آنلاین <span id="xuiStatOnline">(0)</span></button>
-            <button type="button" class="seg-btn" id="btnFilterDepleting" onclick="setXuiFilter('depleting')"><span class="dot yellow"></span> رو به اتمام <span id="xuiStatDepleting">(0)</span></button>
-            <button type="button" class="seg-btn" id="btnFilterEnded" onclick="setXuiFilter('ended')"><span class="dot red"></span> منقضی <span id="xuiStatEnded">(0)</span></button>
-            <button type="button" class="seg-btn" id="btnFilterDisabled" onclick="setXuiFilter('disabled')"><span class="dot gray"></span> غیرفعال <span id="xuiStatDisabled">(0)</span></button>
-          </div>
+
 
           <!-- Table View -->
           <div class="table-wrap">
@@ -1684,9 +1988,15 @@
               <thead>
                 <tr>
                   <th style="width: 46px; text-align: center;">وضعیت</th>
-                  <th style="min-width: 170px;">کاربر و شناسه ساب</th>
-                  <th style="min-width: 160px;">مصرف ترافیک</th>
-                  <th style="min-width: 130px;">اعتبار / انقضا</th>
+                  <th style="min-width: 170px; cursor: pointer;" onclick="handleXuiHeaderSort('user')" title="کلیک برای مرتب‌سازی الفبایی">
+                    کاربر و شناسه ساب <span id="sortIconUser" class="sort-icon-indicator">↕</span>
+                  </th>
+                  <th style="min-width: 160px; cursor: pointer;" onclick="handleXuiHeaderSort('traffic')" title="کلیک برای مرتب‌سازی حجم مصرفی">
+                    مصرف ترافیک <span id="sortIconTraffic" class="sort-icon-indicator">↕</span>
+                  </th>
+                  <th style="min-width: 130px; cursor: pointer;" onclick="handleXuiHeaderSort('expiry')" title="کلیک برای مرتب‌سازی تاریخ انقضا">
+                    اعتبار / انقضا <span id="sortIconExpiry" class="sort-icon-indicator">↕</span>
+                  </th>
                   <th style="text-align: center; width: 110px;">سقف دستگاه</th>
                   <th style="min-width: 150px;">سرورها و نودها</th>
                   <th style="text-align: center; width: 140px;">عملیات</th>
@@ -1822,14 +2132,22 @@
             <button type="button" class="btn btn-outline" onclick="fetchInternalUsers()">🔄 بروزرسانی جدول</button>
           </div>
 
-          <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center;">
             <input type="text" class="form-input" id="intSearchInput" placeholder="جستجوی شماره، نام کاربری یا یادداشت..." dir="ltr" style="flex: 2; min-width: 180px;" onkeyup="filterInternalUsers()">
-            <select class="form-input" id="intStatusFilter" onchange="filterInternalUsers()" style="flex: 1; min-width: 140px;">
+            <select class="form-input" id="intStatusFilter" onchange="filterInternalUsers()" style="flex: 1; min-width: 130px;">
               <option value="all">همه وضعیت‌ها</option>
               <option value="active">فقط فعال</option>
               <option value="volume_exhausted">اتمام حجم</option>
               <option value="time_expired">پایان زمان</option>
               <option value="disabled">غیرفعال</option>
+            </select>
+            <select class="form-input" id="intSortFilter" onchange="filterInternalUsers()" style="flex: 1; min-width: 150px;">
+              <option value="newest" selected>✨ جدیدترین ثبت‌شده</option>
+              <option value="oldest">⏳ قدیمی‌ترین ثبت‌شده</option>
+              <option value="traffic_desc">🔥 بیشترین مصرف حجم</option>
+              <option value="traffic_asc">🌱 کمترین مصرف حجم</option>
+              <option value="expiry_asc">⏰ نزدیک‌ترین انقضا</option>
+              <option value="name_asc">🔤 نام (الفبا)</option>
             </select>
           </div>
 
@@ -3034,42 +3352,93 @@ function showDashboard() {
   }
 
 
-  // ===== THEME MANAGEMENT (Light / Dark) =====
+  // ===== THEME MANAGEMENT (Light / Dark - High-End Aesthetic) =====
   function initTheme() {
-    const t = localStorage.getItem('svpn_theme') || 'light';
+    const t = localStorage.getItem('svpn_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', t);
     const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.innerText = t === 'light' ? '🌙' : '☀️';
+    if (btn) {
+      btn.innerHTML = t === 'dark' 
+        ? '<svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+        : '<svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    }
   }
+
   function toggleTheme() {
-    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    const cur = document.documentElement.getAttribute('data-theme') || 'dark';
     const next = cur === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('svpn_theme', next);
     const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.innerText = next === 'light' ? '🌙' : '☀️';
+    if (btn) {
+      btn.innerHTML = next === 'dark' 
+        ? '<svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+        : '<svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    }
   }
   document.addEventListener('DOMContentLoaded', initTheme);
   initTheme();
 
-  // ===== FILTER & PAGINATION HELPERS =====
+  // ===== FILTER, SORT & SEARCH HELPERS (VPN Panel High-End UX) =====
   let currentXuiFilter = 'all';
+  let currentXuiSort = 'newest';
 
   function setXuiFilter(filterName) {
     currentXuiFilter = filterName;
     const filterButtons = {
-      'all': 'pillFilterAll',
-      'online': 'pillFilterOnline',
-      'depleting': 'pillFilterDepleting',
-      'ended': 'pillFilterEnded',
-      'disabled': 'pillFilterDisabled'
+      'all': 'btnFilterAll',
+      'online': 'btnFilterOnline',
+      'depleting': 'btnFilterDepleting',
+      'ended': 'btnFilterEnded',
+      'disabled': 'btnFilterDisabled'
     };
     Object.keys(filterButtons).forEach(k => {
-      const el = document.getElementById(filterButtons[k]);
+      const el = document.getElementById(filterButtons[k]) || document.getElementById('pillFilter' + k.charAt(0).toUpperCase() + k.slice(1));
       if (el) el.classList.toggle('active', k === filterName);
     });
     if (typeof renderFilteredXuiUsers === 'function') {
       renderFilteredXuiUsers();
+    }
+  }
+
+  function setXuiSort(sortName) {
+    currentXuiSort = sortName;
+    document.querySelectorAll('.sort-pill-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.sort === sortName);
+    });
+    updateSortIndicators();
+    if (typeof renderFilteredXuiUsers === 'function') {
+      renderFilteredXuiUsers();
+    }
+  }
+
+  function handleXuiHeaderSort(col) {
+    if (col === 'user') {
+      setXuiSort(currentXuiSort === 'name_asc' ? 'name_desc' : 'name_asc');
+    } else if (col === 'traffic') {
+      setXuiSort(currentXuiSort === 'traffic_desc' ? 'traffic_asc' : 'traffic_desc');
+    } else if (col === 'expiry') {
+      setXuiSort(currentXuiSort === 'expiry_asc' ? 'expiry_desc' : 'expiry_asc');
+    }
+  }
+
+  function updateSortIndicators() {
+    const iconUser = document.getElementById('sortIconUser');
+    const iconTraffic = document.getElementById('sortIconTraffic');
+    const iconExpiry = document.getElementById('sortIconExpiry');
+    if (iconUser) iconUser.innerText = currentXuiSort === 'name_asc' ? '↑' : (currentXuiSort === 'name_desc' ? '↓' : '↕');
+    if (iconTraffic) iconTraffic.innerText = currentXuiSort === 'traffic_desc' ? '↓' : (currentXuiSort === 'traffic_asc' ? '↑' : '↕');
+    if (iconExpiry) iconExpiry.innerText = currentXuiSort === 'expiry_asc' ? '↑' : (currentXuiSort === 'expiry_desc' ? '↓' : '↕');
+  }
+
+  function clearXuiSearch() {
+    const input = document.getElementById('xuiSearchInput');
+    if (input) {
+      input.value = '';
+      const clearBtn = document.getElementById('searchClearBtn');
+      if (clearBtn) clearBtn.style.display = 'none';
+      renderFilteredXuiUsers();
+      input.focus();
     }
   }
 
@@ -4359,7 +4728,10 @@ async function fetchFreeConfigsFromWorker() {
       }
 
       const users = data.users;
-      cachedXuiUsers = users;
+      cachedXuiUsers = users.map((u, idx) => ({
+        ...u,
+        _origIdx: idx
+      }));
       const sbBadge = document.getElementById('sideBadgeUsers');
       if (sbBadge) sbBadge.innerText = (data.total !== undefined ? data.total : (users ? users.length : 0));
       const bxui = document.getElementById('badge-xui-users');
@@ -4435,7 +4807,11 @@ async function fetchFreeConfigsFromWorker() {
   function renderFilteredXuiUsers() {
     const tbody = document.getElementById('xuiUsersTableBody');
     const cardsContainer = document.getElementById('xuiUsersMobileCards');
-    const q = (document.getElementById('xuiSearchInput')?.value || '').trim().toLowerCase();
+    const qInput = document.getElementById('xuiSearchInput');
+    const q = (qInput?.value || '').trim().toLowerCase();
+
+    const clearBtn = document.getElementById('searchClearBtn');
+    if (clearBtn) clearBtn.style.display = q ? 'inline-flex' : 'none';
 
     let users = cachedXuiUsers || [];
 
@@ -4448,7 +4824,7 @@ async function fetchFreeConfigsFromWorker() {
       });
     }
 
-    // Filter by Active Pill
+    // Filter by Active Pill (Status Filter)
     if (currentXuiFilter !== 'all') {
       users = users.filter(u => {
         const used = ((u.traffic && u.traffic.up) || 0) + ((u.traffic && u.traffic.down) || 0);
@@ -4466,6 +4842,58 @@ async function fetchFreeConfigsFromWorker() {
         }
         return true;
       });
+    }
+
+    // Sort users by currentXuiSort (Newest / Oldest / Traffic / Expiry / Name)
+    users = [...users].sort((a, b) => {
+      if (currentXuiSort === 'newest') {
+        const timeA = a.createdTime || a.createdAt || a.createTime || 0;
+        const timeB = b.createdTime || b.createdAt || b.createTime || 0;
+        if (timeA && timeB && timeA !== timeB) return timeB - timeA;
+        const idA = typeof a.id === 'number' ? a.id : parseInt(a.id, 10);
+        const idB = typeof b.id === 'number' ? b.id : parseInt(b.id, 10);
+        if (!isNaN(idA) && !isNaN(idB) && idA !== idB) return idB - idA;
+        const idxA = a._origIdx !== undefined ? a._origIdx : 0;
+        const idxB = b._origIdx !== undefined ? b._origIdx : 0;
+        return idxB - idxA;
+      } else if (currentXuiSort === 'oldest') {
+        const timeA = a.createdTime || a.createdAt || a.createTime || 0;
+        const timeB = b.createdTime || b.createdAt || b.createTime || 0;
+        if (timeA && timeB && timeA !== timeB) return timeA - timeB;
+        const idA = typeof a.id === 'number' ? a.id : parseInt(a.id, 10);
+        const idB = typeof b.id === 'number' ? b.id : parseInt(b.id, 10);
+        if (!isNaN(idA) && !isNaN(idB) && idA !== idB) return idA - idB;
+        const idxA = a._origIdx !== undefined ? a._origIdx : 0;
+        const idxB = b._origIdx !== undefined ? b._origIdx : 0;
+        return idxA - idxB;
+      } else if (currentXuiSort === 'traffic_desc') {
+        const usedA = ((a.traffic && a.traffic.up) || 0) + ((a.traffic && a.traffic.down) || 0);
+        const usedB = ((b.traffic && b.traffic.up) || 0) + ((b.traffic && b.traffic.down) || 0);
+        return usedB - usedA;
+      } else if (currentXuiSort === 'traffic_asc') {
+        const usedA = ((a.traffic && a.traffic.up) || 0) + ((a.traffic && a.traffic.down) || 0);
+        const usedB = ((b.traffic && b.traffic.up) || 0) + ((b.traffic && b.traffic.down) || 0);
+        return usedA - usedB;
+      } else if (currentXuiSort === 'expiry_asc') {
+        const expA = a.expiryTime > 0 ? a.expiryTime : Infinity;
+        const expB = b.expiryTime > 0 ? b.expiryTime : Infinity;
+        return expA - expB;
+      } else if (currentXuiSort === 'expiry_desc') {
+        const expA = a.expiryTime > 0 ? a.expiryTime : -Infinity;
+        const expB = b.expiryTime > 0 ? b.expiryTime : -Infinity;
+        return expB - expA;
+      } else if (currentXuiSort === 'name_asc') {
+        return (a.email || '').localeCompare(b.email || '');
+      } else if (currentXuiSort === 'name_desc') {
+        return (b.email || '').localeCompare(a.email || '');
+      }
+      return 0;
+    });
+
+    // Update count pill badges
+    const countPill = document.getElementById('xuiFilteredCountText');
+    if (countPill) {
+      countPill.innerText = `${users.length} مشترک یافت شد`;
     }
 
     // Update Pagination Text
@@ -5093,17 +5521,21 @@ async function updateUserAppLimit(phone, maxDevices) {
       const pct = stats.total_allocated_bytes > 0 ? Math.round((stats.total_used_bytes / stats.total_allocated_bytes) * 100) : 0;
       document.getElementById('intStatPercent').innerText = pct + '%';
 
-      renderInternalUsers(allInternalUsers);
+      filterInternalUsers();
     } catch (err) {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--danger); padding: 16px;">خطای ارتباط با سرور: ' + err.message + '</td></tr>';
     }
   }
 
+  let currentIntSort = 'newest';
+
   function filterInternalUsers() {
     const q = (document.getElementById('intSearchInput')?.value || '').trim().toLowerCase();
     const status = document.getElementById('intStatusFilter')?.value || 'all';
+    const sort = document.getElementById('intSortFilter')?.value || currentIntSort;
+    currentIntSort = sort;
 
-    const filtered = allInternalUsers.filter(u => {
+    let filtered = (allInternalUsers || []).filter(u => {
       // Search
       const matchSearch = !q || (u.username && u.username.toLowerCase().includes(q)) || (u.note && u.note.toLowerCase().includes(q));
       if (!matchSearch) return false;
@@ -5114,6 +5546,32 @@ async function updateUserAppLimit(phone, maxDevices) {
       if (status === 'time_expired') return u.expired_reason === 'time';
       if (status === 'disabled') return !u.active;
       return true;
+    });
+
+    // Sorting (Newest / Oldest / Traffic / Expiry / Name)
+    filtered.sort((a, b) => {
+      if (currentIntSort === 'newest') {
+        const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        if (timeA && timeB && timeA !== timeB) return timeB - timeA;
+        return (b.id || 0) - (a.id || 0);
+      } else if (currentIntSort === 'oldest') {
+        const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        if (timeA && timeB && timeA !== timeB) return timeA - timeB;
+        return (a.id || 0) - (b.id || 0);
+      } else if (currentIntSort === 'traffic_desc') {
+        return (b.used_bytes || 0) - (a.used_bytes || 0);
+      } else if (currentIntSort === 'traffic_asc') {
+        return (a.used_bytes || 0) - (b.used_bytes || 0);
+      } else if (currentIntSort === 'expiry_asc') {
+        const expA = a.expiry_time > 0 ? a.expiry_time : Infinity;
+        const expB = b.expiry_time > 0 ? b.expiry_time : Infinity;
+        return expA - expB;
+      } else if (currentIntSort === 'name_asc') {
+        return (a.username || '').localeCompare(b.username || '');
+      }
+      return 0;
     });
 
     renderInternalUsers(filtered);
