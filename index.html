@@ -1985,7 +1985,7 @@
 
         <div class="form-row-inline">
           <label>ساب‌دامین اشتراک (Sub-domain):</label>
-          <input type="text" class="form-input" id="subDomain" dir="ltr" placeholder="sb1.dev-stong.ir:2053" oninput="markFormDirty()">
+          <input type="text" class="form-input" id="subDomain" dir="ltr" placeholder="shop.strongdev.space" oninput="markFormDirty()">
         </div>
 
         <!-- Danger Zone Card -->
@@ -2112,24 +2112,36 @@
 
 <!-- MODALS PRESERVED -->
 <div class="app-modal-overlay" id="qrModalOverlay" onclick="if(event.target===this) closeQrModal()">
-  <div class="app-modal" style="text-align: center;">
+  <div class="app-modal" style="text-align: center; max-width: 420px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
       <h3 style="font-size: 16px; font-weight: 700; color: var(--text);" id="qrModalTitle">کیوآرکد اشتراک</h3>
       <button type="button" onclick="closeQrModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
     </div>
     
-    <div style="background: var(--text); padding: 14px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+    <div style="background: var(--text); padding: 14px; border-radius: 16px; display: inline-block; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
       <img id="qrModalImage" src="" alt="QR" style="width: 200px; height: 200px; display: block;">
     </div>
 
-    <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;" id="qrModalSubInfo">
+    <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 14px; word-break: break-all; direction: ltr; font-family: monospace; background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 8px;" id="qrModalSubInfo">
       جهت اسکن مستقیم با دوربین اپلیکیشن
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button type="button" onclick="openHappDirect()" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 11px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 13px; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">
+        <span>🚀</span>
+        <span>افزودن مستقیم به برنامه Happ (یک‌کلیک)</span>
+      </button>
 
-      <button type="button" id="qrCopyUrlBtn" onclick="copyModalSubUrl()" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); padding: 10px; border-radius: 12px; font-weight: 500; cursor: pointer; font-size: 13px; font-family: inherit;">
-        📋 کپی آدرس سابسکریپشن
+      <button type="button" id="qrCopyUrlBtn" onclick="copyModalSubUrl()" style="background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--card-border); padding: 10px; border-radius: 12px; font-weight: 500; cursor: pointer; font-size: 12.5px; font-family: inherit;">
+        📋 کپی لینک ساب اصلی (سرور ایران / بدون فیلتر)
+      </button>
+
+      <button type="button" onclick="copyModalHappUrl()" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--card-border); padding: 9px; border-radius: 12px; font-weight: 500; cursor: pointer; font-size: 12px; font-family: inherit;">
+        ⚡ کپی لینک مخصوص Happ (happ://add/...)
+      </button>
+
+      <button type="button" onclick="copyModalCfUrl()" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px; border-radius: 12px; font-weight: 400; cursor: pointer; font-size: 11.5px; font-family: inherit;">
+        🌐 کپی لینک کمکی کلودفلر (auth.djanah99.ir)
       </button>
     </div>
   </div>
@@ -2952,12 +2964,20 @@ function showDashboard() {
     // Basic pagination handler
   }
 
+  
+  function getMainSubBaseUrl() {
+    const el = document.getElementById('subDomain');
+    const domain = (el && el.value ? el.value : '').trim() || 'shop.strongdev.space';
+    const clean = domain.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    return 'https://' + clean;
+  }
+
   function copyModalSubUrlDirect(subId) {
     if (!subId) {
       showToast('شناسه ساب یافت نشد', true);
       return;
     }
-    const url = `https://sb1.dev-stong.ir:2053/sub/${subId}`;
+    const url = `${getMainSubBaseUrl()}/sub/${subId}`;
     navigator.clipboard.writeText(url).then(() => {
       showToast('لینک اشتراک کپی شد ✅');
     }).catch(() => {
@@ -3997,12 +4017,14 @@ async function fetchFreeConfigsFromWorker() {
   }
 
   // ---------------- Option C: Subscription Actions helpers ----------------
+  let currentModalSubId = '';
   let currentModalSubUrl = '';
   let currentModalEmail = '';
 
   function openQrModal(email, subId) {
     currentModalEmail = email;
-    currentModalSubUrl = `https://sb1.dev-stong.ir:2053/sub/${subId}`;
+    currentModalSubId = subId;
+    currentModalSubUrl = `${getMainSubBaseUrl()}/sub/${subId}`;
     const title = document.getElementById('qrModalTitle');
     const info = document.getElementById('qrModalSubInfo');
     const img = document.getElementById('qrModalImage');
@@ -4014,6 +4036,28 @@ async function fetchFreeConfigsFromWorker() {
     }
     const overlay = document.getElementById('qrModalOverlay');
     if (overlay) overlay.style.display = 'flex';
+  }
+
+  function openHappDirect() {
+    if (!currentModalSubUrl) return;
+    window.location.href = `happ://add/${currentModalSubUrl}`;
+    showToast('در حال باز کردن برنامه Happ...');
+  }
+
+  function copyModalHappUrl() {
+    if (!currentModalSubUrl) return;
+    const happUrl = `happ://add/${currentModalSubUrl}`;
+    navigator.clipboard.writeText(happUrl).then(() => showToast('لینک مخصوص Happ کپی شد! ✅')).catch(() => {
+      prompt('لینک هپ:', happUrl);
+    });
+  }
+
+  function copyModalCfUrl() {
+    if (!currentModalSubId) return;
+    const cfUrl = `https://auth.djanah99.ir/sub/${currentModalSubId}`;
+    navigator.clipboard.writeText(cfUrl).then(() => showToast('لینک کمکی کلودفلر کپی شد! ✅')).catch(() => {
+      prompt('لینک کلودفلر:', cfUrl);
+    });
   }
 
   function closeQrModal() {
@@ -4764,7 +4808,7 @@ async function updateUserAppLimit(phone, maxDevices) {
       const pwEl = document.getElementById('newXuiPassword'); if (pwEl) pwEl.value = '';
 
       // 3. Show created link
-      const subUrl = `https://sb1.dev-stong.ir:2053/sub/${data.subId}`;
+      const subUrl = `${getMainSubBaseUrl()}/sub/${data.subId}`;
       const box = document.getElementById('newCreatedUserBox');
       const inp = document.getElementById('createdSubUrl');
       if (box && inp) {
