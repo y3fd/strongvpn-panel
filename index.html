@@ -4819,6 +4819,8 @@ async function fetchFreeConfigsFromWorker() {
 
   
   let cachedXuiUsers = [];
+  let xuiUsersList = cachedXuiUsers;
+  window.xuiUsersList = cachedXuiUsers;
 
   function _xuiSetBadge(id, val) {
     const el = document.getElementById(id);
@@ -5245,7 +5247,7 @@ async function fetchFreeConfigsFromWorker() {
                 <span style="color: #64748b;">🔁 وضعیت تمدید:</span>
                 <div style="display: flex; align-items: center; gap: 6px;">
                   <span style="font-weight: 600; color: ${f.renewalCount > 0 ? '#0284c7' : '#64748b'};">${f.renewalCount > 0 ? f.renewalCount + ' بار تمدید شده' : 'بدون تمدید'}</span>
-                  ${f.renewalCount > 0 ? `<button type="button" onclick="openRenewalHistoryModal('${email}')" style="background: #e0f2fe; color: #0369a1; border: none; border-radius: 6px; font-size: 10px; padding: 2px 7px; cursor: pointer; font-weight: 600;">سوابق 📜</button>` : ''}
+                  ${f.renewalCount > 0 ? `<button type="button" onclick="openRenewalHistoryModal('${email}')" style="background: #e0f2fe; color: #0369a1; border: none; border-radius: 6px; font-size: 10px; padding: 2px 7px; cursor: pointer; font-weight: 600;">سوابق 🕒</button>` : ''}
                 </div>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -5280,7 +5282,7 @@ async function fetchFreeConfigsFromWorker() {
                   <span>✏️</span> <span>ویرایش و رمز اپ</span>
                 </button>
                 <button type="button" onclick="openRenewalHistoryModal('${email}')" style="height: 42px; padding: 0 12px; display: flex; align-items: center; justify-content: center; gap: 4px; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer;" title="سوابق تمدید">
-                  <span>📜 سوابق</span>
+                  <span>🕒 سوابق</span>
                 </button>
                 <button type="button" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; border-radius: 12px; cursor: pointer;" title="کپی ساب">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
@@ -5636,10 +5638,11 @@ async function updateUserAppLimit(phone, maxDevices) {
     const modal = document.getElementById('renewUserModalOverlay');
     if (!modal) return;
     const emailClean = (email || '').trim();
-    const u = (xuiUsersList || []).find(x => (x.email || '').toLowerCase().trim() === emailClean.toLowerCase());
+    const u = (cachedXuiUsers || []).find(x => (x.email || '').toLowerCase().trim() === emailClean.toLowerCase());
     
     document.getElementById('renewEmail').value = emailClean;
-    document.getElementById('renewDisplayEmail').innerText = emailClean;
+    const dispEl = document.getElementById('renewDisplayEmail');
+    if (dispEl) dispEl.innerText = emailClean;
     
     let expStr = 'نامحدود';
     let daysRem = '';
@@ -5653,13 +5656,19 @@ async function updateUserAppLimit(phone, maxDevices) {
         daysRem = expired ? 'منقضی شده' : (dCount + ' روز مانده');
       }
     }
-    document.getElementById('renewCurrentExpiry').innerText = expStr + (daysRem ? ' (' + daysRem + ')' : '');
-    document.getElementById('renewCurrentCount').innerText = renCount + ' بار';
+    const curExpEl = document.getElementById('renewCurrentExpiry');
+    if (curExpEl) curExpEl.innerText = expStr + (daysRem ? ' (' + daysRem + ')' : '');
+    const curCntEl = document.getElementById('renewCurrentCount');
+    if (curCntEl) curCntEl.innerText = renCount + ' بار';
     
-    document.getElementById('renewVolumeGb').value = '30';
-    document.getElementById('renewDays').value = '30';
-    document.getElementById('renewResetTraffic').checked = true;
-    document.getElementById('renewNote').value = '';
+    const volEl = document.getElementById('renewVolumeGb');
+    if (volEl) volEl.value = '30';
+    const daysEl = document.getElementById('renewDays');
+    if (daysEl) daysEl.value = '30';
+    const rstEl = document.getElementById('renewResetTraffic');
+    if (rstEl) rstEl.checked = true;
+    const noteEl = document.getElementById('renewNote');
+    if (noteEl) noteEl.value = '';
     
     updateRenewDatePreview();
     modal.style.display = 'flex';
@@ -5675,14 +5684,15 @@ async function updateUserAppLimit(phone, maxDevices) {
   }
 
   function setRenewDays(days) {
-    document.getElementById('renewDays').value = days;
+    const daysEl = document.getElementById('renewDays');
+    if (daysEl) daysEl.value = days;
     updateRenewDatePreview();
   }
 
   function updateRenewDatePreview() {
-    const email = (document.getElementById('renewEmail').value || '').trim();
-    const u = (xuiUsersList || []).find(x => (x.email || '').toLowerCase().trim() === email.toLowerCase());
-    const days = parseInt(document.getElementById('renewDays').value, 10) || 0;
+    const email = (document.getElementById('renewEmail')?.value || '').trim();
+    const u = (cachedXuiUsers || []).find(x => (x.email || '').toLowerCase().trim() === email.toLowerCase());
+    const days = parseInt(document.getElementById('renewDays')?.value, 10) || 0;
     
     let baseTime = Date.now();
     if (u && u.expiryTime && u.expiryTime > Date.now()) {
@@ -5699,57 +5709,70 @@ async function updateUserAppLimit(phone, maxDevices) {
   }
 
   async function submitRenewUser() {
-    const email = (document.getElementById('renewEmail').value || '').trim();
-    const addedGb = parseFloat(document.getElementById('renewVolumeGb').value) || 0;
-    const addedDays = parseInt(document.getElementById('renewDays').value, 10) || 0;
-    const resetTraffic = document.getElementById('renewResetTraffic').checked;
-    const note = document.getElementById('renewNote').value.trim();
+    const email = (document.getElementById('renewEmail')?.value || '').trim();
+    const addedGb = parseFloat(document.getElementById('renewVolumeGb')?.value) || 0;
+    const addedDays = parseInt(document.getElementById('renewDays')?.value, 10) || 0;
+    const resetTraffic = !!document.getElementById('renewResetTraffic')?.checked;
+    const note = (document.getElementById('renewNote')?.value || '').trim();
     
     if (!email) {
-      showAppToast('خطا: ایمیل کاربر مشخص نیست', 'error');
+      showToast('خطا: ایمیل کاربر مشخص نیست', true);
       return;
     }
     if (addedGb <= 0 && addedDays <= 0) {
-      showAppToast('حداقل حجم یا روز تمدید باید وارد شود', 'error');
+      showToast('حداقل حجم یا روز تمدید باید وارد شود', true);
       return;
     }
     
     const btn = document.getElementById('btnSubmitRenew');
-    btn.disabled = true;
-    btn.innerText = 'در حال ثبت تمدید...';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerText = 'در حال ثبت تمدید...';
+    }
     
     try {
-      const res = await fetch('/api/admin/xui-users/renew', {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/xui-users/renew`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
         body: JSON.stringify({ email, addedGb, addedDays, resetTraffic, note })
       });
       const data = await res.json();
       if (data.success) {
-        showAppToast('✅ ' + (data.message || 'تمدید اشتراک با موفقیت ثبت شد'), 'success');
+        showToast('✅ ' + (data.message || 'تمدید اشتراک با موفقیت ثبت شد'));
         closeRenewModal();
         await fetchXuiUsers(false);
       } else {
-        showAppToast('❌ خطا: ' + (data.error || 'عملیات تمدید ناموفق بود'), 'error');
+        showToast('❌ خطا: ' + (data.error || 'عملیات تمدید ناموفق بود'), true);
       }
     } catch (e) {
-      showAppToast('❌ خطای ارتباط با سرور: ' + e.message, 'error');
+      showToast('❌ خطای ارتباط با سرور: ' + e.message, true);
     } finally {
-      btn.disabled = false;
-      btn.innerText = '✅ ثبت تمدید اشتراک';
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = '✅ ثبت تمدید اشتراک';
+      }
     }
   }
 
-  // ---------------- MODAL: RENEWAL HISTORY ----------------
+  // ---------------- MODAL: RENEWAL & LIFECYCLE HISTORY ----------------
   async function openRenewalHistoryModal(email) {
     const modal = document.getElementById('renewalHistoryModalOverlay');
     if (!modal) return;
+
+    // Immediately display modal so user gets instant visual feedback
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+
     const emailClean = (email || '').trim();
-    const u = (xuiUsersList || []).find(x => (x.email || '').toLowerCase().trim() === emailClean.toLowerCase());
-    
-    document.getElementById('historyDisplayEmail').innerText = emailClean;
-    
-    // Lifecycle Summary
+    const u = (cachedXuiUsers || []).find(x => (x.email || '').toLowerCase().trim() === emailClean.toLowerCase());
+
+    const dispEl = document.getElementById('historyDisplayEmail');
+    if (dispEl) dispEl.innerText = emailClean || '-';
+
+    // Lifecycle Summary from local cached user object
     let regStr = 'ثبت اولیه: نامشخص';
     let regTime = (u && u.createdTime && u.createdTime > 0) ? u.createdTime : (u && u.createdAt ? u.createdAt * 1000 : 0);
     if (regTime > 0) {
@@ -5757,9 +5780,12 @@ async function updateUserAppLimit(phone, maxDevices) {
       const daysDiff = Math.max(0, Math.floor((Date.now() - regTime) / 86400000));
       regStr = rd.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' }) + (daysDiff > 0 ? ` (${daysDiff} روز پیش)` : ' (امروز)');
     }
-    document.getElementById('historyCreatedDate').innerText = regStr;
-    document.getElementById('historyRenewalCount').innerText = (u ? (u.renewalCount || 0) : 0) + ' بار';
-    
+    const createdEl = document.getElementById('historyCreatedDate');
+    if (createdEl) createdEl.innerText = regStr;
+
+    const countEl = document.getElementById('historyRenewalCount');
+    if (countEl) countEl.innerText = (u ? (u.renewalCount || 0) : 0) + ' بار';
+
     let expStr = 'نامحدود';
     if (u && u.expiryTime > 0) {
       const ed = new Date(u.expiryTime);
@@ -5767,47 +5793,77 @@ async function updateUserAppLimit(phone, maxDevices) {
       const dCount = Math.ceil((u.expiryTime - Date.now()) / 86400000);
       expStr = ed.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' }) + (expired ? ' (منقضی)' : ` (${dCount} روز مانده)`);
     }
-    document.getElementById('historyNextRenewal').innerText = expStr;
-    
+    const nextEl = document.getElementById('historyNextRenewal');
+    if (nextEl) nextEl.innerText = expStr;
+
     // List container
     const listEl = document.getElementById('renewalHistoryList');
-    listEl.innerHTML = '<div style="text-align: center; padding: 25px; color: var(--text-muted); font-size: 13px;">⏳ در حال دریافت سوابق از سرور...</div>';
-    
-    modal.style.display = 'flex';
-    modal.classList.add('active');
-    
+    if (listEl) {
+      listEl.innerHTML = '<div style="text-align: center; padding: 25px; color: var(--text-muted); font-size: 13px;">⏳ در حال دریافت سوابق از سرور...</div>';
+    }
+
     try {
-      const res = await fetch('/api/admin/xui-users/renewals?email=' + encodeURIComponent(emailClean));
+      const url = `${CF_WORKER_API}/api/admin/xui-users/renewals?email=${encodeURIComponent(emailClean)}`;
+      const res = await fetch(url, {
+        headers: {
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        }
+      });
       const data = await res.json();
-      if (data.success && data.renewals && data.renewals.length > 0) {
-        listEl.innerHTML = data.renewals.map((r, idx) => {
-          const rDate = new Date(r.renewed_at * 1000);
-          const rDateStr = rDate.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-          const newExpStr = r.new_expiry > 0 ? new Date(r.new_expiry).toLocaleDateString('fa-IR') : 'نامحدود';
-          return `
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; font-size: 12px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span style="font-weight: 700; color: #10b981;">تمدید #${data.renewals.length - idx}: +${r.added_gb} گیگابایت / +${r.added_days} روز</span>
-                <span style="color: var(--text-muted); font-size: 11px;">${rDateStr}</span>
+
+      if (data.success) {
+        // If server meta has created_at from database, update registration date
+        if (data.meta && data.meta.created_at && (!regTime || regTime === 0)) {
+          const dbCreatedMs = data.meta.created_at * 1000;
+          const rd = new Date(dbCreatedMs);
+          const daysDiff = Math.max(0, Math.floor((Date.now() - dbCreatedMs) / 86400000));
+          if (createdEl) {
+            createdEl.innerText = rd.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' }) + (daysDiff > 0 ? ` (${daysDiff} روز پیش)` : ' (امروز)');
+          }
+        }
+
+        const renewals = data.renewals || [];
+        if (countEl && renewals.length > 0) {
+          countEl.innerText = renewals.length + ' بار';
+        }
+
+        if (renewals.length > 0) {
+          if (listEl) {
+            listEl.innerHTML = renewals.map((r, idx) => {
+              const rDate = new Date(r.renewed_at * 1000);
+              const rDateStr = rDate.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+              const newExpStr = r.new_expiry > 0 ? new Date(r.new_expiry).toLocaleDateString('fa-IR') : 'نامحدود';
+              const cleanNote = r.note ? _xuiEsc(r.note) : '';
+              return `
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; font-size: 12px; margin-bottom: 8px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-weight: 700; color: #10b981;">تمدید #${renewals.length - idx}: +${r.added_gb} گیگابایت / +${r.added_days} روز</span>
+                    <span style="color: var(--text-muted); font-size: 11px;">${rDateStr}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
+                    <span>سررسید پس از تمدید: <strong style="color: var(--text);">${newExpStr}</strong></span>
+                    <span>توسط: ${_xuiEsc(r.renewed_by || 'مدیر')}</span>
+                  </div>
+                  ${cleanNote ? `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #94a3b8;">یادداشت: ${cleanNote}</div>` : ''}
+                </div>
+              `;
+            }).join('');
+          }
+        } else {
+          if (listEl) {
+            listEl.innerHTML = `
+              <div style="text-align: center; padding: 25px 15px; background: rgba(255,255,255,0.02); border: 1px dashed var(--card-border); border-radius: 10px; color: var(--text-muted); font-size: 12.5px;">
+                ℹ️ سابقه تمدید مستقیمی برای این کاربر در پایگاه‌داده ثبت نشده است.<br>
+                <span style="font-size: 11px; opacity: 0.8; margin-top: 4px; display: inline-block;">(کاربر اولیه یا پیش از فعال‌سازی سیستم لاگ تمدید)</span>
               </div>
-              <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
-                <span>سررسید پس از تمدید: <strong style="color: var(--text);">${newExpStr}</strong></span>
-                <span>توسط: ${r.renewed_by || 'مدیر'}</span>
-              </div>
-              ${r.note ? `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #94a3b8;">یادداشت: ${r.note}</div>` : ''}
-            </div>
-          `;
-        }).join('');
+            `;
+          }
+        }
       } else {
-        listEl.innerHTML = `
-          <div style="text-align: center; padding: 25px 15px; background: rgba(255,255,255,0.02); border: 1px dashed var(--card-border); border-radius: 10px; color: var(--text-muted); font-size: 12.5px;">
-            ℹ️ سابقه تمدید مستقیمی برای این کاربر ثبت نشده است.<br>
-            <span style="font-size: 11px; opacity: 0.8; margin-top: 4px; display: inline-block;">(کاربر اولیه یا پیش از فعال‌سازی سیستم سوابق)</span>
-          </div>
-        `;
+        if (listEl) listEl.innerHTML = `<div style="text-align: center; padding: 20px; color: #ef4444; font-size: 12px;">خطا در دریافت: ${_xuiEsc(data.error || 'عملیات ناموفق بود')}</div>`;
       }
     } catch (e) {
-      listEl.innerHTML = `<div style="text-align: center; padding: 20px; color: #ef4444; font-size: 12px;">خطا در دریافت سوابق: ${e.message}</div>`;
+      if (listEl) listEl.innerHTML = `<div style="text-align: center; padding: 20px; color: #ef4444; font-size: 12px;">خطا در دریافت سوابق: ${_xuiEsc(e.message)}</div>`;
     }
   }
 
