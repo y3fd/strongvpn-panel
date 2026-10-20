@@ -3187,7 +3187,13 @@
           }
           return res;
         } else {
-          lastErr = new Error(`خطای سرور HTTP ${res.status}`);
+          // Keep the real error response so callers can surface its message.
+          let serverMsg = `خطای سرور HTTP ${res.status}`;
+          try {
+            const j = await res.clone().json();
+            if (j && j.message) serverMsg = j.message;
+          } catch (_) {}
+          lastErr = new Error(serverMsg);
         }
       } catch (err) {
         lastErr = err;
@@ -5481,7 +5487,10 @@ async function fetchFreeConfigsFromWorker() {
         },
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error((data && data.message) || ('خطای سرور HTTP ' + res.status));
+      }
       if (!data.success) {
         showToast('خطا در ذخیره تغییرات: ' + (data.message || 'نامشخص'), true);
         saveBtn.disabled = false;
