@@ -5737,7 +5737,16 @@ async function updateUserAppLimit(phone, maxDevices) {
           'Content-Type': 'application/json',
           'X-Admin-Secret': CF_ADMIN_SECRET
         },
-        body: JSON.stringify({ email, addedGb, addedDays, resetTraffic, note })
+        body: JSON.stringify({
+          email,
+          addedGb,
+          addedDays,
+          resetTraffic,
+          volume_gb: addedGb,
+          days: addedDays,
+          reset_traffic: resetTraffic,
+          note
+        })
       });
       const data = await res.json();
       if (data.success) {
@@ -5834,17 +5843,22 @@ async function updateUserAppLimit(phone, maxDevices) {
               const rDateStr = rDate.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
               const newExpStr = r.new_expiry > 0 ? new Date(r.new_expiry).toLocaleDateString('fa-IR') : 'نامحدود';
               const cleanNote = r.note ? _xuiEsc(r.note) : '';
+              const isActionOnly = (r.added_gb === 0 && r.added_days === 0);
+              const badgeColor = isActionOnly ? '#38bdf8' : '#10b981';
+              const titleText = isActionOnly 
+                ? (cleanNote || 'عملیات سیستم')
+                : `تمدید #${renewals.length - idx}: +${r.added_gb} گیگابایت / +${r.added_days} روز`;
               return `
                 <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; font-size: 12px; margin-bottom: 8px;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-weight: 700; color: #10b981;">تمدید #${renewals.length - idx}: +${r.added_gb} گیگابایت / +${r.added_days} روز</span>
+                    <span style="font-weight: 700; color: ${badgeColor};">${titleText}</span>
                     <span style="color: var(--text-muted); font-size: 11px;">${rDateStr}</span>
                   </div>
                   <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
                     <span>سررسید پس از تمدید: <strong style="color: var(--text);">${newExpStr}</strong></span>
                     <span>توسط: ${_xuiEsc(r.renewed_by || 'مدیر')}</span>
                   </div>
-                  ${cleanNote ? `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #94a3b8;">یادداشت: ${cleanNote}</div>` : ''}
+                  ${(!isActionOnly && cleanNote) ? `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #94a3b8;">یادداشت: ${cleanNote}</div>` : ''}
                 </div>
               `;
             }).join('');
