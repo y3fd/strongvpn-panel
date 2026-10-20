@@ -2960,6 +2960,134 @@
 
 
 
+
+<!-- Modal: Quick Renewal -->
+<div class="app-modal-overlay" id="renewUserModalOverlay" onclick="if(event.target===this) closeRenewModal()">
+  <div class="app-modal" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px;">
+        <span style="color: #10b981;">🔄</span>
+        <span>تمدید اشتراک کاربر</span>
+      </h3>
+      <button type="button" onclick="closeRenewModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; padding: 4px 8px;">✕</button>
+    </div>
+
+    <!-- User Info Box -->
+    <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 11.5px; color: var(--text-muted);">کاربر مورد نظر:</span>
+        <span id="renewDisplayEmail" style="font-weight: 700; color: #10b981; font-family: monospace; font-size: 14.5px; direction: ltr;">-</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
+        <span>انقضای فعلی: <strong id="renewCurrentExpiry" style="color: var(--text);">-</strong></span>
+        <span>دفعات تمدید قبلی: <strong id="renewCurrentCount" style="color: #38bdf8;">۰ بار</strong></span>
+      </div>
+    </div>
+    <input type="hidden" id="renewEmail">
+
+    <div class="form-grid">
+      <!-- 1. Volume GB -->
+      <div class="form-group full">
+        <label>📦 حجم تمدید (گیگابایت):</label>
+        <input type="number" id="renewVolumeGb" dir="ltr" step="1" min="1" value="30" placeholder="مثلاً: 30">
+        <div style="display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;">
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('renewVolumeGb').value='10'">۱۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('renewVolumeGb').value='20'">۲۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('renewVolumeGb').value='30'">۳۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('renewVolumeGb').value='50'">۵۰ گیگ</button>
+          <button type="button" class="btn-xs-pill" onclick="document.getElementById('renewVolumeGb').value='100'">۱۰۰ گیگ</button>
+        </div>
+      </div>
+
+      <!-- 2. Days -->
+      <div class="form-group full">
+        <label>⏳ مدت تمدید (روز):</label>
+        <input type="number" id="renewDays" dir="ltr" step="1" min="1" value="30" oninput="updateRenewDatePreview()" placeholder="مثلاً: 30">
+        <div style="display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap;">
+          <button type="button" class="btn-xs-pill" onclick="setRenewDays(30)">۳۰ روزه (۱ ماه)</button>
+          <button type="button" class="btn-xs-pill" onclick="setRenewDays(60)">۶۰ روزه (۲ ماه)</button>
+          <button type="button" class="btn-xs-pill" onclick="setRenewDays(90)">۹۰ روزه (۳ ماه)</button>
+          <button type="button" class="btn-xs-pill" onclick="setRenewDays(365)">۳۶۵ روزه (۱ سال)</button>
+        </div>
+        <div id="renewNewExpiryPreview" style="font-size: 11.5px; color: #10b981; margin-top: 6px; font-weight: 600;"></div>
+      </div>
+
+      <!-- 3. Reset traffic checkbox -->
+      <div class="form-group full" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 600; color: var(--text);">صفر کردن حجم مصرفی قبلی</div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">ترافیک مصرف‌شده کاربر مجدداً صفر می‌شود</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="renewResetTraffic" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- 4. Renewal Note -->
+      <div class="form-group full">
+        <label>📝 یادداشت تمدید (اختیاری):</label>
+        <input type="text" id="renewNote" placeholder="مثلاً: تمدید ماهانه، واریز کارت‌به‌کارت و...">
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+      <button type="button" id="btnSubmitRenew" onclick="submitRenewUser()" style="flex: 2; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; border-radius: 12px; padding: 12px; font-weight: 700; cursor: pointer; font-size: 13.5px;">
+        ✅ ثبت تمدید اشتراک
+      </button>
+      <button type="button" onclick="closeRenewModal()" style="flex: 1; background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; font-weight: 600; cursor: pointer; font-size: 13px;">
+        انصراف
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Renewal & Lifecycle History -->
+<div class="app-modal-overlay" id="renewalHistoryModalOverlay" onclick="if(event.target===this) closeRenewalHistoryModal()">
+  <div class="app-modal" style="max-width: 620px; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px;">
+        <span style="color: #38bdf8;">📜</span>
+        <span>شناسنامه و سوابق تمدید کاربر</span>
+      </h3>
+      <button type="button" onclick="closeRenewalHistoryModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; padding: 4px 8px;">✕</button>
+    </div>
+
+    <!-- User Lifecycle Summary Card -->
+    <div style="background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.25); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+      <div style="font-size: 14.5px; font-weight: 700; color: #38bdf8; font-family: monospace; direction: ltr; margin-bottom: 10px;" id="historyDisplayEmail">-</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; font-size: 12px;">
+        <div style="background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 8px;">
+          <div style="color: var(--text-muted); font-size: 10.5px;">📅 تاریخ ثبت اولیه:</div>
+          <div id="historyCreatedDate" style="font-weight: 600; color: var(--text); margin-top: 3px;">-</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 8px;">
+          <div style="color: var(--text-muted); font-size: 10.5px;">🔁 دفعات تمدید:</div>
+          <div id="historyRenewalCount" style="font-weight: 600; color: #10b981; margin-top: 3px;">۰ بار</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 8px;">
+          <div style="color: var(--text-muted); font-size: 10.5px;">⏳ موعد تمدید بعدی:</div>
+          <div id="historyNextRenewal" style="font-weight: 600; color: #f59e0b; margin-top: 3px;">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline / History List -->
+    <div style="margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--text);">سوابق دوره‌های تمدید:</div>
+    <div id="renewalHistoryList" style="max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+      <div style="text-align: center; padding: 20px; color: var(--text-muted);">در حال دریافت سوابق...</div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 16px; border-top: 1px solid var(--card-border); padding-top: 12px; text-align: left;">
+      <button type="button" onclick="closeRenewalHistoryModal()" style="background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid var(--card-border); border-radius: 10px; padding: 8px 18px; font-weight: 600; cursor: pointer; font-size: 12.5px;">
+        بستن
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- JAVASCRIPT LOGIC -->
 <script>
 
@@ -4951,7 +5079,37 @@ async function fetchFreeConfigsFromWorker() {
 
       const subIdShort = u.subId ? (u.subId.length > 8 ? u.subId.substring(0, 8) + '...' : u.subId) : '---';
 
-      return { usedGb, totalGb, pct, expStr, daysRem, expired, appLimit, bar, emailL, badgeClass, statusLabel, avatar, subIdShort };
+      // Registration Date
+      let regStr = 'ثبت اولیه: نامشخص';
+      let regAgo = '';
+      const regTime = (u.createdTime && u.createdTime > 0) ? u.createdTime : (u.createdAt ? u.createdAt * 1000 : 0);
+      if (regTime > 0) {
+        const rd = new Date(regTime);
+        regStr = rd.toLocaleDateString('fa-IR', { year: 'numeric', month: 'numeric', day: 'numeric' });
+        const daysDiff = Math.max(0, Math.floor((Date.now() - regTime) / 86400000));
+        regAgo = daysDiff === 0 ? 'امروز' : `${daysDiff} روز پیش`;
+      }
+
+      // Renewal info
+      const renewalCount = u.renewalCount || 0;
+      let lastRenStr = '';
+      if (u.lastRenewedAt && u.lastRenewedAt > 0) {
+        const lrd = new Date(u.lastRenewedAt * 1000);
+        lastRenStr = lrd.toLocaleDateString('fa-IR', { month: 'numeric', day: 'numeric' });
+      }
+
+      // Next renewal info
+      let nextRenDays = 'نامحدود';
+      if (u.expiryTime > 0) {
+        if (expired) {
+          nextRenDays = 'منقضی شده';
+        } else {
+          const remDays = Math.ceil((u.expiryTime - Date.now()) / 86400000);
+          nextRenDays = `${remDays} روز مانده`;
+        }
+      }
+
+      return { usedGb, totalGb, pct, expStr, daysRem, expired, appLimit, bar, emailL, badgeClass, statusLabel, avatar, subIdShort, regStr, regAgo, renewalCount, lastRenStr, nextRenDays };
     };
 
     // ---------- Render Desktop Table ----------
@@ -4960,9 +5118,9 @@ async function fetchFreeConfigsFromWorker() {
         const f = fmt(u);
         const email = _xuiEsc(u.email);
         return `
-          <tr>
-            <td style="text-align: center;">
-              <label class="xui-switch" title="${u.enable ? 'غیرفعال‌سازی کاربر' : 'فعال‌سازی کاربر'}">
+          <tr class="xui-user-row" data-email="${email}">
+            <td>
+              <label class="xui-switch" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}">
                 <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
                 <span class="slider"></span>
               </label>
@@ -4975,6 +5133,11 @@ async function fetchFreeConfigsFromWorker() {
                   <div class="user-sub-id" dir="ltr">
                     <span class="badge-protocol">VLESS</span>
                     <span>ساب: ${f.subIdShort}</span>
+                  </div>
+                  <div style="display: flex; gap: 8px; font-size: 11px; color: var(--text-muted); margin-top: 4px; align-items: center; flex-wrap: wrap;">
+                    <span title="تاریخ ساخت">📅 ثبت: ${f.regStr} ${f.regAgo ? '(' + f.regAgo + ')' : ''}</span>
+                    <span style="opacity: 0.3;">•</span>
+                    <span style="color: ${f.renewalCount > 0 ? '#38bdf8' : 'inherit'};">🔁 ${f.renewalCount > 0 ? f.renewalCount + ' بار تمدید' : 'بدون تمدید'}</span>
                   </div>
                 </div>
               </div>
@@ -4992,20 +5155,26 @@ async function fetchFreeConfigsFromWorker() {
             </td>
             <td>
               <div class="expiry-cell">
-                <div class="days-rem-badge ${f.expired ? 'expired' : ''}">${f.daysRem ? f.daysRem : f.expStr}</div>
-                <div class="expiry-date-sub" dir="ltr">${f.expStr}</div>
+                <div class="days-rem-badge ${f.expired ? 'expired' : ''}">
+                  ${f.expired ? '⚠️ منقضی' : '⏳ ' + f.daysRem}
+                </div>
+                <div class="expiry-date-sub" dir="ltr" title="موعد سررسید تمدید بعدی">
+                  سررسید: ${f.expStr}
+                </div>
               </div>
             </td>
-            <td style="text-align: center;">
-              <select class="app-limit-select" onchange="updateUserAppLimit('${email}', this.value)" title="سقف اتصال هم‌زمان">
-                <option value="1" ${f.appLimit == 1 ? 'selected' : ''}>۱ دستگاه</option>
-                <option value="2" ${f.appLimit == 2 ? 'selected' : ''}>۲ دستگاه</option>
-                <option value="3" ${f.appLimit == 3 ? 'selected' : ''}>۳ دستگاه</option>
-                <option value="4" ${f.appLimit == 4 ? 'selected' : ''}>۴ دستگاه</option>
-                <option value="5" ${f.appLimit == 5 ? 'selected' : ''}>۵ دستگاه</option>
-                <option value="10" ${f.appLimit == 10 ? 'selected' : ''}>۱۰ دستگاه</option>
-                <option value="20" ${f.appLimit == 20 ? 'selected' : ''}>۲۰ دستگاه</option>
-              </select>
+            <td>
+              <div class="app-limit-cell">
+                <span class="badge-protocol" style="font-size: 11.5px; padding: 4px 10px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25);">
+                  📱 ${f.appLimit} دستگاه
+                </span>
+              </div>
+            </td>
+            <td>
+              <span class="xui-status-badge ${f.badgeClass}">
+                <span class="xui-status-dot"></span>
+                <span>${f.statusLabel}</span>
+              </span>
             </td>
             <td>
               <div class="country-pills-row" title="آلمان، ترکیه، فنلاند، بحرین">
@@ -5017,8 +5186,14 @@ async function fetchFreeConfigsFromWorker() {
             </td>
             <td>
               <div class="xui-actions-cell">
+                <button type="button" class="btn-action-edit" onclick="openRenewModal('${email}')" title="تمدید سریع اشتراک" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35);">
+                  <span>🔄 تمدید</span>
+                </button>
+                <button type="button" class="xui-action-btn" onclick="openRenewalHistoryModal('${email}')" title="سوابق و تاریخچه تمدید">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </button>
                 <button type="button" class="btn-action-edit" onclick="openXuiEditModal('${email}')" title="ویرایش و تعیین رمز عبور">
-                  <span>✏️ ویرایش و رمز</span>
+                  <span>✏️ ویرایش</span>
                 </button>
                 <button type="button" class="xui-action-btn" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" title="کپی لینک ساب">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
@@ -5041,53 +5216,86 @@ async function fetchFreeConfigsFromWorker() {
         const f = fmt(u);
         const email = _xuiEsc(u.email);
         return `
-          <div class="mobile-user-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(15,23,42,0.03), 0 4px 12px rgba(15,23,42,0.02);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="user-avatar-badge" style="width: 34px; height: 34px; font-size: 11px;">${f.avatar}</div>
-                <div>
-                  <div class="user-name-title" dir="ltr" style="font-size: 13.5px;">${email}</div>
-                  <div class="user-sub-id" dir="ltr" style="font-size: 10.5px;">ساب: ${f.subIdShort}</div>
+          <div class="mobile-user-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 16px; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(15,23,42,0.04);">
+            <!-- Card Top: User Header & Status Toggle -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
+              <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                <div class="user-avatar-badge" style="width: 38px; height: 38px; font-size: 12px; flex-shrink: 0; background: #0f172a; color: #fff;">${f.avatar}</div>
+                <div style="min-width: 0;">
+                  <div class="user-name-title" dir="ltr" style="font-size: 14px; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${email}</div>
+                  <div class="user-sub-id" dir="ltr" style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                    <span style="background: #e2e8f0; color: #334155; padding: 1px 5px; border-radius: 4px; font-size: 9.5px; font-weight: 600;">VLESS</span>
+                    <span>ساب: ${f.subIdShort}</span>
+                  </div>
                 </div>
               </div>
-              <label class="xui-switch" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}">
+              <label class="xui-switch" title="${u.enable ? 'غیرفعال‌سازی' : 'فعال‌سازی'}" style="flex-shrink: 0;">
                 <input type="checkbox" ${u.enable ? 'checked' : ''} onchange="toggleUserEnable('${email}')">
                 <span class="slider"></span>
               </label>
             </div>
             
-            <div style="background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
-              <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-family: monospace; direction: ltr; margin-bottom: 5px;">
+            <!-- Card Middle 1: Lifecycle Box (Registration, Renewals, Next Due) -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; font-size: 11.5px; display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #64748b;">📅 تاریخ ثبت اولیه:</span>
+                <span style="font-weight: 600; color: #1e293b;">${f.regStr} ${f.regAgo ? '<span style="color:#94a3b8; font-size:10px;">(' + f.regAgo + ')</span>' : ''}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #64748b;">🔁 وضعیت تمدید:</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-weight: 600; color: ${f.renewalCount > 0 ? '#0284c7' : '#64748b'};">${f.renewalCount > 0 ? f.renewalCount + ' بار تمدید شده' : 'بدون تمدید'}</span>
+                  ${f.renewalCount > 0 ? `<button type="button" onclick="openRenewalHistoryModal('${email}')" style="background: #e0f2fe; color: #0369a1; border: none; border-radius: 6px; font-size: 10px; padding: 2px 7px; cursor: pointer; font-weight: 600;">سوابق 📜</button>` : ''}
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #64748b;">⏳ سررسید تمدید بعدی:</span>
+                <span style="font-weight: 700; color: ${f.expired ? '#dc2626' : '#059669'};">${f.nextRenDays} (${f.expStr})</span>
+              </div>
+            </div>
+
+            <!-- Card Middle 2: Traffic Bar & App limits -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; font-family: monospace; direction: ltr; margin-bottom: 6px;">
                 <span>مصرف: <strong>${f.usedGb}</strong> / ${f.totalGb ? f.totalGb + ' GB' : '∞'}</span>
                 <span style="color: ${f.bar}; font-weight: 700;">${f.pct}%</span>
               </div>
-              <div class="traffic-bar-track">
-                <div class="traffic-bar-fill" style="background: ${f.bar}; width: ${f.pct}%;"></div>
+              <div class="traffic-bar-track" style="height: 7px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                <div class="traffic-bar-fill" style="background: ${f.bar}; width: ${f.pct}%; height: 100%; border-radius: 4px;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 11px; color: #64748b;">
+                <span>📱 سقف همزمان: <strong>${f.appLimit} دستگاه</strong></span>
+                <span class="days-rem-badge ${f.expired ? 'expired' : ''}">${f.daysRem}</span>
               </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; margin-bottom: 14px; flex-wrap: wrap; gap: 6px;">
-              <span class="days-rem-badge ${f.expired ? 'expired' : ''}">⏳ ${f.daysRem ? f.daysRem + ' (' + f.expStr + ')' : f.expStr}</span>
-              <span style="color: #64748b; font-weight: 600;">📱 ${f.appLimit} دستگاه</span>
-            </div>
-
-            <div style="display: flex; gap: 8px;">
-              <button type="button" class="btn-action-edit" onclick="openXuiEditModal('${email}')" style="flex: 2; justify-content: center; padding: 9px 12px; font-size: 12.5px;">
-                ✏️ ویرایش و رمز اپ
+            <!-- Card Bottom: Ergonomic Action Buttons (44px min height) -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button type="button" onclick="openRenewModal('${email}')" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 44px; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: none; border-radius: 12px; font-size: 13.5px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(16,185,129,0.25);">
+                <span>🔄</span> <span>تمدید اشتراک کاربر</span>
               </button>
-              <button type="button" class="xui-action-btn" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" style="width: 40px; height: 38px;" title="کپی لینک ساب">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-              </button>
-              <button type="button" class="xui-action-btn" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="width: 40px; height: 38px;" title="کیوآرکد">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"></rect><rect width="5" height="5" x="16" y="3" rx="1"></rect><rect width="5" height="5" x="3" y="16" rx="1"></rect><path d="M21 16h-3a2 2 0 0 0-2 2v3"></path><path d="M21 21v.01"></path><path d="M12 7v3a2 2 0 0 1-2 2H7"></path><path d="M3 12h.01"></path><path d="M12 3h.01"></path><path d="M12 16v.01"></path><path d="M16 12h1"></path><path d="M21 12v.01"></path><path d="M12 21v-1"></path></svg>
-              </button>
+              
+              <div style="display: flex; gap: 8px;">
+                <button type="button" onclick="openXuiEditModal('${email}')" style="flex: 2; height: 42px; display: flex; align-items: center; justify-content: center; gap: 6px; background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 12.5px; font-weight: 600; cursor: pointer;">
+                  <span>✏️</span> <span>ویرایش و رمز اپ</span>
+                </button>
+                <button type="button" onclick="openRenewalHistoryModal('${email}')" style="height: 42px; padding: 0 12px; display: flex; align-items: center; justify-content: center; gap: 4px; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer;" title="سوابق تمدید">
+                  <span>📜 سوابق</span>
+                </button>
+                <button type="button" onclick="copyModalSubUrlDirect('${_xuiEsc(u.subId)}')" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; border-radius: 12px; cursor: pointer;" title="کپی ساب">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                </button>
+                <button type="button" onclick="openQrModal('${email}', '${_xuiEsc(u.subId)}')" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; border-radius: 12px; cursor: pointer;" title="کیوآرکد">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="5" height="5" x="3" y="3" rx="1"></rect><rect width="5" height="5" x="16" y="3" rx="1"></rect><rect width="5" height="5" x="3" y="16" rx="1"></rect><path d="M21 16h-3a2 2 0 0 0-2 2v3"></path><path d="M21 21v.01"></path><path d="M12 7v3a2 2 0 0 1-2 2H7"></path><path d="M3 12h.01"></path><path d="M12 3h.01"></path><path d="M12 16v.01"></path><path d="M16 12h1"></path><path d="M21 12v.01"></path><path d="M12 21v-1"></path></svg>
+                </button>
+              </div>
             </div>
           </div>`;
       }).join('');
     }
   }
 
-  // ---------------- MODAL: ADD CLIENT (3X-UI STYLE) ----------------
+// ---------------- MODAL: ADD CLIENT (3X-UI STYLE) ----------------
   function openCreateXuiModal() {
     const modal = document.getElementById('createXuiModalOverlay');
     if (modal) {
@@ -5419,6 +5627,195 @@ async function updateUserAppLimit(phone, maxDevices) {
     if (inp && inp.value) {
       navigator.clipboard.writeText(inp.value);
       showToast('لینک اشتراک کپی شد!');
+    }
+  }
+
+  
+  // ---------------- MODAL: RENEW USER & LIFECYCLE ----------------
+  function openRenewModal(email) {
+    const modal = document.getElementById('renewUserModalOverlay');
+    if (!modal) return;
+    const emailClean = (email || '').trim();
+    const u = (xuiUsersList || []).find(x => (x.email || '').toLowerCase().trim() === emailClean.toLowerCase());
+    
+    document.getElementById('renewEmail').value = emailClean;
+    document.getElementById('renewDisplayEmail').innerText = emailClean;
+    
+    let expStr = 'نامحدود';
+    let daysRem = '';
+    let renCount = 0;
+    if (u) {
+      renCount = u.renewalCount || 0;
+      if (u.expiryTime > 0) {
+        expStr = new Date(u.expiryTime).toLocaleDateString('fa-IR');
+        const expired = u.expiryTime < Date.now();
+        const dCount = Math.ceil((u.expiryTime - Date.now()) / 86400000);
+        daysRem = expired ? 'منقضی شده' : (dCount + ' روز مانده');
+      }
+    }
+    document.getElementById('renewCurrentExpiry').innerText = expStr + (daysRem ? ' (' + daysRem + ')' : '');
+    document.getElementById('renewCurrentCount').innerText = renCount + ' بار';
+    
+    document.getElementById('renewVolumeGb').value = '30';
+    document.getElementById('renewDays').value = '30';
+    document.getElementById('renewResetTraffic').checked = true;
+    document.getElementById('renewNote').value = '';
+    
+    updateRenewDatePreview();
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+  }
+
+  function closeRenewModal() {
+    const modal = document.getElementById('renewUserModalOverlay');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
+    }
+  }
+
+  function setRenewDays(days) {
+    document.getElementById('renewDays').value = days;
+    updateRenewDatePreview();
+  }
+
+  function updateRenewDatePreview() {
+    const email = (document.getElementById('renewEmail').value || '').trim();
+    const u = (xuiUsersList || []).find(x => (x.email || '').toLowerCase().trim() === email.toLowerCase());
+    const days = parseInt(document.getElementById('renewDays').value, 10) || 0;
+    
+    let baseTime = Date.now();
+    if (u && u.expiryTime && u.expiryTime > Date.now()) {
+      baseTime = u.expiryTime;
+    }
+    const targetTime = baseTime + (days * 86400000);
+    const targetDate = new Date(targetTime);
+    const targetStr = targetDate.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    const previewEl = document.getElementById('renewNewExpiryPreview');
+    if (previewEl) {
+      previewEl.innerText = '✨ موعد تمدید جدید: ' + targetStr;
+    }
+  }
+
+  async function submitRenewUser() {
+    const email = (document.getElementById('renewEmail').value || '').trim();
+    const addedGb = parseFloat(document.getElementById('renewVolumeGb').value) || 0;
+    const addedDays = parseInt(document.getElementById('renewDays').value, 10) || 0;
+    const resetTraffic = document.getElementById('renewResetTraffic').checked;
+    const note = document.getElementById('renewNote').value.trim();
+    
+    if (!email) {
+      showAppToast('خطا: ایمیل کاربر مشخص نیست', 'error');
+      return;
+    }
+    if (addedGb <= 0 && addedDays <= 0) {
+      showAppToast('حداقل حجم یا روز تمدید باید وارد شود', 'error');
+      return;
+    }
+    
+    const btn = document.getElementById('btnSubmitRenew');
+    btn.disabled = true;
+    btn.innerText = 'در حال ثبت تمدید...';
+    
+    try {
+      const res = await fetch('/api/admin/xui-users/renew', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, addedGb, addedDays, resetTraffic, note })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showAppToast('✅ ' + (data.message || 'تمدید اشتراک با موفقیت ثبت شد'), 'success');
+        closeRenewModal();
+        await fetchXuiUsers(false);
+      } else {
+        showAppToast('❌ خطا: ' + (data.error || 'عملیات تمدید ناموفق بود'), 'error');
+      }
+    } catch (e) {
+      showAppToast('❌ خطای ارتباط با سرور: ' + e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerText = '✅ ثبت تمدید اشتراک';
+    }
+  }
+
+  // ---------------- MODAL: RENEWAL HISTORY ----------------
+  async function openRenewalHistoryModal(email) {
+    const modal = document.getElementById('renewalHistoryModalOverlay');
+    if (!modal) return;
+    const emailClean = (email || '').trim();
+    const u = (xuiUsersList || []).find(x => (x.email || '').toLowerCase().trim() === emailClean.toLowerCase());
+    
+    document.getElementById('historyDisplayEmail').innerText = emailClean;
+    
+    // Lifecycle Summary
+    let regStr = 'ثبت اولیه: نامشخص';
+    let regTime = (u && u.createdTime && u.createdTime > 0) ? u.createdTime : (u && u.createdAt ? u.createdAt * 1000 : 0);
+    if (regTime > 0) {
+      const rd = new Date(regTime);
+      const daysDiff = Math.max(0, Math.floor((Date.now() - regTime) / 86400000));
+      regStr = rd.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' }) + (daysDiff > 0 ? ` (${daysDiff} روز پیش)` : ' (امروز)');
+    }
+    document.getElementById('historyCreatedDate').innerText = regStr;
+    document.getElementById('historyRenewalCount').innerText = (u ? (u.renewalCount || 0) : 0) + ' بار';
+    
+    let expStr = 'نامحدود';
+    if (u && u.expiryTime > 0) {
+      const ed = new Date(u.expiryTime);
+      const expired = u.expiryTime < Date.now();
+      const dCount = Math.ceil((u.expiryTime - Date.now()) / 86400000);
+      expStr = ed.toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' }) + (expired ? ' (منقضی)' : ` (${dCount} روز مانده)`);
+    }
+    document.getElementById('historyNextRenewal').innerText = expStr;
+    
+    // List container
+    const listEl = document.getElementById('renewalHistoryList');
+    listEl.innerHTML = '<div style="text-align: center; padding: 25px; color: var(--text-muted); font-size: 13px;">⏳ در حال دریافت سوابق از سرور...</div>';
+    
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+    
+    try {
+      const res = await fetch('/api/admin/xui-users/renewals?email=' + encodeURIComponent(emailClean));
+      const data = await res.json();
+      if (data.success && data.renewals && data.renewals.length > 0) {
+        listEl.innerHTML = data.renewals.map((r, idx) => {
+          const rDate = new Date(r.renewed_at * 1000);
+          const rDateStr = rDate.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          const newExpStr = r.new_expiry > 0 ? new Date(r.new_expiry).toLocaleDateString('fa-IR') : 'نامحدود';
+          return `
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; font-size: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-weight: 700; color: #10b981;">تمدید #${data.renewals.length - idx}: +${r.added_gb} گیگابایت / +${r.added_days} روز</span>
+                <span style="color: var(--text-muted); font-size: 11px;">${rDateStr}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
+                <span>سررسید پس از تمدید: <strong style="color: var(--text);">${newExpStr}</strong></span>
+                <span>توسط: ${r.renewed_by || 'مدیر'}</span>
+              </div>
+              ${r.note ? `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 11px; color: #94a3b8;">یادداشت: ${r.note}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      } else {
+        listEl.innerHTML = `
+          <div style="text-align: center; padding: 25px 15px; background: rgba(255,255,255,0.02); border: 1px dashed var(--card-border); border-radius: 10px; color: var(--text-muted); font-size: 12.5px;">
+            ℹ️ سابقه تمدید مستقیمی برای این کاربر ثبت نشده است.<br>
+            <span style="font-size: 11px; opacity: 0.8; margin-top: 4px; display: inline-block;">(کاربر اولیه یا پیش از فعال‌سازی سیستم سوابق)</span>
+          </div>
+        `;
+      }
+    } catch (e) {
+      listEl.innerHTML = `<div style="text-align: center; padding: 20px; color: #ef4444; font-size: 12px;">خطا در دریافت سوابق: ${e.message}</div>`;
+    }
+  }
+
+  function closeRenewalHistoryModal() {
+    const modal = document.getElementById('renewalHistoryModalOverlay');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
     }
   }
 
