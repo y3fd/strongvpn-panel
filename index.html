@@ -2368,6 +2368,107 @@
           <button type="button" class="btn btn-teal" onclick="saveHomeBanner()">💾 ذخیره بنر خرید</button>
         </div>
       </div>
+
+      <!-- Video Ad Card (تبلیغات ویدیویی اختصاصی ۱۵ ثانیه‌ای) -->
+      <div class="card" id="videoAdCard" style="margin-top: 14px; border: 1px solid rgba(14, 165, 233, 0.25); background: linear-gradient(180deg, rgba(14, 165, 233, 0.04) 0%, transparent 100%);">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎬</span>
+            <span>تبلیغات ویدیویی درون‌برنامه (Video Ad / Clip 15s)</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 11.5px; color: var(--text-muted);" id="vaStatusText">وضعیت: غیرفعال</span>
+            <label class="switch-wrap">
+              <input type="checkbox" id="vaEnabled" onchange="updateVideoAdStatus(); markFormDirty();">
+              <span class="switch-ui"></span>
+            </label>
+          </div>
+        </div>
+
+        <div style="padding: 4px 0 10px 0; font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+          امکان پخش کلیپ تبلیغاتی اختصاصی (MP4) به صورت پاپ‌آپ با شمارشگر معکوس ۱۵ ثانیه‌ای و دکمه لینک اختصاصی. فایل را روی هاست خودتان آپلود کرده و آدرس مستقیم آن را وارد کنید تا بدون فیلتر و با بالاترین سرعت برای کاربران پخش شود.
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-top: 8px;">
+          <!-- Controls Form -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">عنوان تبلیغ:</label>
+              <input type="text" class="form-input" id="vaTitle" placeholder="مثال: کانال رسمی خدمات دریافتی / پیشنهاد ویژه" oninput="updateVideoAdPreview(); markFormDirty();">
+            </div>
+
+            <div>
+              <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">لینک مستقیم فایل ویدیو (MP4 روی هاست اختصاصی):</label>
+              <input type="text" class="form-input" id="vaVideoUrl" dir="ltr" placeholder="https://shop.strongdev.space/static/ads/my_ad.mp4" oninput="updateVideoAdPreview(); markFormDirty();">
+              <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 3px;">
+                💡 ویدیوی نمونه پیش‌فرض هاست: <code style="color: #38bdf8; cursor: pointer;" onclick="document.getElementById('vaVideoUrl').value='https://hrms.strongdev.space/download/ads/sample_ad.mp4'; updateVideoAdPreview(); markFormDirty();">https://hrms.strongdev.space/download/ads/sample_ad.mp4</code>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">متن دکمه اقدام (Call to Action):</label>
+                <input type="text" class="form-input" id="vaActionText" placeholder="مثال: عضویت در کانال تلگرام" oninput="updateVideoAdPreview(); markFormDirty();">
+              </div>
+              <div>
+                <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">لینک مقصد دکمه (URL یا تلگرام):</label>
+                <input type="text" class="form-input" id="vaActionUrl" dir="ltr" placeholder="https://t.me/daryafti_services" oninput="updateVideoAdPreview(); markFormDirty();">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+              <div>
+                <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">زمان اجباری مشاهده:</label>
+                <select class="form-select" id="vaSkipSeconds" onchange="updateVideoAdPreview(); markFormDirty();">
+                  <option value="5">۵ ثانیه</option>
+                  <option value="10">۱۰ ثانیه</option>
+                  <option value="15" selected>۱۵ ثانیه (استاندارد)</option>
+                  <option value="20">۲۰ ثانیه</option>
+                  <option value="30">۳۰ ثانیه</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">زمان نمایش در اپ:</label>
+                <select class="form-select" id="vaTrigger" onchange="markFormDirty();">
+                  <option value="on_connect" selected>هنگام زدن دکمه اتصال</option>
+                  <option value="on_open">هنگام باز شدن برنامه</option>
+                  <option value="both">هم باز شدن و هم اتصال</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 11.5px; font-weight: 600; display: block; margin-bottom: 4px;">تکرار نمایش:</label>
+                <select class="form-select" id="vaFrequency" onchange="markFormDirty();">
+                  <option value="every_time" selected>هر بار اتصال/اجرا</option>
+                  <option value="once_daily">یک‌بار در ۲۴ ساعت برای هر کاربر</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+              <button type="button" class="btn btn-teal" onclick="saveVideoAd()" style="min-width: 220px; height: 38px; font-weight: 700;">
+                💾 ذخیره و انتشار تبلیغ ویدیویی
+              </button>
+            </div>
+          </div>
+
+          <!-- Video Live Preview -->
+          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 11.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; width: 100%; display: flex; justify-content: space-between;">
+              <span>📱 پیش‌نمایش در پلیر اپلیکیشن:</span>
+              <span id="vaPrevTimerBadge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 1px 6px; border-radius: 4px; font-size: 10.5px;">⏳ ۱۵ ثانیه تا بستن</span>
+            </div>
+            <div style="width: 100%; max-width: 280px; aspect-ratio: 9/16; max-height: 280px; background: #000; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative;">
+              <video id="vaPreviewVideo" style="width: 100%; height: 100%; object-fit: contain;" controls muted playsinline></video>
+              <div id="vaEmptyNotice" style="position: absolute; color: var(--text-muted); font-size: 11px; text-align: center; padding: 10px; pointer-events: none;">
+                آدرس فایل MP4 را وارد کنید تا پیش‌نمایش پخش شود
+              </div>
+            </div>
+            <div id="vaPrevCtaBtn" style="margin-top: 8px; width: 100%; max-width: 280px; background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; text-align: center; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600;">
+              مشاهده و عضویت
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- SECTION 5: SETTINGS TAB -->
@@ -6688,7 +6789,111 @@ async function updateUserAppLimit(phone, maxDevices) {
       showToast(d.ok ? 'بنر صفحهٔ اصلی ذخیره شد ✅' : 'خطا در ذخیره', !d.ok);
     } catch (e) { showToast('خطا در ارتباط با سرور', true); }
   }
-  document.addEventListener('DOMContentLoaded', loadHomeBanner);
+  function updateVideoAdStatus() {
+    const en = document.getElementById('vaEnabled')?.checked;
+    const st = document.getElementById('vaStatusText');
+    if (st) {
+      st.textContent = en ? 'وضعیت: فعال 🟢' : 'وضعیت: غیرفعال ⚪';
+      st.style.color = en ? '#22c55e' : 'var(--text-muted)';
+    }
+  }
+
+  function updateVideoAdPreview() {
+    const vUrl = (document.getElementById('vaVideoUrl')?.value || '').trim();
+    const vid = document.getElementById('vaPreviewVideo');
+    const notice = document.getElementById('vaEmptyNotice');
+    const sec = document.getElementById('vaSkipSeconds')?.value || '15';
+    const timerBadge = document.getElementById('vaPrevTimerBadge');
+    const btn = document.getElementById('vaPrevCtaBtn');
+    const btnText = (document.getElementById('vaActionText')?.value || '').trim() || 'مشاهده پیشنهاد';
+
+    if (btn) btn.textContent = btnText;
+    if (timerBadge) timerBadge.textContent = '⏳ ' + sec + ' ثانیه تا بستن';
+
+    if (vid) {
+      if (vUrl && vUrl.startsWith('http')) {
+        if (vid.src !== vUrl) {
+          vid.src = vUrl;
+          vid.load();
+        }
+        vid.style.display = 'block';
+        if (notice) notice.style.display = 'none';
+      } else {
+        vid.style.display = 'none';
+        if (notice) notice.style.display = 'block';
+      }
+    }
+    updateVideoAdStatus();
+  }
+
+  async function loadVideoAd() {
+    try {
+      const r = await fetch(`${CF_WORKER_API}/api/remote-config?t=${Date.now()}`);
+      const c = await r.json();
+      const v = c.video_ad || {};
+      const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+      const en = document.getElementById('vaEnabled');
+      if (en) en.checked = !!v.enabled;
+      set('vaTitle', v.title || 'پیشنهاد ویژه StrongVPN');
+      set('vaVideoUrl', v.video_url || 'https://hrms.strongdev.space/download/ads/sample_ad.mp4');
+      set('vaActionText', v.action_text || 'مشاهده و پیوستن');
+      set('vaActionUrl', v.action_url || 'https://t.me/daryafti_services');
+      set('vaSkipSeconds', v.skip_seconds || 15);
+      set('vaTrigger', v.trigger || 'on_connect');
+      set('vaFrequency', v.frequency || 'every_time');
+      updateVideoAdPreview();
+    } catch (_) {}
+  }
+
+  async function saveVideoAd() {
+    const v = id => (document.getElementById(id)?.value || '').trim();
+    const videoUrl = v('vaVideoUrl');
+    const isEnabled = !!document.getElementById('vaEnabled')?.checked;
+    if (isEnabled && !videoUrl) {
+      showToast('لطفاً آدرس فایل ویدیو را وارد کنید', true);
+      return;
+    }
+    const actionUrl = v('vaActionUrl');
+    if (actionUrl && !/^(https?:\/\/|tg:\/\/)/.test(actionUrl)) {
+      showToast('لینک دکمه باید با https:// یا tg:// شروع شود', true);
+      return;
+    }
+
+    const videoAd = {
+      id: Math.floor(Date.now() / 1000),
+      enabled: isEnabled,
+      title: v('vaTitle') || 'تبلیغ ویژه',
+      video_url: videoUrl,
+      action_text: v('vaActionText') || 'مشاهده پیشنهاد',
+      action_url: actionUrl,
+      skip_seconds: parseInt(document.getElementById('vaSkipSeconds')?.value, 10) || 15,
+      trigger: v('vaTrigger') || 'on_connect',
+      frequency: v('vaFrequency') || 'every_time',
+      target_users: 'all'
+    };
+
+    try {
+      showToast('در حال ذخیره تبلیغ ویدیویی...');
+      const r = await fetch(`${CF_WORKER_API}/api/remote-config`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': CF_ADMIN_SECRET },
+        body: JSON.stringify({ video_ad: videoAd })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && (d.ok || d.success)) {
+        showToast(isEnabled ? 'تبلیغ ویدیویی فعال و منتشر شد ✅' : 'تنظیمات تبلیغ ویدیویی ذخیره شد ✅');
+      } else {
+        showToast('خطا در ذخیره: ' + (d.error || r.status), true);
+      }
+    } catch (e) {
+      showToast('خطا در ارتباط با سرور', true);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadHomeBanner();
+    loadVideoAd();
+  });
 
   function switchTab(name) {
     if (name === 'users') {
@@ -6706,6 +6911,7 @@ async function updateUserAppLimit(phone, maxDevices) {
         btn.classList.toggle('active', fn.includes("'" + name + "'"));
       });
       if (name === 'ads') updateAdPreview();
+      if (name === 'announcement') { loadHomeBanner(); loadVideoAd(); }
       localStorage.setItem('svpn_active_category', 'messages');
       localStorage.setItem('svpn_active_tab', name);
     } else if (name === 'settings' || name === 'logs') {
