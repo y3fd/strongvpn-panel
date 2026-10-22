@@ -1,5 +1,5 @@
 {
-  "version": 1792678958267,
+  "version": 1792683624587,
   "announcement": {
     "id": 1791983673,
     "active": false,
@@ -30,7 +30,7 @@
     "windows_portable_url": "https://shop.strongdev.space/static/windows/StrongVPN-Portable.zip"
   },
   "fallback_configs": [],
-  "clear_cache_revision": 6,
+  "clear_cache_revision": 7,
   "home_banner": {
     "enabled": false,
     "show_for": "all",
@@ -40,17 +40,5 @@
     "url": "",
     "color": "#0ea5e9",
     "icon": "shop"
-  },
-  "video_ad": {
-    "id": 1792180000,
-    "enabled": false,
-    "title": "پیشنهاد ویژه StrongVPN",
-    "video_url": "https://drigital.ir/ads/sample_ad.mp4",
-    "action_text": "مشاهده جزئیات و عضویت",
-    "action_url": "https://t.me/daryafti_services",
-    "skip_seconds": 15,
-    "trigger": "on_connect",
-    "frequency": "every_time",
-    "target_users": "all"
   }
 }
