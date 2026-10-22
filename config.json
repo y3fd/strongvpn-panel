@@ -1,5 +1,5 @@
 {
-  "version": 1792173600000,
+  "version": 1792678958267,
   "announcement": {
     "id": 1791983673,
     "active": false,
@@ -30,7 +30,7 @@
     "windows_portable_url": "https://shop.strongdev.space/static/windows/StrongVPN-Portable.zip"
   },
   "fallback_configs": [],
-  "clear_cache_revision": 5,
+  "clear_cache_revision": 6,
   "home_banner": {
     "enabled": false,
     "show_for": "all",
