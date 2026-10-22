@@ -1910,6 +1910,30 @@
       </div>
 
       <!-- SUBTAB 1: 3X-UI Users -->
+        <!-- Bento Pro Free Configs Card (Mahsa for Subscribers) -->
+        <div class="card" style="margin-bottom: 14px; background: linear-gradient(135deg, rgba(20,184,166,0.08), rgba(6,182,212,0.05)); border: 1px solid rgba(20,184,166,0.25); border-radius: 12px; padding: 14px 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(20,184,166,0.15); display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                🎁
+              </div>
+              <div>
+                <div style="font-weight: 700; font-size: 13.5px; color: var(--text); display: flex; align-items: center; gap: 8px;">
+                  <span>افزودن کانفیگ‌های مهسا (رایگان) به کاربران دارای اشتراک</span>
+                  <span id="badgeProFreeUsers" class="badge" style="background: #ecfdf5; color: #047857; font-size: 11px;">فعال برای کاربران اشتراکی ✓</span>
+                </div>
+                <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 3px;">
+                  با فعال بودن این گزینه، کانفیگ‌های لیست مهسا (رایگان) خودکار به لیست سرورهای کاربران دارای اشتراک فعال اضافه می‌شوند تا در زمان اختلال از آنها استفاده کنند.
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button type="button" id="btnToggleProFreeUsers" class="btn btn-outline" onclick="toggleProFreeConfigs()" style="font-size: 12.5px; padding: 7px 16px;">
+                غیرفعال‌سازی برای پرو
+              </button>
+            </div>
+          </div>
+        </div>
       <div id="subtab-content-xui">
         <!-- Bento KPI Summary Grid (UI/UX Pro Max) -->
         <div class="users-kpi-grid">
@@ -2247,6 +2271,12 @@
 
         <!-- Subtab 3: Free Configs -->
         <div class="srv-subtab-content" id="srv-subtab-free" style="display: none;">
+          <div style="background: rgba(20,184,166,0.06); border: 1px solid rgba(20,184,166,0.22); border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12.5px; font-weight: 600;">
+              🎁 نمایش سرورهای مهسا برای کاربران اشتراکی (Pro): <span id="badgeProFreeServers" class="badge" style="background: #ecfdf5; color: #047857;">فعال ✓</span>
+            </div>
+            <button type="button" id="btnToggleProFreeServers" class="btn btn-outline" onclick="toggleProFreeConfigs()" style="font-size: 11.5px; padding: 4px 12px;">غیرفعال‌سازی برای پرو</button>
+          </div>
           <div style="background: #f8fafc; border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
             <div style="font-weight: 700; font-size: 12.5px; margin-bottom: 8px;">➕ افزودن سرور به لیست رایگان با پاداش تبلیغاتی:</div>
             <div style="display: grid; grid-template-columns: 140px 1fr 100px; gap: 8px;">
@@ -3584,6 +3614,7 @@ function showDashboard() {
     fetchClientErrorsFromWorker();
     fetchDashboardStats();
     fetchXuiUsers();
+    fetchProFreeStatus();
   }
 
 
@@ -4051,6 +4082,81 @@ async function fetchFreeConfigsFromWorker() {
     } catch (_) {}
   }
 
+
+  // ---------------- Pro Free (Mahsa) Configs Toggle ----------------
+  async function fetchProFreeStatus() {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/pro-free-configs/status`, {
+        headers: { "X-Admin-Secret": CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (data.success) {
+        updateProFreeUI(Boolean(data.pro_include_free_configs));
+      }
+    } catch (e) {
+      console.warn("Failed to fetch pro free status:", e);
+    }
+  }
+
+  function updateProFreeUI(isActive) {
+    const bUsers = document.getElementById("badgeProFreeUsers");
+    const bServers = document.getElementById("badgeProFreeServers");
+    const btn = document.getElementById("btnToggleProFreeUsers");
+    const btnSrv = document.getElementById("btnToggleProFreeServers");
+
+    const text = isActive ? "فعال برای کاربران اشتراکی ✓" : "غیرفعال (فقط سرورهای اصلی) ✕";
+    const bg = isActive ? "#ecfdf5" : "#f1f5f9";
+    const color = isActive ? "#047857" : "#64748b";
+    const btnText = isActive ? "غیرفعال‌سازی برای پرو" : "فعال‌سازی برای کاربران پرو";
+    const btnClass = isActive ? "btn btn-outline" : "btn btn-teal";
+
+    if (bUsers) {
+      bUsers.innerText = text;
+      bUsers.style.background = bg;
+      bUsers.style.color = color;
+    }
+    if (bServers) {
+      bServers.innerText = isActive ? "فعال ✓" : "غیرفعال ✕";
+      bServers.style.background = bg;
+      bServers.style.color = color;
+    }
+    if (btn) {
+      btn.innerText = btnText;
+      btn.className = btnClass;
+    }
+    if (btnSrv) {
+      btnSrv.innerText = btnText;
+      btnSrv.className = btnClass;
+    }
+  }
+
+  async function toggleProFreeConfigs() {
+    showToast("در حال تغییر وضعیت اشتراک کانفیگ‌های مهسا...");
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/pro-free-configs/toggle`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Admin-Secret": CF_ADMIN_SECRET
+        }
+      });
+      const data = await res.json();
+      if (data.success) {
+        updateProFreeUI(Boolean(data.pro_include_free_configs));
+        showToast(data.message || "وضعیت با موفقیت تغییر یافت");
+        try {
+          await fetch(`${CF_WORKER_API}/api/admin/remote-cache-purge`, {
+            method: "POST",
+            headers: { "X-Admin-Secret": CF_ADMIN_SECRET }
+          });
+        } catch (_) {}
+      } else {
+        showToast("خطا: " + (data.message || "نامشخص"), true);
+      }
+    } catch (e) {
+      showToast("خطا در ارتباط با سرور", true);
+    }
+  }
 
   // ---------------- Dedicated Configs from Subscription ----------------
   async function fetchDedicatedConfigsFromWorker() {
