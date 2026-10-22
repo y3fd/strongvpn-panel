@@ -2884,11 +2884,13 @@
 
       <div class="form-group">
         <label>🔑 رمز ورود به اپلیکیشن:</label>
-        <div style="display: flex; gap: 6px;">
-          <input type="text" id="newXuiPassword" placeholder="خالی = خودکار" dir="ltr" inputmode="numeric" maxlength="9" style="flex:1; font-family: monospace;">
-          <button type="button" onclick="genXuiPassword()" class="btn-xs-pill" style="height: 38px; padding: 0 10px; font-weight: 600;">🎲 تصادفی</button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="text" id="newXuiPassword" value="12345" placeholder="12345" dir="ltr" inputmode="numeric" maxlength="15" 
+            style="flex: 1; height: 48px !important; font-size: 17px !important; font-weight: 700 !important; font-family: monospace !important; letter-spacing: 2px !important; padding: 10px 14px !important; border-radius: 12px !important; border: 1.5px solid #38bdf8 !important; color: #38bdf8 !important; background: #0b1329 !important;">
+          <button type="button" onclick="document.getElementById('newXuiPassword').value='12345'" class="btn-xs-pill" style="height: 48px; padding: 0 12px; font-weight: 700; font-size: 12.5px; white-space: nowrap; background: rgba(16,185,129,0.15); color: #10b981; border: 1.5px solid rgba(16,185,129,0.35); border-radius: 12px;">🔑 12345</button>
+          <button type="button" onclick="genXuiPassword()" class="btn-xs-pill" style="height: 48px; padding: 0 12px; font-weight: 600; font-size: 12px; white-space: nowrap; border-radius: 12px;">🎲 تصادفی</button>
         </div>
-        <div class="hint">عددی ۴ تا ۹ رقم؛ مشتری با این رمز وارد اپ می‌شود.</div>
+        <div class="hint">رمز پیش‌فرض ۱۲۳۴۵ تنظیم شده است؛ مشتری با این رمز وارد اپ می‌شود.</div>
       </div>
 
       <div class="form-group">
@@ -2986,9 +2988,13 @@
             <button type="button" class="btn-xs-pill" onclick="copyXuiPass()">📋 کپی</button>
           </div>
         </div>
-        <div style="position: relative; display: flex; align-items: center;">
-          <input type="password" id="xuiEditPassword" dir="ltr" placeholder="رمز دلخواه کاربر (مثلاً: 123456)" style="padding-left: 40px; font-family: monospace; letter-spacing: 1px;">
-          <button type="button" onclick="toggleXuiPassVisibility()" style="position: absolute; left: 8px; background: transparent; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; padding: 4px;" title="نمایش/پنهان رمز">👁️</button>
+        <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+          <input type="text" id="xuiEditPassword" dir="ltr" placeholder="12345" 
+            style="flex: 1; height: 50px !important; font-size: 18px !important; font-weight: 700 !important; font-family: 'SF Mono', Menlo, Consolas, monospace !important; letter-spacing: 2px !important; padding: 10px 16px !important; border-radius: 12px !important; background: #0b1329 !important; border: 2px solid #38bdf8 !important; color: #38bdf8 !important; outline: none !important;">
+          <button type="button" onclick="toggleXuiPassVisibility()" 
+            style="height: 50px; width: 50px; background: rgba(56,189,248,0.12); border: 1.5px solid rgba(56,189,248,0.35); border-radius: 12px; color: #38bdf8; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="نمایش/پنهان کردن رمز">👁️</button>
+          <button type="button" onclick="setDefaultXuiPass()" 
+            style="height: 50px; padding: 0 14px; background: rgba(16,185,129,0.15); border: 1.5px solid rgba(16,185,129,0.35); border-radius: 12px; color: #10b981; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0;" title="تنظیم رمز روی 12345">🔑 12345</button>
         </div>
         <div class="hint" style="margin-top: 6px; font-size: 11px; color: #94a3b8;">
           💡 کاربر می‌تواند با شماره موبایل خود و این رمز مستقیماً وارد برنامه StrongVPN شود.
@@ -5518,7 +5524,7 @@ async function fetchFreeConfigsFromWorker() {
       modal.classList.add('active');
     }
     const pw = document.getElementById('newXuiPassword');
-    if (pw && !pw.value) genXuiPassword();
+    if (pw) pw.value = '12345';
   }
 
   function closeCreateXuiModal() {
@@ -5541,7 +5547,7 @@ async function fetchFreeConfigsFromWorker() {
     document.getElementById('xuiEditPassword').value = '';
     const cmEl = document.getElementById('xuiEditCustomMessage');
     if (cmEl) cmEl.value = '';
-    document.getElementById('xuiEditPassword').type = 'password';
+    document.getElementById('xuiEditPassword').type = 'text';
     document.getElementById('xuiEditTotalGb').value = '';
     document.getElementById('xuiEditRenewalMode').value = 'keep';
     document.getElementById('xuiEditResetTraffic').checked = false;
@@ -5565,7 +5571,7 @@ async function fetchFreeConfigsFromWorker() {
       }
 
       const u = data.user || {};
-      document.getElementById('xuiEditPassword').value = u.password || '';
+      document.getElementById('xuiEditPassword').value = u.password || '12345';
       document.getElementById('xuiEditMaxDevices').value = String(u.maxDevices || 1);
       const gbVal = u.totalGB > 0 ? Number((u.totalGB / 1073741824).toFixed(2)) : 0;
       document.getElementById('xuiEditTotalGb').value = gbVal;
@@ -5627,6 +5633,15 @@ async function fetchFreeConfigsFromWorker() {
     }
     navigator.clipboard.writeText(p);
     showToast('📋 رمز عبور کپی شد: ' + p);
+  }
+
+  function setDefaultXuiPass() {
+    const el = document.getElementById("xuiEditPassword");
+    if (el) {
+      el.value = "12345";
+      el.type = "text";
+      showToast("🔑 رمز پیش‌فرض 12345 تنظیم شد");
+    }
   }
 
   function toggleXuiPassVisibility() {
