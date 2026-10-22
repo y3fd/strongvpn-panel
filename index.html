@@ -2503,6 +2503,62 @@
 
     <!-- SECTION 5: SETTINGS TAB -->
     <section class="tab-panel" id="tab-settings">
+      <!-- Card: Ping & Latency Settings via API -->
+      <div class="card" style="margin-bottom: 14px; background: #f8fafc; border: 1px solid var(--card-border); border-radius: 12px; padding: 16px;">
+        <div class="card-header" style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div class="card-title">
+            <span>📡</span>
+            <span>مدیریت متد و تنظیمات پینگ (Happ & App Ping API)</span>
+          </div>
+          <span class="badge" id="pingSettingsBadge" style="background: #ecfdf5; color: #047857;">همگام با ۳X-UI و اپلیکیشن ✓</span>
+        </div>
+
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.6;">
+          تنظیم شیوه اندازه‌گیری تأخیر و پینگ سرورها در لینک سابسکریپشن Happ و تست سلامت اتصال در اپلیکیشن StrongVPN (مدیریت همزمان از پنل و API):
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">روش تست پینگ در برنامه Happ (Ping-Type):</label>
+            <select class="form-input" id="pingTypeSelect" style="width: 100%; font-size: 13px;">
+              <option value="tcp">⚡ پینگ دست‌دادن TCP (سریع و بدون فیلتر - پیشنهادی)</option>
+              <option value="proxy">🌐 از طریق پروکسی GET (اندازه‌گیری کامل استریم)</option>
+              <option value="proxy_head">🔍 از طریق پروکسی HEAD (سبک‌تر)</option>
+              <option value="icmp">📡 پینگ لایه ۳ شبکه (ICMP)</option>
+              <option value="none">⚙️ پیش‌فرض کلاینت Happ</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">اتصال خودکار به سریع‌ترین نود در Happ:</label>
+            <div style="display: flex; align-items: center; gap: 10px; height: 38px;">
+              <label class="switch-wrap" style="margin: 0;">
+                <input type="checkbox" id="pingAutoConnectCheck" checked>
+                <span class="switch-ui"></span>
+              </label>
+              <span style="font-size: 12px; font-weight: 600;">اتصال خودکار به کم‌پینگ‌ترین سرور (Lowest Delay)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 14px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">آدرس پروب سلامت اینترنت در اپلیکیشن (Probe URL):</label>
+            <input type="text" class="form-input" id="pingProbeUrl" dir="ltr" placeholder="https://cp.cloudflare.com/generate_204" style="width: 100%;">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 6px;">مهلت زمانی تست پینگ (میلی‌ثانیه):</label>
+            <input type="number" class="form-input" id="pingTimeoutMs" dir="ltr" placeholder="2000" style="width: 100%;">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" class="btn btn-teal" onclick="savePingSettingsViaAPI()">
+            💾 ذخیره و اعمال آنی از طریق API
+          </button>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -3621,6 +3677,7 @@ function showDashboard() {
     fetchDashboardStats();
     fetchXuiUsers();
     fetchProFreeStatus();
+    fetchPingSettingsFromAPI();
   }
 
 
@@ -4161,6 +4218,64 @@ async function fetchFreeConfigsFromWorker() {
       }
     } catch (e) {
       showToast("خطا در ارتباط با سرور", true);
+    }
+  }
+
+  // ---------------- Ping & Latency Settings ----------------
+  async function fetchPingSettingsFromAPI() {
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/ping-settings`, {
+        headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+      });
+      const data = await res.json();
+      if (data.success && data.settings) {
+        const s = data.settings;
+        const sel = document.getElementById('pingTypeSelect');
+        if (sel) sel.value = s.happ_ping_type || 'tcp';
+        const ac = document.getElementById('pingAutoConnectCheck');
+        if (ac) ac.checked = s.happ_auto_connect !== false;
+        const pu = document.getElementById('pingProbeUrl');
+        if (pu) pu.value = s.app_probe_url || 'https://cp.cloudflare.com/generate_204';
+        const pt = document.getElementById('pingTimeoutMs');
+        if (pt) pt.value = s.app_ping_timeout_ms || 2000;
+      }
+    } catch (e) {
+      console.warn('Failed to load ping settings:', e);
+    }
+  }
+
+  async function savePingSettingsViaAPI() {
+    showToast('در حال ذخیره و همگام‌سازی تنظیمات پینگ...');
+    const payload = {
+      happ_ping_type: document.getElementById('pingTypeSelect')?.value || 'tcp',
+      happ_auto_connect: !!document.getElementById('pingAutoConnectCheck')?.checked,
+      happ_auto_connect_type: 'lowestdelay',
+      app_probe_url: document.getElementById('pingProbeUrl')?.value.trim() || 'https://cp.cloudflare.com/generate_204',
+      app_ping_timeout_ms: parseInt(document.getElementById('pingTimeoutMs')?.value, 10) || 2000
+    };
+    try {
+      const res = await fetch(`${CF_WORKER_API}/api/admin/ping-settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Secret': CF_ADMIN_SECRET
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('✓ تنظیمات پینگ ذخیره و با ۳X-UI و اپلیکیشن همگام شد');
+        try {
+          await fetch(`${CF_WORKER_API}/api/admin/remote-cache-purge`, {
+            method: 'POST',
+            headers: { 'X-Admin-Secret': CF_ADMIN_SECRET }
+          });
+        } catch (_) {}
+      } else {
+        showToast('خطا: ' + (data.message || 'نامشخص'), true);
+      }
+    } catch (e) {
+      showToast('خطا در ذخیره تنظیمات پینگ', true);
     }
   }
 
