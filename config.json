@@ -22,7 +22,7 @@
     "shop_base_url": "https://shop.strongdev.space"
   },
   "app": {
-    "latest_version": "1.0.7",
+    "latest_version": "1.0.0",
     "min_version": "1.0.0",
     "apk_url": "https://shop.strongdev.space/static/apk/universal.apk",
     "apk_arm64_url": "https://shop.strongdev.space/static/apk/arm64-v8a.apk",
