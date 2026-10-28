@@ -1,44 +1,37 @@
 {
-  "version": 1792683624587,
-  "announcement": {
-    "id": 1791983673,
-    "active": false,
-    "type": "update",
-    "title": "StrongVPN",
-    "message": "اتصال مستقیم بدون فیلتر از سرور ایران فعال شد.",
-    "action_text": "بروزرسانی",
-    "action_url": "https://shop.strongdev.space/static/apk/universal.apk"
-  },
+  "version": 1793185221104,
   "endpoints": {
-    "website_url": "https://shop.strongdev.space",
+    "website_url": "https://shop.djanah99.ir",
     "support_url": "https://t.me/daryafti_services",
-    "panel_base_url": "https://shop.strongdev.space/KZzbJuUKjXkBat0MfS",
-    "sub_domain": "shop.strongdev.space",
+    "panel_base_url": "https://auth.djanah99.ir/KZzbJuUKjXkBat0MfS",
+    "sub_domain": "auth.djanah99.ir",
     "sub_mirrors": [
-      "shop.strongdev.space",
-      "sb1.dev-stong.ir:2053",
-      "sub.strongdev.space"
+      "auth.djanah99.ir",
+      "shop.djanah99.ir",
+      "sb1.dev-stong.ir:2053"
     ],
-    "shop_base_url": "https://shop.strongdev.space"
+    "shop_base_url": "https://shop.djanah99.ir"
   },
   "app": {
     "latest_version": "1.0.0",
     "min_version": "1.0.0",
-    "apk_url": "https://shop.strongdev.space/static/apk/universal.apk",
-    "apk_arm64_url": "https://shop.strongdev.space/static/apk/arm64-v8a.apk",
-    "windows_url": "https://shop.strongdev.space/static/windows/StrongVPN-Setup.exe",
-    "windows_portable_url": "https://shop.strongdev.space/static/windows/StrongVPN-Portable.zip"
+    "apk_url": "https://hrms.strongdev.space/download/StrongVPN-v1.1.9-test-universal.apk",
+    "apk_arm64_url": "https://hrms.strongdev.space/download/StrongVPN-v1.1.9-test-arm64.apk",
+    "windows_url": "https://shop.djanah99.ir/static/windows/StrongVPN-Setup.exe"
   },
-  "fallback_configs": [],
-  "clear_cache_revision": 7,
-  "home_banner": {
-    "enabled": false,
-    "show_for": "all",
+  "announcement": {
+    "id": 1792859803,
+    "active": false,
+    "type": "info",
     "title": "",
-    "subtitle": "",
-    "button_text": "",
-    "url": "",
-    "color": "#0ea5e9",
-    "icon": "shop"
-  }
+    "message": "",
+    "action_text": "",
+    "action_url": ""
+  },
+  "fallback_configs": [
+    "samizdat://fffb003b6b3d269da9600044200b6309797b3279a5f152a9eb29d2c562886957@206.1.102.84:443?sni=speedtest.net&shortid=71e81009852d11cd&fp=chrome#🇹🇷 ترکیه Samizdat (ضد فیلتر)"
+  ],
+  "clear_cache_revision": 8,
+  "free_ad_enabled": true,
+  "ad_active": true
 }
