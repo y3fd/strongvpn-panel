@@ -1,5 +1,5 @@
 {
-  "version": 1793185221104,
+  "version": 1793196817927,
   "endpoints": {
     "website_url": "https://shop.djanah99.ir",
     "support_url": "https://t.me/daryafti_services",
@@ -29,9 +29,10 @@
     "action_url": ""
   },
   "fallback_configs": [
-    "samizdat://fffb003b6b3d269da9600044200b6309797b3279a5f152a9eb29d2c562886957@206.1.102.84:443?sni=speedtest.net&shortid=71e81009852d11cd&fp=chrome#🇹🇷 ترکیه Samizdat (ضد فیلتر)"
+    "samizdat://fffb003b6b3d269da9600044200b6309797b3279a5f152a9eb29d2c562886957@206.1.102.84:443?sni=speedtest.net&shortid=71e81009852d11cd&fp=chrome#🇹🇷 ترکیه Samizdat (ضد فیلتر)",
+    "samizdat://dea36f6b4c43775326e1dd3a0fad6c0a8d5aa01511cdb78844f14ae2d57b9c0f@3.148.213.15:80?sni=speedtest.net&shortid=71b203f9c0f77c6a&fp=chrome#🇺🇸 آمریکا Samizdat (AWS)"
   ],
-  "clear_cache_revision": 8,
+  "clear_cache_revision": 12,
   "free_ad_enabled": true,
   "ad_active": true
 }
